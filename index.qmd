@@ -1,6 +1,6 @@
 ---
 title: "Market-Neutral Pairs Trading Strategy"
-subtitle: "FINTECH 512 Final Project"
+subtitle: "FINTECH 533 Final Project"
 format:
   html:
     theme: cosmo
