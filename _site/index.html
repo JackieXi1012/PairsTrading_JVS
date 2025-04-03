@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>hahaha</title>
+<title>Market-Neutral Pairs Trading Strategy – Pairs Trading</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -68,7 +68,6 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -79,7 +78,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">hahaha</span>
+    <span class="navbar-title">Pairs Trading</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -97,6 +96,13 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">About</span></a>
   </li>  
 </ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/JackieXi1012/PairsTrading_JVS"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
 </div>
@@ -104,23 +110,30 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#strategy-overview" id="toc-strategy-overview" class="nav-link active" data-scroll-target="#strategy-overview">Strategy Overview</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">hahaha</h1>
+<h1 class="title">Market-Neutral Pairs Trading Strategy</h1>
+<p class="subtitle lead">FINTECH 512 Final Project</p>
 </div>
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page-left">
 
     
   
@@ -132,10 +145,15 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is a Quarto website.</p>
-<p>To learn more about Quarto websites visit <a href="https://quarto.org/docs/websites" class="uri">https://quarto.org/docs/websites</a>.</p>
+<section id="strategy-overview" class="level2">
+<h2 class="anchored" data-anchor-id="strategy-overview">Strategy Overview</h2>
+<p>Our strategy is a <strong>market-neutral pairs trading approach</strong> designed to profit from relative mispricings between highly correlated stocks. By identifying asset pairs (e.g., AMD and NVIDIA) that exhibit historical cointegration, we aim to exploit the natural tendency of their price spread to revert to the mean. Using a one-year lookback window, we screen for pairs with high Pearson correlation (≥ 0.7) and statistically significant cointegration (ADF test p-value &lt; 0.05).</p>
+<p>Trades are triggered when the Z-score of the spread exceeds ±2.0 under low volatility (VIX &lt; 20), adjusted upwards in more volatile markets. We enter long-short positions accordingly—buying the undervalued stock and shorting the overvalued one—and exit upon Z-score reversion to ±0.5 or when time or stop-loss conditions are met.</p>
+<p>Risk is managed through <strong>dollar-neutral positioning</strong>, a strict <strong>5% stop-loss</strong>, and diversification across 3–5 trading pairs. This systematic, data-driven approach allows us to generate alpha while minimizing exposure to market direction.</p>
+<hr>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
