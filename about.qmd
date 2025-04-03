@@ -1,5 +1,48 @@
 ---
-title: "About"
+title: "About the Strategy"
+format:
+  html:
+    theme: cosmo
+    toc: true
 ---
 
-About this site
+## Background & Motivation
+
+In volatile and uncertain markets, market-neutral strategies provide a way to generate returns independent of broader market movements. Our strategy is inspired by the classic concept of **pairs trading**, which identifies two historically correlated stocks and exploits temporary deviations in their price spread. This method allows us to capitalize on mean-reverting behavior while maintaining a neutral exposure to the overall market.
+
+## Strategy Design
+
+We begin by screening for candidate pairs using:
+
+- **Pearson Correlation ≥ 0.7** over a 1-year window
+- **Cointegration** verified by the Augmented Dickey-Fuller (ADF) test (p-value < 0.05)
+
+From this universe, we select pairs like **AMD vs. NVIDIA** that meet the statistical requirements and have strong economic or industry logic.
+
+We compute the **Z-score** of the price spread and define our signals as:
+
+- **Enter Long-Short**: when Z-score > 2.0 or < –2.0
+- **Exit**: when Z-score reverts to between –0.5 and +0.5
+
+Volatility filtering is also applied: we only trade when the **VIX < 20**, dynamically increasing thresholds in more volatile periods.
+
+## Risk Management
+
+To ensure capital protection and stable performance, we include:
+
+- **Dollar-neutral positions** for each pair
+- **Stop-loss of 5%** per position
+- **Diversification** across 3–5 pairs
+- **Maximum holding period** of 30 trading days
+
+This structure helps us reduce systemic risk while relying on price relationships between stocks, not market direction.
+
+## Why It Works
+
+Statistical arbitrage strategies like ours benefit from the natural tendency of related stocks to **mean-revert** after short-term shocks. By combining statistical rigor with practical filters like the VIX, we improve trade reliability and reduce noise. This strategy provides a **quantitative, risk-controlled framework** to exploit inefficiencies in the market.
+
+---
+
+## Want to Learn More?
+
+Check out our [Data & Code](data.qmd) and [Results](results.qmd) pages to explore our full backtest, performance metrics, and visualizations.
