@@ -21,6 +21,13 @@
     "text": "Strategy Design\nWe begin by screening for candidate pairs using:\n\nPearson Correlation ≥ 0.7 over a 1-year window\nCointegration verified by the Augmented Dickey-Fuller (ADF) test (p-value &lt; 0.05)\n\nFrom this universe, we select pairs like AMD vs. NVIDIA that meet the statistical requirements and have strong economic or industry logic.\nWe compute the Z-score of the price spread and define our signals as:\n\nEnter Long-Short: when Z-score &gt; 2.0 or &lt; –2.0\nExit: when Z-score reverts to between –0.5 and +0.5\n\nVolatility filtering is also applied: we only trade when the VIX &lt; 20, dynamically increasing thresholds in more volatile periods."
   },
   {
+    "objectID": "about.html#mathematical-formulas",
+    "href": "about.html#mathematical-formulas",
+    "title": "About the Strategy",
+    "section": "Mathematical Formulas",
+    "text": "Mathematical Formulas\n\n1. Asset Pair Selection\n\nUsing Pearson correlation coefficient to filter pairs with correlation &gt; 0.7\nApplying ADF cointegration test to confirm spread stationarity (p-value &lt; 0.05)\nCalculating half-life and prioritizing pairs with half-life between 5-25 days\n\n\n\n2. Signal Generation\n\nDaily log prices calculation: \\[\\text{Log Price}_A = \\log(\\text{Price}_A)\\]\nSpread calculation: \\[\\text{Spread} = \\text{Log Price}_A - \\text{Log Price}_B\\]\nZ-score calculation: \\[Z\\text{-score} = \\frac{\\text{Spread} - \\text{20-day Mean}}{\\text{20-day Standard Deviation}}\\]\n\n\n\n3. Trading Rules\n\nEntry signals:\n\nLong-short pair when \\(Z\\text{-score} &gt; 2.0\\)\nShort-long pair when \\(Z\\text{-score} &lt; -2.0\\)\n\nExit signals:\n\nClose position when \\(|Z\\text{-score}| &lt; 0.5\\)\nOr after \\(1.5 \\times \\text{half-life}\\) days\nOr hit 5% stop-loss"
+  },
+  {
     "objectID": "about.html#risk-management",
     "href": "about.html#risk-management",
     "title": "About the Strategy",
@@ -44,15 +51,8 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Market-Neutral Pairs Trading Strategy",
+    "title": "Pairs Trading Strategy Overview",
     "section": "",
-    "text": "Our strategy is a market-neutral pairs trading approach designed to profit from relative mispricings between highly correlated stocks. By identifying asset pairs (e.g., AMD and NVIDIA) that exhibit historical cointegration, we aim to exploit the natural tendency of their price spread to revert to the mean. Using a one-year lookback window, we screen for pairs with high Pearson correlation (≥ 0.7) and statistically significant cointegration (ADF test p-value &lt; 0.05).\nTrades are triggered when the Z-score of the spread exceeds ±2.0 under low volatility (VIX &lt; 20), adjusted upwards in more volatile markets. We enter long-short positions accordingly—buying the undervalued stock and shorting the overvalued one—and exit upon Z-score reversion to ±0.5 or when time or stop-loss conditions are met.\nRisk is managed through dollar-neutral positioning, a strict 5% stop-loss, and diversification across 3–5 trading pairs. This systematic, data-driven approach allows us to generate alpha while minimizing exposure to market direction."
-  },
-  {
-    "objectID": "index.html#strategy-overview",
-    "href": "index.html#strategy-overview",
-    "title": "Market-Neutral Pairs Trading Strategy",
-    "section": "",
-    "text": "Our strategy is a market-neutral pairs trading approach designed to profit from relative mispricings between highly correlated stocks. By identifying asset pairs (e.g., AMD and NVIDIA) that exhibit historical cointegration, we aim to exploit the natural tendency of their price spread to revert to the mean. Using a one-year lookback window, we screen for pairs with high Pearson correlation (≥ 0.7) and statistically significant cointegration (ADF test p-value &lt; 0.05).\nTrades are triggered when the Z-score of the spread exceeds ±2.0 under low volatility (VIX &lt; 20), adjusted upwards in more volatile markets. We enter long-short positions accordingly—buying the undervalued stock and shorting the overvalued one—and exit upon Z-score reversion to ±0.5 or when time or stop-loss conditions are met.\nRisk is managed through dollar-neutral positioning, a strict 5% stop-loss, and diversification across 3–5 trading pairs. This systematic, data-driven approach allows us to generate alpha while minimizing exposure to market direction."
+    "text": "Strategy Introduction\nOur strategy is based on Pairs Trading, a market-neutral approach designed to profit from pricing inefficiencies between two historically correlated assets. By balancing long and short positions simultaneously, we reduce overall market risk and rely on mean reversion to capture gains.\nWe identify trading pairs using:\n\nPearson correlation ≥ 0.7\nADF cointegration test with p-value &lt; 0.05\nHalf-life of mean reversion between 5–25 days\n\nOnce a pair is selected, we monitor its spread and calculate the Z-score:\n[ Z = ]\n\n“暂时保留” Let’s walk through a “trade using AMD and NVIDIA as an example:\n\nEntry Signal:\n\nIf Z &gt; 2: Short AMD, Long NVIDIA\nIf Z &lt; -2: Long AMD, Short NVIDIA\nVolatility adjustment:\n\nIf VIX &gt; 25, widen Z threshold to ±2.5\nIf VIX &gt; 30, suspend entries\n\n\nExit Signal:\n\nZ-score returns to ±0.5\nOr after 1.5 × half-life\nOr hit 5% stop-loss\n\n\nThis strategy uses dollar-neutral positioning and aims to reduce individual asset risk through diversification across 3–5 pairs.\n\n\n\nSample Trading Pairs Table\n\n\n\nExample Pairs and Key Drivers\n\n\n\n\n\n\n\n\nCategory\nPairs\nCorrelation\nKeyDrivers\n\n\n\n\nSemiconductor\nAMD vs. NVIDIA\n&gt; 0.7\nGPU/CPU Demand\n\n\nCloud Computing\nMicrosoft vs. Amazon\n&gt; 0.7\nCloud Growth\n\n\nBanking\nJP Morgan vs. Bank of America\nMedium-High\nInterest Rates\n\n\nETF Strategy\nQQQ vs. SMH\n&gt; 0.7\nTech Performance"
   }
 ]
