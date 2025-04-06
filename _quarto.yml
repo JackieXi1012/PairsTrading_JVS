@@ -7,11 +7,20 @@ website:
   navbar:
     left:
       - text: Home
-        href: index.qmd
+        file: index.qmd
       - text: About
-        href: about.qmd
-
+        file: about.qmd
+      - text: Indicators
+        file: data.qmd
+      - text: Results
+        file: results.qmd
     right:
       - icon: github
         href: https://github.com/JackieXi1012/PairsTrading_JVS
         aria-label: GitHub
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    math: mathjax

@@ -1,0 +1,59 @@
+---
+title: "Trade Results"
+format:
+  html:
+    theme: cosmo
+    toc: true
+jupyter: python3
+---
+
+## 📉 Pair Trading Signals – AMD vs NVIDIA
+
+```{python}
+#| echo: false
+import numpy as np
+import pandas as pd
+import shinybroker as sb
+import datetime
+
+# Define contracts
+amd = sb.Contract({'symbol': "AMD", 'secType': "STK", 'exchange': "SMART", 'currency': "USD"})
+nvidia = sb.Contract({'symbol': "NVDA", 'secType': "STK", 'exchange': "SMART", 'currency': "USD"})
+
+# Fetch data
+amd_data = sb.fetch_historical_data(contract=amd, barSizeSetting="1 day", durationStr="1 Y")['hst_dta']
+nvidia_data = sb.fetch_historical_data(contract=nvidia, barSizeSetting="1 day", durationStr="1 Y")['hst_dta']
+
+# Extract or fallback to generated dates
+try:
+    date_column = next((col for col in ['date', 'time'] if col in amd_data.columns), None)
+    if not date_column:
+        date_column = [col for col in amd_data.columns if 'date' in col.lower() or 'time' in col.lower()][0]
+    data = pd.DataFrame({
+        'Date': amd_data[date_column],
+        'AMD_Price': amd_data['close'],
+        'NVIDIA_Price': nvidia_data['close']
+    })
+except:
+    data = pd.DataFrame({
+        'AMD_Price': amd_data['close'],
+        'NVIDIA_Price': nvidia_data['close']
+    })
+    end_date = datetime.datetime.now()
+    start_date = end_date - datetime.timedelta(days=365)
+    trading_days = pd.date_range(start=start_date, periods=len(data), freq='B')
+    data['Date'] = trading_days
+
+# Calculate metrics
+data['Log_Spread'] = np.log(data['AMD_Price']) - np.log(data['NVIDIA_Price'])
+data['roll_mean'] = data['Log_Spread'].rolling(window=20).mean()
+data['roll_std'] = data['Log_Spread'].rolling(window=20).std()
+data['Z_Score'] = (data['Log_Spread'] - data['roll_mean']) / data['roll_std']
+
+# Prepare for output
+results_df = data[['Date', 'AMD_Price', 'NVIDIA_Price', 'Log_Spread', 'Z_Score']].tail(20)
+results_df['Date'] = pd.to_datetime(results_df['Date'])
+results_df = results_df.round({'AMD_Price': 2, 'NVIDIA_Price': 2, 'Log_Spread': 6, 'Z_Score': 6})
+results_df = results_df.sort_values(by="Date").reset_index(drop=True)
+results_df
+```
