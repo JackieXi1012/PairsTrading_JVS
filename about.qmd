@@ -26,6 +26,33 @@ We compute the **Z-score** of the price spread and define our signals as:
 
 Volatility filtering is also applied: we only trade when the **VIX < 20**, dynamically increasing thresholds in more volatile periods.
 
+## Mathematical Formulas
+
+### 1. Asset Pair Selection
+- Using Pearson correlation coefficient to filter pairs with correlation > 0.7
+- Applying ADF cointegration test to confirm spread stationarity (p-value < 0.05)
+- Calculating half-life and prioritizing pairs with half-life between 5-25 days
+
+### 2. Signal Generation
+- Daily log prices calculation:
+  $$\text{Log Price}_A = \log(\text{Price}_A)$$
+
+- Spread calculation:
+  $$\text{Spread} = \text{Log Price}_A - \text{Log Price}_B$$
+
+- Z-score calculation:
+  $$Z\text{-score} = \frac{\text{Spread} - \text{20-day Mean}}{\text{20-day Standard Deviation}}$$
+
+### 3. Trading Rules
+- Entry signals:
+  - Long-short pair when $Z\text{-score} > 2.0$
+  - Short-long pair when $Z\text{-score} < -2.0$
+
+- Exit signals:
+  - Close position when $|Z\text{-score}| < 0.5$
+  - Or after $1.5 \times \text{half-life}$ days
+  - Or hit 5% stop-loss
+
 ## Risk Management
 
 To ensure capital protection and stable performance, we include:
@@ -45,4 +72,4 @@ Statistical arbitrage strategies like ours benefit from the natural tendency of 
 
 ## Want to Learn More?
 
-Check out our [Data & Code](data.qmd) and [Results](results.qmd) pages to explore our full backtest, performance metrics, and visualizations.
+Check out our [Indicators](indicators.qmd) and [Results](results.qmd) pages to explore our full backtest, performance metrics, and visualizations.

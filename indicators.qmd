@@ -1,0 +1,38 @@
+---
+title: "Custom Indicators"
+---
+
+## VWAP
+
+$$
+\text{VWAP} = \frac{\sum (\text{Price} \times \text{Volume})}{\sum \text{Volume}}
+$$
+
+
+- Long if price > VWAP → bullish trend
+- Short if price < VWAP → bearish trend
+
+## Bollinger Bands
+
+- Band width measures volatility
+- Buy when price breaks above upper band
+- Sell when price breaks below lower band
+- Can combine with RSI
+
+## RSI (Relative Strength Index)
+
+- RSI > 50: Bullish, buy signal
+- RSI < 50: Bearish, sell signal
+- Filters weak momentum
+
+## Parabolic SAR
+
+- Confirms trend direction
+- Defines exit points
+- Reduces false signals with trailing stops
+
+## CMF (Chaikin Money Flow)
+
+- CMF > 0 → buy pressure
+- CMF < 0 → sell pressure
+- Combines with VWAP and RSI for confirmation

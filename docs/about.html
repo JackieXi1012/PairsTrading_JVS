@@ -67,6 +67,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -95,6 +124,14 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link active" href="./about.html" aria-current="page"> 
 <span class="menu-text">About</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./indicators.html"> 
+<span class="menu-text">Indicators</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./results.html"> 
+<span class="menu-text">Results</span></a>
+  </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -120,6 +157,12 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#background-motivation" id="toc-background-motivation" class="nav-link active" data-scroll-target="#background-motivation">Background &amp; Motivation</a></li>
   <li><a href="#strategy-design" id="toc-strategy-design" class="nav-link" data-scroll-target="#strategy-design">Strategy Design</a></li>
+  <li><a href="#mathematical-formulas" id="toc-mathematical-formulas" class="nav-link" data-scroll-target="#mathematical-formulas">Mathematical Formulas</a>
+  <ul class="collapse">
+  <li><a href="#asset-pair-selection" id="toc-asset-pair-selection" class="nav-link" data-scroll-target="#asset-pair-selection">1. Asset Pair Selection</a></li>
+  <li><a href="#signal-generation" id="toc-signal-generation" class="nav-link" data-scroll-target="#signal-generation">2. Signal Generation</a></li>
+  <li><a href="#trading-rules" id="toc-trading-rules" class="nav-link" data-scroll-target="#trading-rules">3. Trading Rules</a></li>
+  </ul></li>
   <li><a href="#risk-management" id="toc-risk-management" class="nav-link" data-scroll-target="#risk-management">Risk Management</a></li>
   <li><a href="#why-it-works" id="toc-why-it-works" class="nav-link" data-scroll-target="#why-it-works">Why It Works</a></li>
   <li><a href="#want-to-learn-more" id="toc-want-to-learn-more" class="nav-link" data-scroll-target="#want-to-learn-more">Want to Learn More?</a></li>
@@ -167,6 +210,41 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p>Volatility filtering is also applied: we only trade when the <strong>VIX &lt; 20</strong>, dynamically increasing thresholds in more volatile periods.</p>
 </section>
+<section id="mathematical-formulas" class="level2">
+<h2 class="anchored" data-anchor-id="mathematical-formulas">Mathematical Formulas</h2>
+<section id="asset-pair-selection" class="level3">
+<h3 class="anchored" data-anchor-id="asset-pair-selection">1. Asset Pair Selection</h3>
+<ul>
+<li>Using Pearson correlation coefficient to filter pairs with correlation &gt; 0.7</li>
+<li>Applying ADF cointegration test to confirm spread stationarity (p-value &lt; 0.05)</li>
+<li>Calculating half-life and prioritizing pairs with half-life between 5-25 days</li>
+</ul>
+</section>
+<section id="signal-generation" class="level3">
+<h3 class="anchored" data-anchor-id="signal-generation">2. Signal Generation</h3>
+<ul>
+<li><p>Daily log prices calculation: <span class="math display">\[\text{Log Price}_A = \log(\text{Price}_A)\]</span></p></li>
+<li><p>Spread calculation: <span class="math display">\[\text{Spread} = \text{Log Price}_A - \text{Log Price}_B\]</span></p></li>
+<li><p>Z-score calculation: <span class="math display">\[Z\text{-score} = \frac{\text{Spread} - \text{20-day Mean}}{\text{20-day Standard Deviation}}\]</span></p></li>
+</ul>
+</section>
+<section id="trading-rules" class="level3">
+<h3 class="anchored" data-anchor-id="trading-rules">3. Trading Rules</h3>
+<ul>
+<li>Entry signals:
+<ul>
+<li>Long-short pair when <span class="math inline">\(Z\text{-score} &gt; 2.0\)</span></li>
+<li>Short-long pair when <span class="math inline">\(Z\text{-score} &lt; -2.0\)</span></li>
+</ul></li>
+<li>Exit signals:
+<ul>
+<li>Close position when <span class="math inline">\(|Z\text{-score}| &lt; 0.5\)</span></li>
+<li>Or after <span class="math inline">\(1.5 \times \text{half-life}\)</span> days</li>
+<li>Or hit 5% stop-loss</li>
+</ul></li>
+</ul>
+</section>
+</section>
 <section id="risk-management" class="level2">
 <h2 class="anchored" data-anchor-id="risk-management">Risk Management</h2>
 <p>To ensure capital protection and stable performance, we include:</p>
@@ -185,7 +263,8 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="want-to-learn-more" class="level2">
 <h2 class="anchored" data-anchor-id="want-to-learn-more">Want to Learn More?</h2>
-<p>Check out our <a href="data.qmd">Data &amp; Code</a> and <a href="results.qmd">Results</a> pages to explore our full backtest, performance metrics, and visualizations.</p>
+<p>Check out our <a href="./indicators.html">Indicators</a> and <a href="./results.html">Results</a> pages to explore our full backtest, performance metrics, and visualizations.</p>
+
 
 
 </section>

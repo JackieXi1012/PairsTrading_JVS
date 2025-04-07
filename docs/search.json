@@ -1,5 +1,68 @@
 [
   {
+    "objectID": "indicators.html",
+    "href": "indicators.html",
+    "title": "Custom Indicators",
+    "section": "",
+    "text": "\\[\n\\text{VWAP} = \\frac{\\sum (\\text{Price} \\times \\text{Volume})}{\\sum \\text{Volume}}\n\\]\n\nLong if price &gt; VWAP → bullish trend\nShort if price &lt; VWAP → bearish trend"
+  },
+  {
+    "objectID": "indicators.html#vwap",
+    "href": "indicators.html#vwap",
+    "title": "Custom Indicators",
+    "section": "",
+    "text": "\\[\n\\text{VWAP} = \\frac{\\sum (\\text{Price} \\times \\text{Volume})}{\\sum \\text{Volume}}\n\\]\n\nLong if price &gt; VWAP → bullish trend\nShort if price &lt; VWAP → bearish trend"
+  },
+  {
+    "objectID": "indicators.html#bollinger-bands",
+    "href": "indicators.html#bollinger-bands",
+    "title": "Custom Indicators",
+    "section": "Bollinger Bands",
+    "text": "Bollinger Bands\n\nBand width measures volatility\nBuy when price breaks above upper band\nSell when price breaks below lower band\nCan combine with RSI"
+  },
+  {
+    "objectID": "indicators.html#rsi-relative-strength-index",
+    "href": "indicators.html#rsi-relative-strength-index",
+    "title": "Custom Indicators",
+    "section": "RSI (Relative Strength Index)",
+    "text": "RSI (Relative Strength Index)\n\nRSI &gt; 50: Bullish, buy signal\nRSI &lt; 50: Bearish, sell signal\nFilters weak momentum"
+  },
+  {
+    "objectID": "indicators.html#parabolic-sar",
+    "href": "indicators.html#parabolic-sar",
+    "title": "Custom Indicators",
+    "section": "Parabolic SAR",
+    "text": "Parabolic SAR\n\nConfirms trend direction\nDefines exit points\nReduces false signals with trailing stops"
+  },
+  {
+    "objectID": "indicators.html#cmf-chaikin-money-flow",
+    "href": "indicators.html#cmf-chaikin-money-flow",
+    "title": "Custom Indicators",
+    "section": "CMF (Chaikin Money Flow)",
+    "text": "CMF (Chaikin Money Flow)\n\nCMF &gt; 0 → buy pressure\nCMF &lt; 0 → sell pressure\nCombines with VWAP and RSI for confirmation"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Pairs Trading Strategy Overview",
+    "section": "",
+    "text": "Strategy Introduction\nOur strategy is based on Pairs Trading, a market-neutral approach designed to profit from pricing inefficiencies between two historically correlated assets. By balancing long and short positions simultaneously, we reduce overall market risk and rely on mean reversion to capture gains.\nWe identify trading pairs using:\n\nPearson correlation ≥ 0.7\nADF cointegration test with p-value &lt; 0.05\nHalf-life of mean reversion between 5–25 days\n\nOnce a pair is selected, we monitor its spread and calculate the Z-score:\n\\[Z\\text{-score} = \\frac{\\text{Spread} - \\text{20-day Mean}}{\\text{20-day Standard Deviation}}\\]\n\n\n\nSample Trading Pairs Table\n\n\n\nExample Pairs and Key Drivers\n\n\n\n\n\n\n\n\nCategory\nPairs\nCorrelation\nKeyDrivers\n\n\n\n\nSemiconductor\nAMD vs. NVIDIA\n&gt; 0.7\nGPU/CPU Demand\n\n\nCloud Computing\nMicrosoft vs. Amazon\n&gt; 0.7\nCloud Growth\n\n\nBanking\nJP Morgan vs. Bank of America\nMedium-High\nInterest Rates\n\n\nETF Strategy\nQQQ vs. SMH\n&gt; 0.7\nTech Performance"
+  },
+  {
+    "objectID": "results.html",
+    "href": "results.html",
+    "title": "Trade Results",
+    "section": "",
+    "text": "Date\nAMD_Price\nNVIDIA_Price\nLog_Spread\nZ_Score\n\n\n\n\n0\n2025-03-11\n96.76\n108.76\n-0.116910\n1.417985\n\n\n1\n2025-03-12\n100.79\n115.74\n-0.138307\n0.794952\n\n\n2\n2025-03-13\n98.11\n115.58\n-0.163874\n0.144990\n\n\n3\n2025-03-14\n100.97\n121.67\n-0.186489\n-0.441179\n\n\n4\n2025-03-17\n104.59\n119.53\n-0.133519\n0.831934\n\n\n5\n2025-03-18\n103.51\n115.43\n-0.108996\n1.310051\n\n\n6\n2025-03-19\n106.23\n117.52\n-0.101002\n1.347274\n\n\n7\n2025-03-20\n107.14\n118.53\n-0.101030\n1.216555\n\n\n8\n2025-03-21\n106.44\n117.70\n-0.100558\n1.109036\n\n\n9\n2025-03-24\n113.85\n121.41\n-0.064291\n1.719163\n\n\n10\n2025-03-25\n114.81\n120.69\n-0.049947\n1.784611\n\n\n11\n2025-03-26\n110.19\n113.76\n-0.031885\n1.967171\n\n\n12\n2025-03-27\n106.65\n111.43\n-0.043844\n1.535127\n\n\n13\n2025-03-28\n103.22\n109.67\n-0.060613\n1.148534\n\n\n14\n2025-03-31\n102.74\n108.38\n-0.053442\n1.190434\n\n\n15\n2025-04-01\n102.78\n110.15\n-0.069252\n0.734091\n\n\n16\n2025-04-02\n102.96\n110.42\n-0.069951\n0.641832\n\n\n17\n2025-04-03\n93.80\n101.80\n-0.081845\n0.314571\n\n\n18\n2025-04-04\n85.76\n94.31\n-0.095035\n-0.034728\n\n\n19\n2025-04-07\n82.97\n93.96\n-0.124390\n-0.721331"
+  },
+  {
+    "objectID": "results.html#pair-trading-signals-amd-vs-nvidia",
+    "href": "results.html#pair-trading-signals-amd-vs-nvidia",
+    "title": "Trade Results",
+    "section": "",
+    "text": "Date\nAMD_Price\nNVIDIA_Price\nLog_Spread\nZ_Score\n\n\n\n\n0\n2025-03-11\n96.76\n108.76\n-0.116910\n1.417985\n\n\n1\n2025-03-12\n100.79\n115.74\n-0.138307\n0.794952\n\n\n2\n2025-03-13\n98.11\n115.58\n-0.163874\n0.144990\n\n\n3\n2025-03-14\n100.97\n121.67\n-0.186489\n-0.441179\n\n\n4\n2025-03-17\n104.59\n119.53\n-0.133519\n0.831934\n\n\n5\n2025-03-18\n103.51\n115.43\n-0.108996\n1.310051\n\n\n6\n2025-03-19\n106.23\n117.52\n-0.101002\n1.347274\n\n\n7\n2025-03-20\n107.14\n118.53\n-0.101030\n1.216555\n\n\n8\n2025-03-21\n106.44\n117.70\n-0.100558\n1.109036\n\n\n9\n2025-03-24\n113.85\n121.41\n-0.064291\n1.719163\n\n\n10\n2025-03-25\n114.81\n120.69\n-0.049947\n1.784611\n\n\n11\n2025-03-26\n110.19\n113.76\n-0.031885\n1.967171\n\n\n12\n2025-03-27\n106.65\n111.43\n-0.043844\n1.535127\n\n\n13\n2025-03-28\n103.22\n109.67\n-0.060613\n1.148534\n\n\n14\n2025-03-31\n102.74\n108.38\n-0.053442\n1.190434\n\n\n15\n2025-04-01\n102.78\n110.15\n-0.069252\n0.734091\n\n\n16\n2025-04-02\n102.96\n110.42\n-0.069951\n0.641832\n\n\n17\n2025-04-03\n93.80\n101.80\n-0.081845\n0.314571\n\n\n18\n2025-04-04\n85.76\n94.31\n-0.095035\n-0.034728\n\n\n19\n2025-04-07\n82.97\n93.96\n-0.124390\n-0.721331"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About the Strategy",
@@ -21,6 +84,13 @@
     "text": "Strategy Design\nWe begin by screening for candidate pairs using:\n\nPearson Correlation ≥ 0.7 over a 1-year window\nCointegration verified by the Augmented Dickey-Fuller (ADF) test (p-value &lt; 0.05)\n\nFrom this universe, we select pairs like AMD vs. NVIDIA that meet the statistical requirements and have strong economic or industry logic.\nWe compute the Z-score of the price spread and define our signals as:\n\nEnter Long-Short: when Z-score &gt; 2.0 or &lt; –2.0\nExit: when Z-score reverts to between –0.5 and +0.5\n\nVolatility filtering is also applied: we only trade when the VIX &lt; 20, dynamically increasing thresholds in more volatile periods."
   },
   {
+    "objectID": "about.html#mathematical-formulas",
+    "href": "about.html#mathematical-formulas",
+    "title": "About the Strategy",
+    "section": "Mathematical Formulas",
+    "text": "Mathematical Formulas\n\n1. Asset Pair Selection\n\nUsing Pearson correlation coefficient to filter pairs with correlation &gt; 0.7\nApplying ADF cointegration test to confirm spread stationarity (p-value &lt; 0.05)\nCalculating half-life and prioritizing pairs with half-life between 5-25 days\n\n\n\n2. Signal Generation\n\nDaily log prices calculation: \\[\\text{Log Price}_A = \\log(\\text{Price}_A)\\]\nSpread calculation: \\[\\text{Spread} = \\text{Log Price}_A - \\text{Log Price}_B\\]\nZ-score calculation: \\[Z\\text{-score} = \\frac{\\text{Spread} - \\text{20-day Mean}}{\\text{20-day Standard Deviation}}\\]\n\n\n\n3. Trading Rules\n\nEntry signals:\n\nLong-short pair when \\(Z\\text{-score} &gt; 2.0\\)\nShort-long pair when \\(Z\\text{-score} &lt; -2.0\\)\n\nExit signals:\n\nClose position when \\(|Z\\text{-score}| &lt; 0.5\\)\nOr after \\(1.5 \\times \\text{half-life}\\) days\nOr hit 5% stop-loss"
+  },
+  {
     "objectID": "about.html#risk-management",
     "href": "about.html#risk-management",
     "title": "About the Strategy",
@@ -39,20 +109,6 @@
     "href": "about.html#want-to-learn-more",
     "title": "About the Strategy",
     "section": "Want to Learn More?",
-    "text": "Want to Learn More?\nCheck out our Data & Code and Results pages to explore our full backtest, performance metrics, and visualizations."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Market-Neutral Pairs Trading Strategy",
-    "section": "",
-    "text": "Our strategy is a market-neutral pairs trading approach designed to profit from relative mispricings between highly correlated stocks. By identifying asset pairs (e.g., AMD and NVIDIA) that exhibit historical cointegration, we aim to exploit the natural tendency of their price spread to revert to the mean. Using a one-year lookback window, we screen for pairs with high Pearson correlation (≥ 0.7) and statistically significant cointegration (ADF test p-value &lt; 0.05).\nTrades are triggered when the Z-score of the spread exceeds ±2.0 under low volatility (VIX &lt; 20), adjusted upwards in more volatile markets. We enter long-short positions accordingly—buying the undervalued stock and shorting the overvalued one—and exit upon Z-score reversion to ±0.5 or when time or stop-loss conditions are met.\nRisk is managed through dollar-neutral positioning, a strict 5% stop-loss, and diversification across 3–5 trading pairs. This systematic, data-driven approach allows us to generate alpha while minimizing exposure to market direction."
-  },
-  {
-    "objectID": "index.html#strategy-overview",
-    "href": "index.html#strategy-overview",
-    "title": "Market-Neutral Pairs Trading Strategy",
-    "section": "",
-    "text": "Our strategy is a market-neutral pairs trading approach designed to profit from relative mispricings between highly correlated stocks. By identifying asset pairs (e.g., AMD and NVIDIA) that exhibit historical cointegration, we aim to exploit the natural tendency of their price spread to revert to the mean. Using a one-year lookback window, we screen for pairs with high Pearson correlation (≥ 0.7) and statistically significant cointegration (ADF test p-value &lt; 0.05).\nTrades are triggered when the Z-score of the spread exceeds ±2.0 under low volatility (VIX &lt; 20), adjusted upwards in more volatile markets. We enter long-short positions accordingly—buying the undervalued stock and shorting the overvalued one—and exit upon Z-score reversion to ±0.5 or when time or stop-loss conditions are met.\nRisk is managed through dollar-neutral positioning, a strict 5% stop-loss, and diversification across 3–5 trading pairs. This systematic, data-driven approach allows us to generate alpha while minimizing exposure to market direction."
+    "text": "Want to Learn More?\nCheck out our Indicators and Results pages to explore our full backtest, performance metrics, and visualizations."
   }
 ]

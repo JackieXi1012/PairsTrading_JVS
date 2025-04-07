@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Market-Neutral Pairs Trading Strategy – Pairs Trading</title>
+<title>Pairs Trading Strategy Overview – Pairs Trading</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -67,6 +67,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -95,6 +124,14 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./indicators.html"> 
+<span class="menu-text">Indicators</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./results.html"> 
+<span class="menu-text">Results</span></a>
+  </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -110,7 +147,7 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -118,22 +155,22 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#strategy-overview" id="toc-strategy-overview" class="nav-link active" data-scroll-target="#strategy-overview">Strategy Overview</a></li>
+  <li><a href="#strategy-introduction" id="toc-strategy-introduction" class="nav-link active" data-scroll-target="#strategy-introduction">Strategy Introduction</a></li>
+  <li><a href="#sample-trading-pairs-table" id="toc-sample-trading-pairs-table" class="nav-link" data-scroll-target="#sample-trading-pairs-table">Sample Trading Pairs Table</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Market-Neutral Pairs Trading Strategy</h1>
-<p class="subtitle lead">FINTECH 533 Final Project</p>
+<h1 class="title">Pairs Trading Strategy Overview</h1>
 </div>
 
 
 
-<div class="quarto-title-meta column-page-left">
+<div class="quarto-title-meta">
 
     
   
@@ -145,12 +182,69 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="strategy-overview" class="level2">
-<h2 class="anchored" data-anchor-id="strategy-overview">Strategy Overview</h2>
-<p>Our strategy is a <strong>market-neutral pairs trading approach</strong> designed to profit from relative mispricings between highly correlated stocks. By identifying asset pairs (e.g., AMD and NVIDIA) that exhibit historical cointegration, we aim to exploit the natural tendency of their price spread to revert to the mean. Using a one-year lookback window, we screen for pairs with high Pearson correlation (≥ 0.7) and statistically significant cointegration (ADF test p-value &lt; 0.05).</p>
-<p>Trades are triggered when the Z-score of the spread exceeds ±2.0 under low volatility (VIX &lt; 20), adjusted upwards in more volatile markets. We enter long-short positions accordingly—buying the undervalued stock and shorting the overvalued one—and exit upon Z-score reversion to ±0.5 or when time or stop-loss conditions are met.</p>
-<p>Risk is managed through <strong>dollar-neutral positioning</strong>, a strict <strong>5% stop-loss</strong>, and diversification across 3–5 trading pairs. This systematic, data-driven approach allows us to generate alpha while minimizing exposure to market direction.</p>
+<section id="strategy-introduction" class="level1">
+<h1>Strategy Introduction</h1>
+<p>Our strategy is based on <strong>Pairs Trading</strong>, a market-neutral approach designed to profit from pricing inefficiencies between two historically correlated assets. By balancing long and short positions simultaneously, we reduce overall market risk and rely on <strong>mean reversion</strong> to capture gains.</p>
+<p>We identify trading pairs using:</p>
+<ul>
+<li><strong>Pearson correlation</strong> ≥ 0.7</li>
+<li><strong>ADF cointegration test</strong> with p-value &lt; 0.05</li>
+<li><strong>Half-life</strong> of mean reversion between 5–25 days</li>
+</ul>
+<p>Once a pair is selected, we monitor its <strong>spread</strong> and calculate the <strong>Z-score</strong>:</p>
+<p><span class="math display">\[Z\text{-score} = \frac{\text{Spread} - \text{20-day Mean}}{\text{20-day Standard Deviation}}\]</span></p>
 <hr>
+</section>
+<section id="sample-trading-pairs-table" class="level1">
+<h1>Sample Trading Pairs Table</h1>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Example Pairs and Key Drivers</caption>
+<colgroup>
+<col style="width: 21%">
+<col style="width: 40%">
+<col style="width: 16%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Category</th>
+<th style="text-align: left;">Pairs</th>
+<th style="text-align: left;">Correlation</th>
+<th style="text-align: left;">KeyDrivers</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Semiconductor</td>
+<td style="text-align: left;">AMD vs.&nbsp;NVIDIA</td>
+<td style="text-align: left;">&gt; 0.7</td>
+<td style="text-align: left;">GPU/CPU Demand</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cloud Computing</td>
+<td style="text-align: left;">Microsoft vs.&nbsp;Amazon</td>
+<td style="text-align: left;">&gt; 0.7</td>
+<td style="text-align: left;">Cloud Growth</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Banking</td>
+<td style="text-align: left;">JP Morgan vs.&nbsp;Bank of America</td>
+<td style="text-align: left;">Medium-High</td>
+<td style="text-align: left;">Interest Rates</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ETF Strategy</td>
+<td style="text-align: left;">QQQ vs.&nbsp;SMH</td>
+<td style="text-align: left;">&gt; 0.7</td>
+<td style="text-align: left;">Tech Performance</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
 
 
 </section>

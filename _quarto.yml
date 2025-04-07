@@ -11,7 +11,7 @@ website:
       - text: About
         file: about.qmd
       - text: Indicators
-        file: data.qmd
+        file: indicators.qmd
       - text: Results
         file: results.qmd
     right:
