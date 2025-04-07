@@ -7,7 +7,7 @@ format:
 jupyter: python3
 ---
 
-## 📉 Pair Trading Signals – AMD vs NVIDIA
+## Pair Trading Signals – AMD vs NVIDIA
 
 ```{python}
 #| echo: false

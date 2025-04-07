@@ -16,7 +16,7 @@ website:
         file: results.qmd
     right:
       - icon: github
-        href: https://github.com/JackieXi1012/PairsTrading_JVS
+        href: https://github.com/szhang95/PairsTrading_JVS
         aria-label: GitHub
 
 format:

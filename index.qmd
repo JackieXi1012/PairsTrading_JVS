@@ -1,24 +1,30 @@
 ---
 title: "Pairs Trading Strategy Overview"
 ---
+<p style="font-size: 20px;"><strong>Team Members:</strong> Sunny Zhang, Victoria Li, Jackie Xi</p>
 
-# Strategy Introduction
+<br>
 
-Our strategy is based on **Pairs Trading**, a market-neutral approach designed to profit from pricing inefficiencies between two historically correlated assets. By balancing long and short positions simultaneously, we reduce overall market risk and rely on **mean reversion** to capture gains.
+## Pairs Trading Strategy Overview
+**What is Pairs Trading?**
+Pairs Trading is a **market-neutral strategy** designed to profit from **temporary price divergences** between two historically correlated assets. Rather than betting on market direction, it aims to capture **statistical arbitrage opportunities** when the price relationship between two assets temporarily drifts from its historical mean.
 
-We identify trading pairs using:
+<br>
 
-- **Pearson correlation** ≥ 0.7
-- **ADF cointegration test** with p-value < 0.05
-- **Half-life** of mean reversion between 5–25 days
+This strategy offers a robust approach in volatile markets, by:
 
-Once a pair is selected, we monitor its **spread** and calculate the **Z-score**:
+- Targeting **mean reversion** in asset pairs
+- Utilizing **long-short positions** to hedge market-wide movements
+- Focusing on **relative pricing** rather than absolute market trends
 
-  $$Z\text{-score} = \frac{\text{Spread} - \text{20-day Mean}}{\text{20-day Standard Deviation}}$$
+<br>
 
+By identifying pairs that move together historically, the strategy capitalizes when their prices diverge and then revert — creating opportunities for **low-risk, data-driven trading**.
 ---
 
-# Sample Trading Pairs Table
+<br>
+
+## Sample Trading Pairs Table
 
 ```{r}
 #| echo: false
@@ -30,4 +36,20 @@ pairs <- data.frame(
 )
 
 knitr::kable(pairs, caption = "Example Pairs and Key Drivers")
+
 ```
+---
+<br>
+
+## Explore This Project
+
+- [About](about.qmd): Learn the motivation, design, and logic behind the strategy
+- [Indicators](indicators.qmd): Statistical tests and thresholds used
+- [Results](results.qmd): Sample pairs, backtesting results, and insights
+
+---
+
+<br><br>
+<p style="text-align: center; font-style: italic; font-size: 1.05em;"> “ In markets driven by noise, we trade on the signal. ” </p>
+
+<br><br>

@@ -46,21 +46,21 @@
     "href": "index.html",
     "title": "Pairs Trading Strategy Overview",
     "section": "",
-    "text": "Strategy Introduction\nOur strategy is based on Pairs Trading, a market-neutral approach designed to profit from pricing inefficiencies between two historically correlated assets. By balancing long and short positions simultaneously, we reduce overall market risk and rely on mean reversion to capture gains.\nWe identify trading pairs using:\n\nPearson correlation ≥ 0.7\nADF cointegration test with p-value &lt; 0.05\nHalf-life of mean reversion between 5–25 days\n\nOnce a pair is selected, we monitor its spread and calculate the Z-score:\n\\[Z\\text{-score} = \\frac{\\text{Spread} - \\text{20-day Mean}}{\\text{20-day Standard Deviation}}\\]\n\n\n\nSample Trading Pairs Table\n\n\n\nExample Pairs and Key Drivers\n\n\n\n\n\n\n\n\nCategory\nPairs\nCorrelation\nKeyDrivers\n\n\n\n\nSemiconductor\nAMD vs. NVIDIA\n&gt; 0.7\nGPU/CPU Demand\n\n\nCloud Computing\nMicrosoft vs. Amazon\n&gt; 0.7\nCloud Growth\n\n\nBanking\nJP Morgan vs. Bank of America\nMedium-High\nInterest Rates\n\n\nETF Strategy\nQQQ vs. SMH\n&gt; 0.7\nTech Performance"
+    "text": "Team Members: Sunny Zhang, Victoria Li, Jackie Xi"
   },
   {
     "objectID": "results.html",
     "href": "results.html",
     "title": "Trade Results",
     "section": "",
-    "text": "Date\nAMD_Price\nNVIDIA_Price\nLog_Spread\nZ_Score\n\n\n\n\n0\n2025-03-11\n96.76\n108.76\n-0.116910\n1.417985\n\n\n1\n2025-03-12\n100.79\n115.74\n-0.138307\n0.794952\n\n\n2\n2025-03-13\n98.11\n115.58\n-0.163874\n0.144990\n\n\n3\n2025-03-14\n100.97\n121.67\n-0.186489\n-0.441179\n\n\n4\n2025-03-17\n104.59\n119.53\n-0.133519\n0.831934\n\n\n5\n2025-03-18\n103.51\n115.43\n-0.108996\n1.310051\n\n\n6\n2025-03-19\n106.23\n117.52\n-0.101002\n1.347274\n\n\n7\n2025-03-20\n107.14\n118.53\n-0.101030\n1.216555\n\n\n8\n2025-03-21\n106.44\n117.70\n-0.100558\n1.109036\n\n\n9\n2025-03-24\n113.85\n121.41\n-0.064291\n1.719163\n\n\n10\n2025-03-25\n114.81\n120.69\n-0.049947\n1.784611\n\n\n11\n2025-03-26\n110.19\n113.76\n-0.031885\n1.967171\n\n\n12\n2025-03-27\n106.65\n111.43\n-0.043844\n1.535127\n\n\n13\n2025-03-28\n103.22\n109.67\n-0.060613\n1.148534\n\n\n14\n2025-03-31\n102.74\n108.38\n-0.053442\n1.190434\n\n\n15\n2025-04-01\n102.78\n110.15\n-0.069252\n0.734091\n\n\n16\n2025-04-02\n102.96\n110.42\n-0.069951\n0.641832\n\n\n17\n2025-04-03\n93.80\n101.80\n-0.081845\n0.314571\n\n\n18\n2025-04-04\n85.76\n94.31\n-0.095035\n-0.034728\n\n\n19\n2025-04-07\n82.97\n93.96\n-0.124390\n-0.721331"
+    "text": "Date\nAMD_Price\nNVIDIA_Price\nLog_Spread\nZ_Score\n\n\n\n\n0\n2025-03-11\n96.76\n108.76\n-0.116910\n1.417985\n\n\n1\n2025-03-12\n100.79\n115.74\n-0.138307\n0.794952\n\n\n2\n2025-03-13\n98.11\n115.58\n-0.163874\n0.144990\n\n\n3\n2025-03-14\n100.97\n121.67\n-0.186489\n-0.441179\n\n\n4\n2025-03-17\n104.59\n119.53\n-0.133519\n0.831934\n\n\n5\n2025-03-18\n103.51\n115.43\n-0.108996\n1.310051\n\n\n6\n2025-03-19\n106.23\n117.52\n-0.101002\n1.347274\n\n\n7\n2025-03-20\n107.14\n118.53\n-0.101030\n1.216555\n\n\n8\n2025-03-21\n106.44\n117.70\n-0.100558\n1.109036\n\n\n9\n2025-03-24\n113.85\n121.41\n-0.064291\n1.719163\n\n\n10\n2025-03-25\n114.81\n120.69\n-0.049947\n1.784611\n\n\n11\n2025-03-26\n110.19\n113.76\n-0.031885\n1.967171\n\n\n12\n2025-03-27\n106.65\n111.43\n-0.043844\n1.535127\n\n\n13\n2025-03-28\n103.22\n109.67\n-0.060613\n1.148534\n\n\n14\n2025-03-31\n102.74\n108.38\n-0.053442\n1.190434\n\n\n15\n2025-04-01\n102.78\n110.15\n-0.069252\n0.734091\n\n\n16\n2025-04-02\n102.96\n110.42\n-0.069951\n0.641832\n\n\n17\n2025-04-03\n93.80\n101.80\n-0.081845\n0.314571\n\n\n18\n2025-04-04\n85.76\n94.31\n-0.095035\n-0.034728\n\n\n19\n2025-04-07\n83.20\n97.30\n-0.156552\n-1.403266"
   },
   {
     "objectID": "results.html#pair-trading-signals-amd-vs-nvidia",
     "href": "results.html#pair-trading-signals-amd-vs-nvidia",
     "title": "Trade Results",
     "section": "",
-    "text": "Date\nAMD_Price\nNVIDIA_Price\nLog_Spread\nZ_Score\n\n\n\n\n0\n2025-03-11\n96.76\n108.76\n-0.116910\n1.417985\n\n\n1\n2025-03-12\n100.79\n115.74\n-0.138307\n0.794952\n\n\n2\n2025-03-13\n98.11\n115.58\n-0.163874\n0.144990\n\n\n3\n2025-03-14\n100.97\n121.67\n-0.186489\n-0.441179\n\n\n4\n2025-03-17\n104.59\n119.53\n-0.133519\n0.831934\n\n\n5\n2025-03-18\n103.51\n115.43\n-0.108996\n1.310051\n\n\n6\n2025-03-19\n106.23\n117.52\n-0.101002\n1.347274\n\n\n7\n2025-03-20\n107.14\n118.53\n-0.101030\n1.216555\n\n\n8\n2025-03-21\n106.44\n117.70\n-0.100558\n1.109036\n\n\n9\n2025-03-24\n113.85\n121.41\n-0.064291\n1.719163\n\n\n10\n2025-03-25\n114.81\n120.69\n-0.049947\n1.784611\n\n\n11\n2025-03-26\n110.19\n113.76\n-0.031885\n1.967171\n\n\n12\n2025-03-27\n106.65\n111.43\n-0.043844\n1.535127\n\n\n13\n2025-03-28\n103.22\n109.67\n-0.060613\n1.148534\n\n\n14\n2025-03-31\n102.74\n108.38\n-0.053442\n1.190434\n\n\n15\n2025-04-01\n102.78\n110.15\n-0.069252\n0.734091\n\n\n16\n2025-04-02\n102.96\n110.42\n-0.069951\n0.641832\n\n\n17\n2025-04-03\n93.80\n101.80\n-0.081845\n0.314571\n\n\n18\n2025-04-04\n85.76\n94.31\n-0.095035\n-0.034728\n\n\n19\n2025-04-07\n82.97\n93.96\n-0.124390\n-0.721331"
+    "text": "Date\nAMD_Price\nNVIDIA_Price\nLog_Spread\nZ_Score\n\n\n\n\n0\n2025-03-11\n96.76\n108.76\n-0.116910\n1.417985\n\n\n1\n2025-03-12\n100.79\n115.74\n-0.138307\n0.794952\n\n\n2\n2025-03-13\n98.11\n115.58\n-0.163874\n0.144990\n\n\n3\n2025-03-14\n100.97\n121.67\n-0.186489\n-0.441179\n\n\n4\n2025-03-17\n104.59\n119.53\n-0.133519\n0.831934\n\n\n5\n2025-03-18\n103.51\n115.43\n-0.108996\n1.310051\n\n\n6\n2025-03-19\n106.23\n117.52\n-0.101002\n1.347274\n\n\n7\n2025-03-20\n107.14\n118.53\n-0.101030\n1.216555\n\n\n8\n2025-03-21\n106.44\n117.70\n-0.100558\n1.109036\n\n\n9\n2025-03-24\n113.85\n121.41\n-0.064291\n1.719163\n\n\n10\n2025-03-25\n114.81\n120.69\n-0.049947\n1.784611\n\n\n11\n2025-03-26\n110.19\n113.76\n-0.031885\n1.967171\n\n\n12\n2025-03-27\n106.65\n111.43\n-0.043844\n1.535127\n\n\n13\n2025-03-28\n103.22\n109.67\n-0.060613\n1.148534\n\n\n14\n2025-03-31\n102.74\n108.38\n-0.053442\n1.190434\n\n\n15\n2025-04-01\n102.78\n110.15\n-0.069252\n0.734091\n\n\n16\n2025-04-02\n102.96\n110.42\n-0.069951\n0.641832\n\n\n17\n2025-04-03\n93.80\n101.80\n-0.081845\n0.314571\n\n\n18\n2025-04-04\n85.76\n94.31\n-0.095035\n-0.034728\n\n\n19\n2025-04-07\n83.20\n97.30\n-0.156552\n-1.403266"
   },
   {
     "objectID": "about.html",
@@ -110,5 +110,33 @@
     "title": "About the Strategy",
     "section": "Want to Learn More?",
     "text": "Want to Learn More?\nCheck out our Indicators and Results pages to explore our full backtest, performance metrics, and visualizations."
+  },
+  {
+    "objectID": "index.html#team-members",
+    "href": "index.html#team-members",
+    "title": "Pairs Trading Strategy Overview",
+    "section": "",
+    "text": "Sunny Zhang, Victoria Li, Jackie Xi"
+  },
+  {
+    "objectID": "index.html#pairs-trading-strategy-overview",
+    "href": "index.html#pairs-trading-strategy-overview",
+    "title": "Pairs Trading Strategy Overview",
+    "section": "Pairs Trading Strategy Overview",
+    "text": "Pairs Trading Strategy Overview\nWhat is Pairs Trading? Pairs Trading is a market-neutral strategy designed to profit from temporary price divergences between two historically correlated assets. Rather than betting on market direction, it aims to capture statistical arbitrage opportunities when the price relationship between two assets temporarily drifts from its historical mean.\n\nThis strategy offers a robust approach in volatile markets, by:\n\nTargeting mean reversion in asset pairs\nUtilizing long-short positions to hedge market-wide movements\nFocusing on relative pricing rather than absolute market trends\n\n\nBy identifying pairs that move together historically, the strategy capitalizes when their prices diverge and then revert — creating opportunities for low-risk, data-driven trading."
+  },
+  {
+    "objectID": "index.html#explore-this-project",
+    "href": "index.html#explore-this-project",
+    "title": "Pairs Trading Strategy Overview",
+    "section": "Explore This Project",
+    "text": "Explore This Project\n\nAbout: Learn the motivation, design, and logic behind the strategy\nIndicators: Statistical tests and thresholds used\nResults: Sample pairs, backtesting results, and insights\n\n\n\n\n“ In markets driven by noise, we trade on the signal. ”"
+  },
+  {
+    "objectID": "index.html#sample-trading-pairs-table",
+    "href": "index.html#sample-trading-pairs-table",
+    "title": "Pairs Trading Strategy Overview",
+    "section": "Sample Trading Pairs Table",
+    "text": "Sample Trading Pairs Table\n\n\n\nExample Pairs and Key Drivers\n\n\n\n\n\n\n\n\nCategory\nPairs\nCorrelation\nKeyDrivers\n\n\n\n\nSemiconductor\nAMD vs. NVIDIA\n&gt; 0.7\nGPU/CPU Demand\n\n\nCloud Computing\nMicrosoft vs. Amazon\n&gt; 0.7\nCloud Growth\n\n\nBanking\nJP Morgan vs. Bank of America\nMedium-High\nInterest Rates\n\n\nETF Strategy\nQQQ vs. SMH\n&gt; 0.7\nTech Performance"
   }
 ]
