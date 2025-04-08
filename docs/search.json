@@ -4,84 +4,84 @@
     "href": "indicators.html",
     "title": "Pair Trading Indicators",
     "section": "",
-    "text": "This document explains the key statistical indicators used in pair trading analysis. These indicators help identify suitable pairs, determine optimal entry and exit points, and manage risk."
+    "text": "Purpose: Measure the strength of linear relationship between two asset price series.\nHow:\n\nComputed using the Pearson correlation coefficient.\nInputs: Price series of both assets.\nOutputs: A value between -1 and 1.\n\nInterpretation:\n\nValues close to 1 indicate strong positive correlation.\nValues close to -1 indicate strong negative correlation.\nValues close to 0 indicate little or no correlation.\nFor pair trading, correlations above 0.7 are generally desirable.\n\n\n\n\nPurpose: Test for a long-term equilibrium relationship between two asset price series.\nHow:\n\nComputed using coint() from statsmodels.tsa.stattools.\nInputs: Price series of both assets.\nOutputs: Test statistic and p-value.\n\nInterpretation:\n\np-value &lt; 0.05: Reject the null hypothesis of no cointegration.\nA p-value below 0.05 suggests the pair is suitable for trading, indicating that prices may diverge temporarily but tend to revert to equilibrium.\n\n\n\n\nPurpose: Test whether the spread between two assets is stationary.\nHow:\n\nComputed using adfuller() from statsmodels.tsa.stattools.\nInput: Log spread between two assets (i.e. log price A - log price B).\nOutputs: Test statistic and p-value.\n\nInterpretation:\n\np-value &lt; 0.05: Reject the null hypothesis of non-stationarity.\nIndicates that the spread is stationary and likely to mean-revert.\nSuitable for pair trading when p &lt; 0.05.\n\n\n\n\nPurpose: Measure how quickly the spread reverts to its mean.\nHow:\n\nBased on the Ornstein-Uhlenbeck mean-reversion process.\nDerived from a regression of the spread change against its lagged value.\n\nFormula:\n\nRun an AR(1) regression on the spread series: \\[\n\\Delta \\text{Spread}_t = \\alpha + \\rho \\cdot \\text{Spread}_{t-1} + \\varepsilon_t\n\\]\nThen calculate the half-life using: \\[\n\\text{Half-life} = \\frac{-\\ln(2)}{\\rho}\n\\]\n\nInterpretation:\n\n5-25 days: Ideal half-life range for pair trading.\n&lt; 5 days: Very rapid mean reversion, may lead to frequent trading.\n25-60 days: Slower mean reversion, requiring longer holding periods.\n&gt; 60 days or negative: May not be suitable for pair trading."
   },
   {
     "objectID": "indicators.html#correlation-analysis",
     "href": "indicators.html#correlation-analysis",
     "title": "Pair Trading Indicators",
-    "section": "2.1 Correlation Analysis",
-    "text": "2.1 Correlation Analysis\nPurpose: Measure the strength of linear relationship between two asset price series.\nHow:\n\nComputed using the Pearson correlation coefficient.\nInputs: Price series of both assets.\nOutputs: A value between -1 and 1.\n\nInterpretation:\n\nValues close to 1 indicate strong positive correlation.\nValues close to -1 indicate strong negative correlation.\nValues close to 0 indicate little or no correlation.\nFor pair trading, correlations above 0.7 are generally desirable."
+    "section": "",
+    "text": "Purpose: Measure the strength of linear relationship between two asset price series.\nHow:\n\nComputed using the Pearson correlation coefficient.\nInputs: Price series of both assets.\nOutputs: A value between -1 and 1.\n\nInterpretation:\n\nValues close to 1 indicate strong positive correlation.\nValues close to -1 indicate strong negative correlation.\nValues close to 0 indicate little or no correlation.\nFor pair trading, correlations above 0.7 are generally desirable."
   },
   {
     "objectID": "indicators.html#cointegration-test",
     "href": "indicators.html#cointegration-test",
     "title": "Pair Trading Indicators",
-    "section": "2.2 Cointegration Test",
-    "text": "2.2 Cointegration Test\nPurpose: Test for a long-term equilibrium relationship between two asset price series.\nHow:\n\nComputed using coint() from statsmodels.tsa.stattools.\nInputs: Price series of both assets.\nOutputs: Test statistic and p-value.\n\nInterpretation:\n\np-value &lt; 0.05: Reject the null hypothesis of no cointegration.\nA p-value below 0.05 suggests the pair is suitable for trading, indicating that prices may diverge temporarily but tend to revert to equilibrium."
+    "section": "",
+    "text": "Purpose: Test for a long-term equilibrium relationship between two asset price series.\nHow:\n\nComputed using coint() from statsmodels.tsa.stattools.\nInputs: Price series of both assets.\nOutputs: Test statistic and p-value.\n\nInterpretation:\n\np-value &lt; 0.05: Reject the null hypothesis of no cointegration.\nA p-value below 0.05 suggests the pair is suitable for trading, indicating that prices may diverge temporarily but tend to revert to equilibrium."
   },
   {
     "objectID": "indicators.html#augmented-dickey-fuller-adf-test",
     "href": "indicators.html#augmented-dickey-fuller-adf-test",
     "title": "Pair Trading Indicators",
-    "section": "2.3 Augmented Dickey-Fuller (ADF) Test",
-    "text": "2.3 Augmented Dickey-Fuller (ADF) Test\nPurpose: Test whether the spread between two assets is stationary.\nHow:\n\nComputed using adfuller() from statsmodels.tsa.stattools.\nInput: Log spread between two assets (i.e. log price A - log price B).\nOutputs: Test statistic and p-value.\n\nInterpretation:\n\np-value &lt; 0.05: Reject the null hypothesis of non-stationarity.\nIndicates that the spread is stationary and likely to mean-revert.\nSuitable for pair trading when p &lt; 0.05."
+    "section": "",
+    "text": "Purpose: Test whether the spread between two assets is stationary.\nHow:\n\nComputed using adfuller() from statsmodels.tsa.stattools.\nInput: Log spread between two assets (i.e. log price A - log price B).\nOutputs: Test statistic and p-value.\n\nInterpretation:\n\np-value &lt; 0.05: Reject the null hypothesis of non-stationarity.\nIndicates that the spread is stationary and likely to mean-revert.\nSuitable for pair trading when p &lt; 0.05."
   },
   {
     "objectID": "indicators.html#half-life-calculation",
     "href": "indicators.html#half-life-calculation",
     "title": "Pair Trading Indicators",
-    "section": "2.4 Half-Life Calculation",
-    "text": "2.4 Half-Life Calculation\nPurpose: Measure how quickly the spread reverts to its mean.\nHow:\n\nBased on the Ornstein-Uhlenbeck mean-reversion process.\nDerived from a regression of the spread change against its lagged value.\n\nFormula:\n\nRun an AR(1) regression on the spread series: \\[\n\\Delta \\text{Spread}_t = \\alpha + \\rho \\cdot \\text{Spread}_{t-1} + \\varepsilon_t\n\\]\nThen calculate the half-life using: \\[\n\\text{Half-life} = \\frac{-\\ln(2)}{\\rho}\n\\]\n\nInterpretation:\n\n5-25 days: Ideal half-life range for pair trading.\n&lt; 5 days: Very rapid mean reversion, may lead to frequent trading.\n25-60 days: Slower mean reversion, requiring longer holding periods.\n&gt; 60 days or negative: May not be suitable for pair trading."
+    "section": "",
+    "text": "Purpose: Measure how quickly the spread reverts to its mean.\nHow:\n\nBased on the Ornstein-Uhlenbeck mean-reversion process.\nDerived from a regression of the spread change against its lagged value.\n\nFormula:\n\nRun an AR(1) regression on the spread series: \\[\n\\Delta \\text{Spread}_t = \\alpha + \\rho \\cdot \\text{Spread}_{t-1} + \\varepsilon_t\n\\]\nThen calculate the half-life using: \\[\n\\text{Half-life} = \\frac{-\\ln(2)}{\\rho}\n\\]\n\nInterpretation:\n\n5-25 days: Ideal half-life range for pair trading.\n&lt; 5 days: Very rapid mean reversion, may lead to frequent trading.\n25-60 days: Slower mean reversion, requiring longer holding periods.\n&gt; 60 days or negative: May not be suitable for pair trading."
   },
   {
     "objectID": "indicators.html#z-score",
     "href": "indicators.html#z-score",
     "title": "Pair Trading Indicators",
-    "section": "3.1 Z-Score",
-    "text": "3.1 Z-Score\nPurpose: Measure how many standard deviations the current spread deviates from its mean.\nHow:\n\nBased on the rolling mean and standard deviation of the spread.\nFormula: \\[\n\\text{Z-score} = \\frac{\\text{Current Spread} - \\text{Rolling Mean}}{\\text{Rolling Standard Deviation}}\n\\]\nTypically uses a 20-day rolling window.\n\nInterpretation:\n\n|Z-score| &gt; 2: Typical entry signal threshold.\n|Z-score| &lt; 0.5: Typical exit signal threshold.\nHigh absolute Z-score values indicate extreme divergence from the normal relationship."
+    "section": "2.1 Z-Score",
+    "text": "2.1 Z-Score\nPurpose: Measure how many standard deviations the current spread deviates from its mean.\nHow:\n\nBased on the rolling mean and standard deviation of the spread.\nFormula: \\[\n\\text{Z-score} = \\frac{\\text{Current Spread} - \\text{Rolling Mean}}{\\text{Rolling Standard Deviation}}\n\\]\nTypically uses a 20-day rolling window.\n\nInterpretation:\n\n|Z-score| &gt; 2: Typical entry signal threshold.\n|Z-score| &lt; 0.5: Typical exit signal threshold.\nHigh absolute Z-score values indicate extreme divergence from the normal relationship."
   },
   {
     "objectID": "indicators.html#vix-adjusted-thresholds",
     "href": "indicators.html#vix-adjusted-thresholds",
     "title": "Pair Trading Indicators",
-    "section": "3.2 VIX-Adjusted Thresholds",
-    "text": "3.2 VIX-Adjusted Thresholds\nPurpose: Adapt entry thresholds based on market volatility.\nHow:\n\nUses VIX index levels to adjust the Z-score thresholds.\nHigher VIX values lead to higher threshold requirements.\n\nInterpretation:\n\nVIX &lt; 20: Entry threshold = 2.0\nVIX 20-25: Entry threshold = 2.25\nVIX 25-30: Entry threshold = 2.5\nVIX &gt; 30: Entry threshold = 3.0\nA higher threshold during periods of high volatility reduces false signals."
+    "section": "2.2 VIX-Adjusted Thresholds",
+    "text": "2.2 VIX-Adjusted Thresholds\nPurpose: Adapt entry thresholds based on market volatility.\nHow:\n\nUses VIX index levels to adjust the Z-score thresholds.\nHigher VIX values lead to higher threshold requirements.\n\nInterpretation:\n\nVIX &lt; 20: Entry threshold = 2.0\nVIX 20-25: Entry threshold = 2.25\nVIX 25-30: Entry threshold = 2.5\nVIX &gt; 30: Entry threshold = 3.0\nA higher threshold during periods of high volatility reduces false signals."
   },
   {
     "objectID": "indicators.html#entry-signals",
     "href": "indicators.html#entry-signals",
     "title": "Pair Trading Indicators",
-    "section": "4.1 Entry Signals",
-    "text": "4.1 Entry Signals\nPurpose: Determine when to enter pair trades.\nHow:\n\nBased on the Z-score crossing the adjusted threshold values.\nSignal Examples:\n\nZ-score &gt; threshold: Short asset A, Long asset B.\nZ-score &lt; -threshold: Long asset A, Short asset B.\n\n\nInterpretation:\n\nA positive Z-score indicates that the spread is wider than normal.\nA negative Z-score indicates that the spread is narrower than normal.\nA large absolute Z-score suggests a higher probability of mean reversion."
+    "section": "3.1 Entry Signals",
+    "text": "3.1 Entry Signals\nPurpose: Determine when to enter pair trades.\nHow:\n\nBased on the Z-score crossing the adjusted threshold values.\nSignal Examples:\n\nZ-score &gt; threshold: Short asset A, Long asset B.\nZ-score &lt; -threshold: Long asset A, Short asset B.\n\n\nInterpretation:\n\nA positive Z-score indicates that the spread is wider than normal.\nA negative Z-score indicates that the spread is narrower than normal.\nA large absolute Z-score suggests a higher probability of mean reversion."
   },
   {
     "objectID": "indicators.html#exit-signals",
     "href": "indicators.html#exit-signals",
     "title": "Pair Trading Indicators",
-    "section": "4.2 Exit Signals",
-    "text": "4.2 Exit Signals\nPurpose: Determine when to exit pair trades.\nHow:\n\nPrimary exit: When the Z-score returns to the ±0.5 range.\nSecondary exits: Based on time-based or risk-based conditions.\n\nAdditional Exit Conditions:\n\nMaximum holding time: 1.5 × half-life days.\nStop-loss: 5% divergence between the pair."
+    "section": "3.2 Exit Signals",
+    "text": "3.2 Exit Signals\nPurpose: Determine when to exit pair trades.\nHow:\n\nPrimary exit: When the Z-score returns to the ±0.5 range.\nSecondary exits: Based on time-based or risk-based conditions.\n\nAdditional Exit Conditions:\n\nMaximum holding time: 1.5 × half-life days.\nStop-loss: 5% divergence between the pair."
   },
   {
     "objectID": "indicators.html#trade-success-rate",
     "href": "indicators.html#trade-success-rate",
     "title": "Pair Trading Indicators",
-    "section": "5.1 Trade Success Rate",
-    "text": "5.1 Trade Success Rate\nPurpose: Measure the percentage of profitable trades.\nHow:\n\nCalculated as: \\[\n\\text{Trade Success Rate} = \\left(\\frac{\\text{Number of Profitable Trades}}{\\text{Total Number of Trades}}\\right) \\times 100\\%\n\\]\n\nInterpretation:\n\nHigher percentages indicate a more reliable strategy.\nShould be evaluated alongside the average profit or loss per trade."
+    "section": "4.1 Trade Success Rate",
+    "text": "4.1 Trade Success Rate\nPurpose: Measure the percentage of profitable trades.\nHow:\n\nCalculated as: \\[\n\\text{Trade Success Rate} = \\left(\\frac{\\text{Number of Profitable Trades}}{\\text{Total Number of Trades}}\\right) \\times 100\\%\n\\]\n\nInterpretation:\n\nHigher percentages indicate a more reliable strategy.\nShould be evaluated alongside the average profit or loss per trade."
   },
   {
     "objectID": "indicators.html#total-return",
     "href": "indicators.html#total-return",
     "title": "Pair Trading Indicators",
-    "section": "5.2 Total Return",
-    "text": "5.2 Total Return\nPurpose: Measure the overall profitability of the strategy.\nHow:\n\nCalculated as: \\[\n\\text{Total Return} = \\left(\\frac{\\text{Final Portfolio Value} - \\text{Initial Portfolio Value}}{\\text{Initial Portfolio Value}}\\right) \\times 100\\%\n\\]\n\nInterpretation:\n\nPositive values indicate a profitable strategy.\nShould be compared to benchmark returns over the same period."
+    "section": "4.2 Total Return",
+    "text": "4.2 Total Return\nPurpose: Measure the overall profitability of the strategy.\nHow:\n\nCalculated as: \\[\n\\text{Total Return} = \\left(\\frac{\\text{Final Portfolio Value} - \\text{Initial Portfolio Value}}{\\text{Initial Portfolio Value}}\\right) \\times 100\\%\n\\]\n\nInterpretation:\n\nPositive values indicate a profitable strategy.\nShould be compared to benchmark returns over the same period."
   },
   {
     "objectID": "indicators.html#summary-of-screening-criteria",
     "href": "indicators.html#summary-of-screening-criteria",
     "title": "Pair Trading Indicators",
-    "section": "5.3 Summary of Screening Criteria",
-    "text": "5.3 Summary of Screening Criteria\n\n\n\n\n\n\n\n\n\nIndicator\nTest\nThreshold\nPurpose\n\n\n\n\nCorrelation\nPearson\n( &gt; 0.7 )\nCo-movement detection\n\n\nCointegration\nCoint\np &lt; 0.05\nLong-term equilibrium\n\n\nADF Test\nADF\np &lt; 0.05\nMean reversion confirmation\n\n\nHalf-Life\nAR(1)\n5–60 days\nTimeframe viability\n\n\nZ-Score\nRolling\n±2.0 to ±3.0\nEntry/exit signal strength\n\n\n\n\n\nThese indicators form the statistical backbone of our market-neutral pairs trading framework. Each filter adds a layer of validation to improve trade quality and reduce noise."
+    "section": "4.3 Summary of Screening Criteria",
+    "text": "4.3 Summary of Screening Criteria\n\n\n\n\n\n\n\n\n\nIndicator\nTest\nThreshold\nPurpose\n\n\n\n\nCorrelation\nPearson\n( &gt; 0.7 )\nCo-movement detection\n\n\nCointegration\nCoint\np &lt; 0.05\nLong-term equilibrium\n\n\nADF Test\nADF\np &lt; 0.05\nMean reversion confirmation\n\n\nHalf-Life\nAR(1)\n5–60 days\nTimeframe viability\n\n\nZ-Score\nRolling\n±2.0 to ±3.0\nEntry/exit signal strength\n\n\n\n\n\nThese indicators form the statistical backbone of our market-neutral pairs trading framework. Each filter adds a layer of validation to improve trade quality and reduce noise."
   },
   {
     "objectID": "sample_pairs.html",

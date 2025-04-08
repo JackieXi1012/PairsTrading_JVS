@@ -9,10 +9,6 @@ format:
     code-fold: true
 ---
 
-# Introduction
-
-This document explains the key statistical indicators used in pair trading analysis. These indicators help identify suitable pairs, determine optimal entry and exit points, and manage risk.
-
 # Statistical Indicators
 
 ## Correlation Analysis
