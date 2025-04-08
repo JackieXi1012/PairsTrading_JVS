@@ -12,8 +12,8 @@ website:
         file: about.qmd
       - text: Indicators
         file: indicators.qmd
-      - text: Results
-        file: results.qmd
+      - text: Sample pairs
+        file: sample_pairs.qmd
     right:
       - icon: github
         href: https://github.com/szhang95/PairsTrading_JVS

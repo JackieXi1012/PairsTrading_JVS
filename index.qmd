@@ -44,8 +44,8 @@ knitr::kable(pairs, caption = "Example Pairs and Key Drivers")
 ## Explore This Project
 
 - [About](about.qmd): Learn the motivation, design, and logic behind the strategy
-- [Indicators](indicators.qmd): Statistical tests and thresholds used
-- [Results](results.qmd): Sample pairs, backtesting results, and insights
+- [Indicators](indicators.qmd): Statistical indicators, trading signals, and performance metrics
+- [Sample pairs](sample_pairs.qmd): Sample pairs, backtesting results, and insights
 
 ---
 

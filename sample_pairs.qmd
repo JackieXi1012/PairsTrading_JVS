@@ -1,6 +1,3 @@
-# Updated code for results.qmd file
-# This fixes the Statistical Analysis section and improves organization
-
 ---
 title: "Pairs Trading Analysis: AZO vs ORLY"
 format:
@@ -10,8 +7,12 @@ format:
 jupyter: python3
 ---
 
-## Pair Trading Signals – AZO vs ORLY
+### Stock A: AZO | Stock B: ORLY
+**AZO (AutoZone Inc)** is a leading retailer in the automotive aftermarket that specializes in replacement parts, accessories, and maintenance products for vehicles.
 
+**ORLY (O'Reilly Automotive Inc)** is a major distributor of automotive replacement parts, tools, supplies, and equipment, serving both professional service providers and retail customers.
+
+## Important Values
 ```{python}
 #| echo: false
 import numpy as np
@@ -442,7 +443,7 @@ else:
     display(display_blotter)
 ```
 
-### Ledger (Account Daily Status)
+### Ledger (Account Daily Status--With active position)
 
 ```{python}
 #| echo: false
@@ -459,11 +460,30 @@ display_ledger = display_ledger[['date', 'position', 'cash',
                                 f'{STOCK_B_SYMBOL} Price',
                                 'Portfolio Value']]
 
+display_ledger = display_ledger[display_ledger['position'] != 0]
+
 for col in ['cash', f'{STOCK_A_SYMBOL} Price', f'{STOCK_B_SYMBOL} Price', 'Portfolio Value']:
     display_ledger[col] = display_ledger[col].map('${:,.2f}'.format)
 
-print("Ledger (first 10 rows):")
-display(display_ledger.head(10))
+
+display(display_ledger)
+
+last_row = ledger.iloc[[-1]].copy()
+
+# Rename columns for clarity as above
+last_row = last_row.rename(columns={
+    'mark_A': f'{STOCK_A_SYMBOL} Price',
+    'mark_B': f'{STOCK_B_SYMBOL} Price',
+    'mkt_value': 'Portfolio Value'
+})
+
+last_row = last_row[['date', 'position', 'cash', f'{STOCK_A_SYMBOL} Price', f'{STOCK_B_SYMBOL} Price', 'Portfolio Value']]
+
+for col in ['cash', f'{STOCK_A_SYMBOL} Price', f'{STOCK_B_SYMBOL} Price', 'Portfolio Value']:
+    last_row[col] = last_row[col].map('${:,.2f}'.format)
+
+print("\nLast date of this trading period:")
+display(last_row)
 ```
 
 ### Performance Metrics
