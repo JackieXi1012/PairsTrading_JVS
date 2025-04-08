@@ -130,12 +130,12 @@ def calculate_half_life(spread):
     # Set up regression model: ΔSpread_t = α + ρ*Spread_{t-1} + ε_t
     spread_lag = sm.add_constant(spread_lag)
 
-    # Run OLS regression
-    model = sm.OLS(spread_diff[1:], spread_lag[1:])
+    # Run OLS regression - FIX: Use .iloc[] for positional indexing
+    model = sm.OLS(spread_diff.iloc[1:], spread_lag.iloc[1:])
     results = model.fit()
 
-    # Get coefficient for Spread_{t-1} (ρ)
-    rho = results.params[1]
+    # Get coefficient for Spread_{t-1} (ρ) - FIX: Use .iloc[] for positional indexing
+    rho = results.params.iloc[1]
 
     # Calculate half-life: t_{1/2} = -ln(2)/ln(1+ρ)
     if rho >= 0:  # No mean reversion
@@ -146,6 +146,22 @@ def calculate_half_life(spread):
     return half_life, results, rho
 
 half_life, regression_results, rho = calculate_half_life(data['Log_Spread'])
+
+suitable_count = 0
+
+if correlation >= 0.7:
+    suitable_count += 1
+if pvalue < 0.05 or adf_result[1] < 0.05:
+    suitable_count += 1
+if 5 <= half_life <= 60:
+    suitable_count += 1
+
+if suitable_count == 3:
+    print(f"\n{STOCK_A_SYMBOL} and {STOCK_B_SYMBOL} are very suitable for pairs trading, meeting all test conditions")
+elif suitable_count == 2:
+    print(f"\n{STOCK_A_SYMBOL} and {STOCK_B_SYMBOL} are somewhat suitable for pairs trading, meeting most test conditions")
+else:
+    print(f"\n{STOCK_A_SYMBOL} and {STOCK_B_SYMBOL} may not be suitable for pairs trading, failing to meet most test conditions")
 
 print(f"\nMean Reversion Analysis:")
 print(f"Regression coefficient (ρ): {rho:.4f}")
@@ -226,7 +242,6 @@ print(f"Trading period length: {period_length_days} days")
 
 # Initialize blotter (each row represents a trading period)
 trading_periods = data['trading_period'].unique()[1:]  # Start from the second trading period
-print(f"Number of trading periods: {len(trading_periods)}")
 
 blotter = pd.DataFrame({
     'trading_period': trading_periods,
@@ -258,8 +273,6 @@ ledger = pd.DataFrame({
     'mark_B': data[data['trading_period'] > first_period]['Stock_B_Price'].values,
     'mkt_value': 0.0
 })
-
-print(f"Number of ledger rows: {len(ledger)}")
 
 # Set initial parameters
 initial_cash = 1000000  # Initial capital $1M
