@@ -1,3 +1,6 @@
+# Updated code for results.qmd file
+# This fixes the Statistical Analysis section and improves organization
+
 ---
 title: "Pairs Trading Analysis: AZO vs ORLY"
 format:
@@ -19,31 +22,32 @@ import statsmodels.api as sm
 from statsmodels.tsa.stattools import adfuller, coint
 import matplotlib.pyplot as plt
 
-STOCK1_SYMBOL = "AZO"
-STOCK2_SYMBOL = "ORLY"
+# Clearly define stock A and stock B
+STOCK_A_SYMBOL = "AZO" # AutoZone Inc
+STOCK_B_SYMBOL = "ORLY" # O'Reilly Automotive Inc
 
 # Define contracts
-stock1 = sb.Contract({'symbol': STOCK1_SYMBOL, 'secType': "STK", 'exchange': "SMART", 'currency': "USD"})
-stock2 = sb.Contract({'symbol': STOCK2_SYMBOL, 'secType': "STK", 'exchange': "SMART", 'currency': "USD"})
+stock_A = sb.Contract({'symbol': STOCK_A_SYMBOL, 'secType': "STK", 'exchange': "SMART", 'currency': "USD"})
+stock_B = sb.Contract({'symbol': STOCK_B_SYMBOL, 'secType': "STK", 'exchange': "SMART", 'currency': "USD"})
 
 # Fetch data
-stock1_data = sb.fetch_historical_data(contract=stock1, barSizeSetting="1 day", durationStr="1 Y")['hst_dta']
-stock2_data = sb.fetch_historical_data(contract=stock2, barSizeSetting="1 day", durationStr="1 Y")['hst_dta']
+stock_A_data = sb.fetch_historical_data(contract=stock_A, barSizeSetting="1 day", durationStr="1 Y")['hst_dta']
+stock_B_data = sb.fetch_historical_data(contract=stock_B, barSizeSetting="1 day", durationStr="1 Y")['hst_dta']
 
 # Extract or fallback to generated dates
 try:
-    date_column = next((col for col in ['date', 'time'] if col in stock1_data.columns), None)
+    date_column = next((col for col in ['date', 'time'] if col in stock_A_data.columns), None)
     if not date_column:
-        date_column = [col for col in stock1_data.columns if 'date' in col.lower() or 'time' in col.lower()][0]
+        date_column = [col for col in stock_A_data.columns if 'date' in col.lower() or 'time' in col.lower()][0]
     data = pd.DataFrame({
-        'Date': pd.to_datetime(stock1_data[date_column]),
-        'Stock1_Price': stock1_data['close'],
-        'Stock2_Price': stock2_data['close']
+        'Date': pd.to_datetime(stock_A_data[date_column]),
+        'Stock_A_Price': stock_A_data['close'],
+        'Stock_B_Price': stock_B_data['close']
     })
 except:
     data = pd.DataFrame({
-        'Stock1_Price': stock1_data['close'],
-        'Stock2_Price': stock2_data['close']
+        'Stock_A_Price': stock_A_data['close'],
+        'Stock_B_Price': stock_B_data['close']
     })
     end_date = datetime.datetime.now()
     start_date = end_date - datetime.timedelta(days=365)
@@ -54,15 +58,15 @@ except:
 data['Date'] = pd.to_datetime(data['Date'])
 
 # Calculate metrics
-data['Log_Spread'] = np.log(data['Stock1_Price']) - np.log(data['Stock2_Price'])
+data['Log_Spread'] = np.log(data['Stock_A_Price']) - np.log(data['Stock_B_Price'])
 data['roll_mean'] = data['Log_Spread'].rolling(window=20).mean()
 data['roll_std'] = data['Log_Spread'].rolling(window=20).std()
 data['Z_Score'] = (data['Log_Spread'] - data['roll_mean']) / data['roll_std']
 
 # Prepare for output
-results_df = data[['Date', 'Stock1_Price', 'Stock2_Price', 'Log_Spread', 'Z_Score']].tail(20)
+results_df = data[['Date', 'Stock_A_Price', 'Stock_B_Price', 'Log_Spread', 'Z_Score']].tail(20)
 results_df['Date'] = pd.to_datetime(results_df['Date'])
-results_df = results_df.round({'Stock1_Price': 2, 'Stock2_Price': 2, 'Log_Spread': 6, 'Z_Score': 6})
+results_df = results_df.round({'Stock_A_Price': 2, 'Stock_B_Price': 2, 'Log_Spread': 6, 'Z_Score': 6})
 results_df = results_df.sort_values(by="Date").reset_index(drop=True)
 results_df
 ```
@@ -75,22 +79,42 @@ results_df
 data = data.sort_values('Date').reset_index(drop=True)
 
 # Calculate correlation
-correlation = data['Stock1_Price'].corr(data['Stock2_Price'])
+correlation = data['Stock_A_Price'].corr(data['Stock_B_Price'])
+
+# Print results in a clean, consistent format that will display properly
 print(f"Correlation Analysis:")
 print(f"Pearson correlation coefficient: {correlation:.4f}")
+
+# Define correlation strength
 if correlation >= 0.7:
-    print("Conclusion: Strong correlation (≥0.7), suitable for pairs trading\n")
+    correlation_conclusion = "Strong correlation (≥0.7), suitable for pairs trading"
 elif correlation >= 0.5:
-    print("Conclusion: Moderate correlation (0.5-0.7), potentially suitable for pairs trading\n")
+    correlation_conclusion = "Moderate correlation (0.5-0.7), potentially suitable for pairs trading"
 else:
-    print("Conclusion: Weak correlation (<0.5), not very suitable for pairs trading\n")
+    correlation_conclusion = "Weak correlation (<0.5), not very suitable for pairs trading"
+
+print(f"Conclusion: {correlation_conclusion}")
 
 # Cointegration Test
-score, pvalue, _ = coint(data['Stock1_Price'], data['Stock2_Price'])
+score, pvalue, _ = coint(data['Stock_A_Price'], data['Stock_B_Price'])
+print(f"\nCointegration Test:")
+print(f"p-value: {pvalue:.4f}")
+
+if pvalue < 0.05:
+    print(f"Conclusion: Pair is cointegrated (p-value < 0.05)")
+else:
+    print(f"Conclusion: Pair is not cointegrated (p-value >= 0.05)")
 
 # ADF test
 adf_result = adfuller(data['Log_Spread'].dropna())
+print(f"\nAugmented Dickey-Fuller Test:")
+print(f"ADF Statistic: {adf_result[0]:.4f}")
+print(f"p-value: {adf_result[1]:.4f}")
 
+if adf_result[1] < 0.05:
+    print(f"Conclusion: Spread is stationary (p-value < 0.05)")
+else:
+    print(f"Conclusion: Spread is not stationary (p-value >= 0.05)")
 
 # Half-life Calculation
 def calculate_half_life(spread):
@@ -118,12 +142,17 @@ def calculate_half_life(spread):
     else:
         half_life = -np.log(2) / rho
 
-    return half_life, results
+    return half_life, results, rho
 
-half_life, regression_results = calculate_half_life(data['Log_Spread'])
+half_life, regression_results, rho = calculate_half_life(data['Log_Spread'])
+
+print(f"\nMean Reversion Analysis:")
+print(f"Regression coefficient (ρ): {rho:.4f}")
+print(f"Half-life: {half_life:.2f} days")
 
 # Set maximum holding time
 max_holding_time = int(1.5 * half_life) if half_life < 100 else 20
+print(f"Recommended maximum holding time: {max_holding_time} days")
 ```
 
 ## Trading Strategy Implementation
@@ -154,7 +183,7 @@ if has_vix:
     data['VIX'] = vix_data['close']
 else:
     # If no VIX data, use a simple estimate of price volatility
-    data['VIX'] = data['Stock1_Price'].pct_change().rolling(20).std() * 100
+    data['VIX'] = data['Stock_A_Price'].pct_change().rolling(20).std() * 100
     data['VIX'].fillna(15, inplace=True)  # Use 15 as default value
 
 # Adjust thresholds based on VIX
@@ -184,8 +213,8 @@ data = define_trading_periods(data, period_length_days)
 
 # Generate trading signals
 data['signal'] = 0
-data.loc[data['Z_Score'] > data['threshold'], 'signal'] = -1  # Short Stock1, Long Stock2
-data.loc[data['Z_Score'] < -data['threshold'], 'signal'] = 1  # Long Stock1, Short Stock2
+data.loc[data['Z_Score'] > data['threshold'], 'signal'] = -1  # Short Stock A, Long Stock B
+data.loc[data['Z_Score'] < -data['threshold'], 'signal'] = 1  # Long Stock A, Short Stock B
 
 # Exit signal (Z-score reverts to ±0.5)
 data['exit_signal'] = 0
@@ -211,7 +240,9 @@ blotter = pd.DataFrame({
     'pnl_A': 0.0,
     'pnl_B': 0.0,
     'total_pnl': 0.0,
-    'trade_type': None
+    'trade_type': None,
+    'position_A': None,  # Added for clarity
+    'position_B': None   # Added for clarity
 }).set_index('trading_period')
 
 # Initialize ledger (each row represents a trading day)
@@ -222,8 +253,8 @@ ledger = pd.DataFrame({
     'date': dates_after_first_period,
     'position': 0,
     'cash': 0.0,
-    'mark_A': data[data['trading_period'] > first_period]['Stock1_Price'].values,
-    'mark_B': data[data['trading_period'] > first_period]['Stock2_Price'].values,
+    'mark_A': data[data['trading_period'] > first_period]['Stock_A_Price'].values,
+    'mark_B': data[data['trading_period'] > first_period]['Stock_B_Price'].values,
     'mkt_value': 0.0
 })
 
@@ -267,21 +298,25 @@ for i, row in filtered_data.iterrows():
     # Check if there's an entry signal and no current position
     if row['signal'] != 0 and current_position == 0:
         # Record entry information
-        current_position = row['signal'] * shares_per_trade  # Positive means long Stock1/short Stock2, negative means short Stock1/long Stock2
-        entry_price_A = row['Stock1_Price']
-        entry_price_B = row['Stock2_Price']
+        current_position = row['signal'] * shares_per_trade  # Positive means long Stock A/short Stock B, negative means short Stock A/long Stock B
+        entry_price_A = row['Stock_A_Price']
+        entry_price_B = row['Stock_B_Price']
         entry_date = current_date
 
         # Update blotter
         blotter.loc[current_period, 'entry_timestamp'] = current_date
-        blotter.loc[current_period, 'qty'] = current_position
+        blotter.loc[current_period, 'qty'] = abs(current_position)  # Store absolute value for clarity
         blotter.loc[current_period, 'entry_price_A'] = entry_price_A
         blotter.loc[current_period, 'entry_price_B'] = entry_price_B
 
         if current_position > 0:
-            blotter.loc[current_period, 'trade_type'] = f'Long {STOCK1_SYMBOL}, Short {STOCK2_SYMBOL}'
+            blotter.loc[current_period, 'trade_type'] = f'Long {STOCK_A_SYMBOL}, Short {STOCK_B_SYMBOL}'
+            blotter.loc[current_period, 'position_A'] = 'LONG'
+            blotter.loc[current_period, 'position_B'] = 'SHORT'
         else:
-            blotter.loc[current_period, 'trade_type'] = f'Short {STOCK1_SYMBOL}, Long {STOCK2_SYMBOL}'
+            blotter.loc[current_period, 'trade_type'] = f'Short {STOCK_A_SYMBOL}, Long {STOCK_B_SYMBOL}'
+            blotter.loc[current_period, 'position_A'] = 'SHORT'
+            blotter.loc[current_period, 'position_B'] = 'LONG'
 
         # Update ledger
         ledger.loc[ledger_idx, 'position'] = current_position
@@ -290,20 +325,20 @@ for i, row in filtered_data.iterrows():
     elif ((row['exit_signal'] == 1 or
           (entry_date and (current_date - entry_date).days > max_holding_time) or
           (entry_price_A and entry_price_B and
-           abs(((row['Stock1_Price']/entry_price_A) - (row['Stock2_Price']/entry_price_B))/2) > stop_loss_pct))
+           abs(((row['Stock_A_Price']/entry_price_A) - (row['Stock_B_Price']/entry_price_B))/2) > stop_loss_pct))
           and current_position != 0):
 
         # Calculate pairs trading P&L
-        exit_price_A = row['Stock1_Price']
-        exit_price_B = row['Stock2_Price']
+        exit_price_A = row['Stock_A_Price']
+        exit_price_B = row['Stock_B_Price']
 
         # Calculate P&L for both directions
-        if current_position > 0:  # Long Stock1, Short Stock2
-            pnl_A = current_position * (exit_price_A - entry_price_A)  # Stock1 long P&L
-            pnl_B = current_position * (entry_price_B - exit_price_B)  # Stock2 short P&L
-        else:  # Short Stock1, Long Stock2
-            pnl_A = -current_position * (entry_price_A - exit_price_A)  # Stock1 short P&L
-            pnl_B = -current_position * (exit_price_B - entry_price_B)  # Stock2 long P&L
+        if current_position > 0:  # Long Stock A, Short Stock B
+            pnl_A = current_position * (exit_price_A - entry_price_A)  # Stock A long P&L
+            pnl_B = current_position * (entry_price_B - exit_price_B)  # Stock B short P&L
+        else:  # Short Stock A, Long Stock B
+            pnl_A = -current_position * (entry_price_A - exit_price_A)  # Stock A short P&L
+            pnl_B = -current_position * (exit_price_B - entry_price_B)  # Stock B long P&L
 
         total_pnl = pnl_A + pnl_B
 
@@ -344,17 +379,17 @@ for i, row in filtered_data.iterrows():
     ledger.loc[ledger_idx, 'position'] = current_position
 
     # Calculate market value (considering both positions)
-    if current_position > 0:  # Long Stock1, Short Stock2
-        value_A = current_position * row['Stock1_Price']  # Stock1 long value
-        value_B = -current_position * row['Stock2_Price']  # Stock2 short value
-    elif current_position < 0:  # Short Stock1, Long Stock2
-        value_A = current_position * row['Stock1_Price']  # Stock1 short value
-        value_B = -current_position * row['Stock2_Price']  # Stock2 long value
+    if current_position > 0:  # Long Stock A, Short Stock B
+        value_A = current_position * row['Stock_A_Price']  # Stock A long value
+        value_B = -current_position * row['Stock_B_Price']  # Stock B short value
+    elif current_position < 0:  # Short Stock A, Long Stock B
+        value_A = current_position * row['Stock_A_Price']  # Stock A short value
+        value_B = -current_position * row['Stock_B_Price']  # Stock B long value
     else:
         value_A = 0
         value_B = 0
 
-    # Total market value = Cash + Stock1 position value + Stock2 position value
+    # Total market value = Cash + Stock A position value + Stock B position value
     ledger.loc[ledger_idx, 'mkt_value'] = ledger.loc[ledger_idx, 'cash'] + value_A + value_B
 
 # Clean blotter, keep only rows with trades
@@ -370,15 +405,38 @@ blotter = blotter[blotter['entry_timestamp'].notna()]
 if blotter.empty:
     print("No trading records found in the backtest period.")
 else:
-    # Format the blotter for display
+    # Format the blotter for display - reorganized for clarity
     display_blotter = blotter.copy()
     display_blotter = display_blotter.reset_index()
+
+    # Create a more organized display with clearer trade details
     display_blotter = display_blotter[['trading_period', 'entry_timestamp', 'exit_timestamp',
-                                      'trade_type', 'qty', 'entry_price_A', 'exit_price_A',
-                                      'entry_price_B', 'exit_price_B', 'pnl_A', 'pnl_B',
+                                      'position_A', 'position_B', 'qty',
+                                      'entry_price_A', 'exit_price_A', 'pnl_A',
+                                      'entry_price_B', 'exit_price_B', 'pnl_B',
                                       'total_pnl', 'success']]
+
+    # Rename columns for clarity
+    display_blotter = display_blotter.rename(columns={
+        'position_A': f'{STOCK_A_SYMBOL} Position',
+        'position_B': f'{STOCK_B_SYMBOL} Position',
+        'qty': 'Quantity',
+        'entry_price_A': f'{STOCK_A_SYMBOL} Entry',
+        'exit_price_A': f'{STOCK_A_SYMBOL} Exit',
+        'pnl_A': f'{STOCK_A_SYMBOL} P&L',
+        'entry_price_B': f'{STOCK_B_SYMBOL} Entry',
+        'exit_price_B': f'{STOCK_B_SYMBOL} Exit',
+        'pnl_B': f'{STOCK_B_SYMBOL} P&L',
+        'total_pnl': 'Total P&L'
+    })
+
     # Format currency columns
-    for col in ['pnl_A', 'pnl_B', 'total_pnl']:
+    for col in [f'{STOCK_A_SYMBOL} P&L', f'{STOCK_B_SYMBOL} P&L', 'Total P&L']:
+        display_blotter[col] = display_blotter[col].map('${:,.2f}'.format)
+
+    # Format price columns
+    for col in [f'{STOCK_A_SYMBOL} Entry', f'{STOCK_A_SYMBOL} Exit',
+                f'{STOCK_B_SYMBOL} Entry', f'{STOCK_B_SYMBOL} Exit']:
         display_blotter[col] = display_blotter[col].map('${:,.2f}'.format)
 
     display(display_blotter)
@@ -389,10 +447,19 @@ else:
 ```{python}
 #| echo: false
 display_ledger = ledger.copy()
-display_ledger = display_ledger[['date', 'position', 'cash', 'mark_A', 'mark_B', 'mkt_value']]
+# Rename columns for clarity
+display_ledger = display_ledger.rename(columns={
+    'mark_A': f'{STOCK_A_SYMBOL} Price',
+    'mark_B': f'{STOCK_B_SYMBOL} Price',
+    'mkt_value': 'Portfolio Value'
+})
 
+display_ledger = display_ledger[['date', 'position', 'cash',
+                                f'{STOCK_A_SYMBOL} Price',
+                                f'{STOCK_B_SYMBOL} Price',
+                                'Portfolio Value']]
 
-for col in ['cash', 'mark_A', 'mark_B', 'mkt_value']:
+for col in ['cash', f'{STOCK_A_SYMBOL} Price', f'{STOCK_B_SYMBOL} Price', 'Portfolio Value']:
     display_ledger[col] = display_ledger[col].map('${:,.2f}'.format)
 
 print("Ledger (first 10 rows):")
@@ -437,9 +504,9 @@ plt.figure(figsize=(12, 10))
 
 # Price trend subplot
 plt.subplot(3, 1, 1)
-plt.plot(data['Date'], data['Stock1_Price'], label=STOCK1_SYMBOL)
-plt.plot(data['Date'], data['Stock2_Price'], label=STOCK2_SYMBOL)
-plt.title(f'{STOCK1_SYMBOL} vs {STOCK2_SYMBOL} Price Trend')
+plt.plot(data['Date'], data['Stock_A_Price'], label=STOCK_A_SYMBOL)
+plt.plot(data['Date'], data['Stock_B_Price'], label=STOCK_B_SYMBOL)
+plt.title(f'{STOCK_A_SYMBOL} vs {STOCK_B_SYMBOL} Price Trend')
 plt.xlabel('Date')
 plt.ylabel('Price ($)')
 plt.legend()
@@ -448,7 +515,7 @@ plt.grid(True)
 # Price ratio subplot
 plt.subplot(3, 1, 2)
 plt.plot(data['Date'], data['Log_Spread'])
-plt.title(f'Log Spread (log({STOCK1_SYMBOL}) - log({STOCK2_SYMBOL}))')
+plt.title(f'Log Spread (log({STOCK_A_SYMBOL}) - log({STOCK_B_SYMBOL}))')
 plt.xlabel('Date')
 plt.ylabel('Log Spread')
 plt.grid(True)

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>About the Strategy – Pairs Trading</title>
+<title>About Our Pairs Trading Strategy – Pairs Trading</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -155,17 +155,12 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#background-motivation" id="toc-background-motivation" class="nav-link active" data-scroll-target="#background-motivation">Background &amp; Motivation</a></li>
-  <li><a href="#strategy-design" id="toc-strategy-design" class="nav-link" data-scroll-target="#strategy-design">Strategy Design</a></li>
-  <li><a href="#mathematical-formulas" id="toc-mathematical-formulas" class="nav-link" data-scroll-target="#mathematical-formulas">Mathematical Formulas</a>
-  <ul class="collapse">
-  <li><a href="#asset-pair-selection" id="toc-asset-pair-selection" class="nav-link" data-scroll-target="#asset-pair-selection">1. Asset Pair Selection</a></li>
-  <li><a href="#signal-generation" id="toc-signal-generation" class="nav-link" data-scroll-target="#signal-generation">2. Signal Generation</a></li>
-  <li><a href="#trading-rules" id="toc-trading-rules" class="nav-link" data-scroll-target="#trading-rules">3. Trading Rules</a></li>
-  </ul></li>
-  <li><a href="#risk-management" id="toc-risk-management" class="nav-link" data-scroll-target="#risk-management">Risk Management</a></li>
-  <li><a href="#why-it-works" id="toc-why-it-works" class="nav-link" data-scroll-target="#why-it-works">Why It Works</a></li>
-  <li><a href="#want-to-learn-more" id="toc-want-to-learn-more" class="nav-link" data-scroll-target="#want-to-learn-more">Want to Learn More?</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#our-approach" id="toc-our-approach" class="nav-link" data-scroll-target="#our-approach">Our Approach</a></li>
+  <li><a href="#quantitative-methodology" id="toc-quantitative-methodology" class="nav-link" data-scroll-target="#quantitative-methodology">Quantitative Methodology</a></li>
+  <li><a href="#risk-controls" id="toc-risk-controls" class="nav-link" data-scroll-target="#risk-controls">Risk Controls</a></li>
+  <li><a href="#strategy-rationale" id="toc-strategy-rationale" class="nav-link" data-scroll-target="#strategy-rationale">Strategy Rationale</a></li>
+  <li><a href="#learn-more" id="toc-learn-more" class="nav-link" data-scroll-target="#learn-more">Learn More</a></li>
   </ul>
 </nav>
     </div>
@@ -174,7 +169,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">About the Strategy</h1>
+<h1 class="title">About Our Pairs Trading Strategy</h1>
 </div>
 
 
@@ -191,79 +186,46 @@ window.Quarto = {
 </header>
 
 
-<section id="background-motivation" class="level2">
-<h2 class="anchored" data-anchor-id="background-motivation">Background &amp; Motivation</h2>
-<p>In volatile and uncertain markets, market-neutral strategies provide a way to generate returns independent of broader market movements. Our strategy is inspired by the classic concept of <strong>pairs trading</strong>, which identifies two historically correlated stocks and exploits temporary deviations in their price spread. This method allows us to capitalize on mean-reverting behavior while maintaining a neutral exposure to the overall market.</p>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>In today’s fast-changing financial markets, achieving consistent returns without taking on substantial directional risk is increasingly challenging. Our strategy harnesses statistical techniques to capture temporary mispricings between related stocks. By focusing on the intrinsic relationship between asset pairs, we seek to profit from short-term deviations that eventually revert to long-term equilibrium.</p>
 </section>
-<section id="strategy-design" class="level2">
-<h2 class="anchored" data-anchor-id="strategy-design">Strategy Design</h2>
-<p>We begin by screening for candidate pairs using:</p>
+<section id="our-approach" class="level2">
+<h2 class="anchored" data-anchor-id="our-approach">Our Approach</h2>
+<p>We begin by scanning a broad universe of equities and then narrowing our focus to pairs that exhibit strong historical relationships. Key steps include:</p>
 <ul>
-<li><strong>Pearson Correlation ≥ 0.7</strong> over a 1-year window</li>
-<li><strong>Cointegration</strong> verified by the Augmented Dickey-Fuller (ADF) test (p-value &lt; 0.05)</li>
-</ul>
-<p>From this universe, we select pairs like <strong>AMD vs.&nbsp;NVIDIA</strong> that meet the statistical requirements and have strong economic or industry logic.</p>
-<p>We compute the <strong>Z-score</strong> of the price spread and define our signals as:</p>
-<ul>
-<li><strong>Enter Long-Short</strong>: when Z-score &gt; 2.0 or &lt; –2.0</li>
-<li><strong>Exit</strong>: when Z-score reverts to between –0.5 and +0.5</li>
-</ul>
-<p>Volatility filtering is also applied: we only trade when the <strong>VIX &lt; 20</strong>, dynamically increasing thresholds in more volatile periods.</p>
-</section>
-<section id="mathematical-formulas" class="level2">
-<h2 class="anchored" data-anchor-id="mathematical-formulas">Mathematical Formulas</h2>
-<section id="asset-pair-selection" class="level3">
-<h3 class="anchored" data-anchor-id="asset-pair-selection">1. Asset Pair Selection</h3>
-<ul>
-<li>Using Pearson correlation coefficient to filter pairs with correlation &gt; 0.7</li>
-<li>Applying ADF cointegration test to confirm spread stationarity (p-value &lt; 0.05)</li>
-<li>Calculating half-life and prioritizing pairs with half-life between 5-25 days</li>
+<li><strong>Correlation Screening</strong>: We select pairs with strong historical price correlation (typically over 0.7) based on daily data over one year.</li>
+<li><strong>Cointegration Validation</strong>: Statistical tests confirm that the selected price series maintain a long-term equilibrium relationship.</li>
+<li><strong>Dynamic Signal Generation</strong>: Our entry and exit signals are derived from the Z-score of the price spread, which adapts to market conditions with volatility adjustments via the VIX index.</li>
 </ul>
 </section>
-<section id="signal-generation" class="level3">
-<h3 class="anchored" data-anchor-id="signal-generation">2. Signal Generation</h3>
+<section id="quantitative-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="quantitative-methodology">Quantitative Methodology</h2>
+<p>Our method relies on straightforward yet robust quantitative techniques:</p>
 <ul>
-<li><p>Daily log prices calculation: <span class="math display">\[\text{Log Price}_A = \log(\text{Price}_A)\]</span></p></li>
-<li><p>Spread calculation: <span class="math display">\[\text{Spread} = \text{Log Price}_A - \text{Log Price}_B\]</span></p></li>
-<li><p>Z-score calculation: <span class="math display">\[Z\text{-score} = \frac{\text{Spread} - \text{20-day Mean}}{\text{20-day Standard Deviation}}\]</span></p></li>
+<li><p><strong>Log-Price Transformation</strong>: <span class="math display">\[\text{Log Price}_i = \log(\text{Price}_i)\]</span> This normalization allows us to manage multiplicative effects and volatility.</p></li>
+<li><p><strong>Spread and Z-Score Calculation</strong>: The spread is computed as the difference between the log-prices of the paired assets: <span class="math display">\[\text{Spread} = \text{Log Price}_A - \text{Log Price}_B\]</span> The Z-score, calculated over a rolling window (typically 20 days), quantifies the deviation of the current spread from its mean: <span class="math display">\[Z\text{-score} = \frac{\text{Spread} - \text{Mean(Spread)}}{\text{Std(Spread)}}\]</span></p></li>
+<li><p><strong>Half-Life Estimation</strong>: To understand how quickly the spread returns to its mean, we estimate the half-life using an AR(1) model: <span class="math display">\[\text{Half-life} = \frac{-\ln(2)}{\rho}\]</span> where () is the coefficient from the regression of the spread’s change on its lagged value.</p></li>
+<li><p><strong>Volatility Adjustment</strong>: By incorporating the VIX index, we adjust our Z-score entry thresholds dynamically so that the strategy is more conservative in volatile markets.</p></li>
 </ul>
 </section>
-<section id="trading-rules" class="level3">
-<h3 class="anchored" data-anchor-id="trading-rules">3. Trading Rules</h3>
+<section id="risk-controls" class="level2">
+<h2 class="anchored" data-anchor-id="risk-controls">Risk Controls</h2>
+<p>Risk management is integral to our strategy. Key measures include:</p>
 <ul>
-<li>Entry signals:
-<ul>
-<li>Long-short pair when <span class="math inline">\(Z\text{-score} &gt; 2.0\)</span></li>
-<li>Short-long pair when <span class="math inline">\(Z\text{-score} &lt; -2.0\)</span></li>
-</ul></li>
-<li>Exit signals:
-<ul>
-<li>Close position when <span class="math inline">\(|Z\text{-score}| &lt; 0.5\)</span></li>
-<li>Or after <span class="math inline">\(1.5 \times \text{half-life}\)</span> days</li>
-<li>Or hit 5% stop-loss</li>
-</ul></li>
+<li><strong>Dollar-Neutral Positions</strong>: Each trade is structured to maintain a near-neutral market exposure.</li>
+<li><strong>Stop-Loss Implementation</strong>: Positions are exited if adverse movements exceed 5% of the trade’s value.</li>
+<li><strong>Holding Period Limits</strong>: We impose a maximum holding time (typically based on 1.5 times the estimated half-life) to avoid extended exposure.</li>
+<li><strong>Diversification Across Pairs</strong>: Trading multiple, uncorrelated pairs helps mitigate the risk of any single pair underperforming.</li>
 </ul>
 </section>
+<section id="strategy-rationale" class="level2">
+<h2 class="anchored" data-anchor-id="strategy-rationale">Strategy Rationale</h2>
+<p>The rationale behind our strategy is that even highly correlated stocks can temporarily deviate from their equilibrium due to market inefficiencies, news events, or short-term supply/demand imbalances. By capturing these transient mispricings and applying strict risk controls, we aim to generate steady, low-risk returns independent of overall market direction.</p>
 </section>
-<section id="risk-management" class="level2">
-<h2 class="anchored" data-anchor-id="risk-management">Risk Management</h2>
-<p>To ensure capital protection and stable performance, we include:</p>
-<ul>
-<li><strong>Dollar-neutral positions</strong> for each pair</li>
-<li><strong>Stop-loss of 5%</strong> per position</li>
-<li><strong>Diversification</strong> across 3–5 pairs</li>
-<li><strong>Maximum holding period</strong> of 30 trading days</li>
-</ul>
-<p>This structure helps us reduce systemic risk while relying on price relationships between stocks, not market direction.</p>
-</section>
-<section id="why-it-works" class="level2">
-<h2 class="anchored" data-anchor-id="why-it-works">Why It Works</h2>
-<p>Statistical arbitrage strategies like ours benefit from the natural tendency of related stocks to <strong>mean-revert</strong> after short-term shocks. By combining statistical rigor with practical filters like the VIX, we improve trade reliability and reduce noise. This strategy provides a <strong>quantitative, risk-controlled framework</strong> to exploit inefficiencies in the market.</p>
-<hr>
-</section>
-<section id="want-to-learn-more" class="level2">
-<h2 class="anchored" data-anchor-id="want-to-learn-more">Want to Learn More?</h2>
-<p>Check out our <a href="./indicators.html">Indicators</a> and <a href="./results.html">Results</a> pages to explore our full backtest, performance metrics, and visualizations.</p>
+<section id="learn-more" class="level2">
+<h2 class="anchored" data-anchor-id="learn-more">Learn More</h2>
+<p>To delve deeper into the technical details, please visit our <a href="./indicators.html">Indicators</a> page where we explain our statistical filters and signal generation methods. For performance metrics and trade execution details, check out our <a href="./results.html">Results</a> page.</p>
 
 
 

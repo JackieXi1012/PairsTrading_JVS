@@ -1,75 +1,58 @@
 ---
-title: "About the Strategy"
+title: "About Our Pairs Trading Strategy"
 format:
   html:
     theme: cosmo
     toc: true
 ---
 
-## Background & Motivation
+## Overview
 
-In volatile and uncertain markets, market-neutral strategies provide a way to generate returns independent of broader market movements. Our strategy is inspired by the classic concept of **pairs trading**, which identifies two historically correlated stocks and exploits temporary deviations in their price spread. This method allows us to capitalize on mean-reverting behavior while maintaining a neutral exposure to the overall market.
+In today’s fast-changing financial markets, achieving consistent returns without taking on substantial directional risk is increasingly challenging. Our strategy harnesses statistical techniques to capture temporary mispricings between related stocks. By focusing on the intrinsic relationship between asset pairs, we seek to profit from short-term deviations that eventually revert to long-term equilibrium.
 
-## Strategy Design
+## Our Approach
 
-We begin by screening for candidate pairs using:
+We begin by scanning a broad universe of equities and then narrowing our focus to pairs that exhibit strong historical relationships. Key steps include:
 
-- **Pearson Correlation ≥ 0.7** over a 1-year window
-- **Cointegration** verified by the Augmented Dickey-Fuller (ADF) test (p-value < 0.05)
+- **Correlation Screening**: We select pairs with strong historical price correlation (typically over 0.7) based on daily data over one year.
+- **Cointegration Validation**: Statistical tests confirm that the selected price series maintain a long-term equilibrium relationship.
+- **Dynamic Signal Generation**: Our entry and exit signals are derived from the Z-score of the price spread, which adapts to market conditions with volatility adjustments via the VIX index.
 
-From this universe, we select pairs like **AMD vs. NVIDIA** that meet the statistical requirements and have strong economic or industry logic.
+## Quantitative Methodology
 
-We compute the **Z-score** of the price spread and define our signals as:
+Our method relies on straightforward yet robust quantitative techniques:
 
-- **Enter Long-Short**: when Z-score > 2.0 or < –2.0
-- **Exit**: when Z-score reverts to between –0.5 and +0.5
+- **Log-Price Transformation**:
+  $$\text{Log Price}_i = \log(\text{Price}_i)$$
+  This normalization allows us to manage multiplicative effects and volatility.
 
-Volatility filtering is also applied: we only trade when the **VIX < 20**, dynamically increasing thresholds in more volatile periods.
-
-## Mathematical Formulas
-
-### 1. Asset Pair Selection
-- Using Pearson correlation coefficient to filter pairs with correlation > 0.7
-- Applying ADF cointegration test to confirm spread stationarity (p-value < 0.05)
-- Calculating half-life and prioritizing pairs with half-life between 5-25 days
-
-### 2. Signal Generation
-- Daily log prices calculation:
-  $$\text{Log Price}_A = \log(\text{Price}_A)$$
-
-- Spread calculation:
+- **Spread and Z-Score Calculation**:
+  The spread is computed as the difference between the log-prices of the paired assets:
   $$\text{Spread} = \text{Log Price}_A - \text{Log Price}_B$$
+  The Z-score, calculated over a rolling window (typically 20 days), quantifies the deviation of the current spread from its mean:
+  $$Z\text{-score} = \frac{\text{Spread} - \text{Mean(Spread)}}{\text{Std(Spread)}}$$
 
-- Z-score calculation:
-  $$Z\text{-score} = \frac{\text{Spread} - \text{20-day Mean}}{\text{20-day Standard Deviation}}$$
+- **Half-Life Estimation**:
+  To understand how quickly the spread returns to its mean, we estimate the half-life using an AR(1) model:
+  $$\text{Half-life} = \frac{-\ln(2)}{\rho}$$
+  where \(\rho\) is the coefficient from the regression of the spread’s change on its lagged value.
 
-### 3. Trading Rules
-- Entry signals:
-  - Long-short pair when $Z\text{-score} > 2.0$
-  - Short-long pair when $Z\text{-score} < -2.0$
+- **Volatility Adjustment**:
+  By incorporating the VIX index, we adjust our Z-score entry thresholds dynamically so that the strategy is more conservative in volatile markets.
 
-- Exit signals:
-  - Close position when $|Z\text{-score}| < 0.5$
-  - Or after $1.5 \times \text{half-life}$ days
-  - Or hit 5% stop-loss
+## Risk Controls
 
-## Risk Management
+Risk management is integral to our strategy. Key measures include:
 
-To ensure capital protection and stable performance, we include:
+- **Dollar-Neutral Positions**: Each trade is structured to maintain a near-neutral market exposure.
+- **Stop-Loss Implementation**: Positions are exited if adverse movements exceed 5% of the trade's value.
+- **Holding Period Limits**: We impose a maximum holding time (typically based on 1.5 times the estimated half-life) to avoid extended exposure.
+- **Diversification Across Pairs**: Trading multiple, uncorrelated pairs helps mitigate the risk of any single pair underperforming.
 
-- **Dollar-neutral positions** for each pair
-- **Stop-loss of 5%** per position
-- **Diversification** across 3–5 pairs
-- **Maximum holding period** of 30 trading days
+## Strategy Rationale
 
-This structure helps us reduce systemic risk while relying on price relationships between stocks, not market direction.
+The rationale behind our strategy is that even highly correlated stocks can temporarily deviate from their equilibrium due to market inefficiencies, news events, or short-term supply/demand imbalances. By capturing these transient mispricings and applying strict risk controls, we aim to generate steady, low-risk returns independent of overall market direction.
 
-## Why It Works
+## Learn More
 
-Statistical arbitrage strategies like ours benefit from the natural tendency of related stocks to **mean-revert** after short-term shocks. By combining statistical rigor with practical filters like the VIX, we improve trade reliability and reduce noise. This strategy provides a **quantitative, risk-controlled framework** to exploit inefficiencies in the market.
-
----
-
-## Want to Learn More?
-
-Check out our [Indicators](indicators.qmd) and [Results](results.qmd) pages to explore our full backtest, performance metrics, and visualizations.
+To delve deeper into the technical details, please visit our [Indicators](indicators.qmd) page where we explain our statistical filters and signal generation methods. For performance metrics and trade execution details, check out our [Results](results.qmd) page.

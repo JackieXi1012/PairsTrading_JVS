@@ -1,38 +1,221 @@
 ---
-title: "Custom Indicators"
+title: "Pair Trading Indicators"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+    code-fold: true
 ---
 
-## VWAP
+# Introduction
 
-$$
-\text{VWAP} = \frac{\sum (\text{Price} \times \text{Volume})}{\sum \text{Volume}}
-$$
+This document explains the key statistical indicators used in pair trading analysis. These indicators help identify suitable pairs, determine optimal entry and exit points, and manage risk.
+
+# Statistical Indicators
+
+## Correlation Analysis
+
+**Purpose**:
+Measure the strength of linear relationship between two asset price series.
+
+**How**:
+
+- Computed using the Pearson correlation coefficient.
+- **Inputs**: Price series of both assets.
+- **Outputs**: A value between -1 and 1.
+
+**Interpretation**:
+
+- Values close to 1 indicate strong positive correlation.
+- Values close to -1 indicate strong negative correlation.
+- Values close to 0 indicate little or no correlation.
+- For pair trading, correlations above 0.7 are generally desirable.
+
+## Cointegration Test
+
+**Purpose**:
+Test for a long-term equilibrium relationship between two asset price series.
+
+**How**:
+
+- Computed using `coint()` from `statsmodels.tsa.stattools`.
+- **Inputs**: Price series of both assets.
+- **Outputs**: Test statistic and p-value.
+
+**Interpretation**:
+
+- **p-value < 0.05**: Reject the null hypothesis of no cointegration.
+- A p-value below 0.05 suggests the pair is suitable for trading, indicating that prices may diverge temporarily but tend to revert to equilibrium.
+
+## Augmented Dickey-Fuller (ADF) Test
+
+**Purpose**:
+Test whether the spread between two assets is stationary.
+
+**How**:
+
+- Computed using `adfuller()` from `statsmodels.tsa.stattools`.
+- **Input**: Log spread between two assets (i.e. log price A - log price B).
+- **Outputs**: Test statistic and p-value.
+
+**Interpretation**:
+
+- **p-value < 0.05**: Reject the null hypothesis of non-stationarity.
+- Indicates that the spread is stationary and likely to mean-revert.
+- Suitable for pair trading when p < 0.05.
+
+## Half-Life Calculation
+
+**Purpose**:
+Measure how quickly the spread reverts to its mean.
+
+**How**:
+
+- Based on the Ornstein-Uhlenbeck mean-reversion process.
+- Derived from a regression of the spread change against its lagged value.
+
+**Formula**:
+
+- Run an AR(1) regression on the spread series:
+  $$
+  \Delta \text{Spread}_t = \alpha + \rho \cdot \text{Spread}_{t-1} + \varepsilon_t
+  $$
+- Then calculate the half-life using:
+  $$
+  \text{Half-life} = \frac{-\ln(2)}{\rho}
+  $$
+
+**Interpretation**:
+
+- **5-25 days**: Ideal half-life range for pair trading.
+- **< 5 days**: Very rapid mean reversion, may lead to frequent trading.
+- **25-60 days**: Slower mean reversion, requiring longer holding periods.
+- **> 60 days or negative**: May not be suitable for pair trading.
+
+# Trading Signals
+
+## Z-Score
+
+**Purpose**:
+Measure how many standard deviations the current spread deviates from its mean.
+
+**How**:
+
+- Based on the rolling mean and standard deviation of the spread.
+- **Formula**:
+  $$
+  \text{Z-score} = \frac{\text{Current Spread} - \text{Rolling Mean}}{\text{Rolling Standard Deviation}}
+  $$
+- Typically uses a 20-day rolling window.
+
+**Interpretation**:
+
+- **|Z-score| > 2**: Typical entry signal threshold.
+- **|Z-score| < 0.5**: Typical exit signal threshold.
+- High absolute Z-score values indicate extreme divergence from the normal relationship.
+
+## VIX-Adjusted Thresholds
+
+**Purpose**:
+Adapt entry thresholds based on market volatility.
+
+**How**:
+
+- Uses VIX index levels to adjust the Z-score thresholds.
+- Higher VIX values lead to higher threshold requirements.
+
+**Interpretation**:
+
+- **VIX < 20**: Entry threshold = 2.0
+- **VIX 20-25**: Entry threshold = 2.25
+- **VIX 25-30**: Entry threshold = 2.5
+- **VIX > 30**: Entry threshold = 3.0
+- A higher threshold during periods of high volatility reduces false signals.
+
+# Trade Execution
+
+## Entry Signals
+
+**Purpose**:
+Determine when to enter pair trades.
+
+**How**:
+
+- Based on the Z-score crossing the adjusted threshold values.
+- **Signal Examples**:
+  - Z-score > threshold: Short asset A, Long asset B.
+  - Z-score < -threshold: Long asset A, Short asset B.
+
+**Interpretation**:
+
+- A positive Z-score indicates that the spread is wider than normal.
+- A negative Z-score indicates that the spread is narrower than normal.
+- A large absolute Z-score suggests a higher probability of mean reversion.
+
+## Exit Signals
+
+**Purpose**:
+Determine when to exit pair trades.
+
+**How**:
+
+- **Primary exit**: When the Z-score returns to the ±0.5 range.
+- **Secondary exits**: Based on time-based or risk-based conditions.
+
+**Additional Exit Conditions**:
+
+- **Maximum holding time**: 1.5 × half-life days.
+- **Stop-loss**: 5% divergence between the pair.
+
+# Performance Metrics
+
+## Trade Success Rate
+
+**Purpose**:
+Measure the percentage of profitable trades.
+
+**How**:
+
+- Calculated as:
+  $$
+  \text{Trade Success Rate} = \left(\frac{\text{Number of Profitable Trades}}{\text{Total Number of Trades}}\right) \times 100\%
+  $$
+
+**Interpretation**:
+
+- Higher percentages indicate a more reliable strategy.
+- Should be evaluated alongside the average profit or loss per trade.
+
+## Total Return
+
+**Purpose**:
+Measure the overall profitability of the strategy.
+
+**How**:
+
+- Calculated as:
+  $$
+  \text{Total Return} = \left(\frac{\text{Final Portfolio Value} - \text{Initial Portfolio Value}}{\text{Initial Portfolio Value}}\right) \times 100\%
+  $$
+
+**Interpretation**:
+
+- Positive values indicate a profitable strategy.
+- Should be compared to benchmark returns over the same period.
 
 
-- Long if price > VWAP → bullish trend
-- Short if price < VWAP → bearish trend
+## Summary of Screening Criteria
 
-## Bollinger Bands
+| Indicator       | Test      | Threshold       | Purpose                        |
+|-----------------|-----------|-----------------|--------------------------------|
+| Correlation     | Pearson   | \( \rho > 0.7 \) | Co-movement detection          |
+| Cointegration   | Coint     | p < 0.05        | Long-term equilibrium          |
+| ADF Test        | ADF       | p < 0.05        | Mean reversion confirmation    |
+| Half-Life       | AR(1)     | 5–60 days       | Timeframe viability            |
+| Z-Score         | Rolling   | ±2.0 to ±3.0    | Entry/exit signal strength     |
 
-- Band width measures volatility
-- Buy when price breaks above upper band
-- Sell when price breaks below lower band
-- Can combine with RSI
+---
 
-## RSI (Relative Strength Index)
-
-- RSI > 50: Bullish, buy signal
-- RSI < 50: Bearish, sell signal
-- Filters weak momentum
-
-## Parabolic SAR
-
-- Confirms trend direction
-- Defines exit points
-- Reduces false signals with trailing stops
-
-## CMF (Chaikin Money Flow)
-
-- CMF > 0 → buy pressure
-- CMF < 0 → sell pressure
-- Combines with VWAP and RSI for confirmation
+> These indicators form the statistical backbone of our market-neutral pairs trading framework. Each filter adds a layer of validation to improve trade quality and reduce noise.

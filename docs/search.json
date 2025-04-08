@@ -2,44 +2,86 @@
   {
     "objectID": "indicators.html",
     "href": "indicators.html",
-    "title": "Custom Indicators",
+    "title": "Pair Trading Indicators",
     "section": "",
-    "text": "\\[\n\\text{VWAP} = \\frac{\\sum (\\text{Price} \\times \\text{Volume})}{\\sum \\text{Volume}}\n\\]\n\nLong if price &gt; VWAP → bullish trend\nShort if price &lt; VWAP → bearish trend"
+    "text": "This document explains the key statistical indicators used in pair trading analysis. These indicators help identify suitable pairs, determine optimal entry and exit points, and manage risk."
   },
   {
-    "objectID": "indicators.html#vwap",
-    "href": "indicators.html#vwap",
-    "title": "Custom Indicators",
-    "section": "",
-    "text": "\\[\n\\text{VWAP} = \\frac{\\sum (\\text{Price} \\times \\text{Volume})}{\\sum \\text{Volume}}\n\\]\n\nLong if price &gt; VWAP → bullish trend\nShort if price &lt; VWAP → bearish trend"
+    "objectID": "indicators.html#correlation-analysis",
+    "href": "indicators.html#correlation-analysis",
+    "title": "Pair Trading Indicators",
+    "section": "2.1 Correlation Analysis",
+    "text": "2.1 Correlation Analysis\nPurpose: Measure the strength of linear relationship between two asset price series.\nHow:\n\nComputed using the Pearson correlation coefficient.\nInputs: Price series of both assets.\nOutputs: A value between -1 and 1.\n\nInterpretation:\n\nValues close to 1 indicate strong positive correlation.\nValues close to -1 indicate strong negative correlation.\nValues close to 0 indicate little or no correlation.\nFor pair trading, correlations above 0.7 are generally desirable."
   },
   {
-    "objectID": "indicators.html#bollinger-bands",
-    "href": "indicators.html#bollinger-bands",
-    "title": "Custom Indicators",
-    "section": "Bollinger Bands",
-    "text": "Bollinger Bands\n\nBand width measures volatility\nBuy when price breaks above upper band\nSell when price breaks below lower band\nCan combine with RSI"
+    "objectID": "indicators.html#cointegration-test",
+    "href": "indicators.html#cointegration-test",
+    "title": "Pair Trading Indicators",
+    "section": "2.2 Cointegration Test",
+    "text": "2.2 Cointegration Test\nPurpose: Test for a long-term equilibrium relationship between two asset price series.\nHow:\n\nComputed using coint() from statsmodels.tsa.stattools.\nInputs: Price series of both assets.\nOutputs: Test statistic and p-value.\n\nInterpretation:\n\np-value &lt; 0.05: Reject the null hypothesis of no cointegration.\nA p-value below 0.05 suggests the pair is suitable for trading, indicating that prices may diverge temporarily but tend to revert to equilibrium."
   },
   {
-    "objectID": "indicators.html#rsi-relative-strength-index",
-    "href": "indicators.html#rsi-relative-strength-index",
-    "title": "Custom Indicators",
-    "section": "RSI (Relative Strength Index)",
-    "text": "RSI (Relative Strength Index)\n\nRSI &gt; 50: Bullish, buy signal\nRSI &lt; 50: Bearish, sell signal\nFilters weak momentum"
+    "objectID": "indicators.html#augmented-dickey-fuller-adf-test",
+    "href": "indicators.html#augmented-dickey-fuller-adf-test",
+    "title": "Pair Trading Indicators",
+    "section": "2.3 Augmented Dickey-Fuller (ADF) Test",
+    "text": "2.3 Augmented Dickey-Fuller (ADF) Test\nPurpose: Test whether the spread between two assets is stationary.\nHow:\n\nComputed using adfuller() from statsmodels.tsa.stattools.\nInput: Log spread between two assets (i.e. log price A - log price B).\nOutputs: Test statistic and p-value.\n\nInterpretation:\n\np-value &lt; 0.05: Reject the null hypothesis of non-stationarity.\nIndicates that the spread is stationary and likely to mean-revert.\nSuitable for pair trading when p &lt; 0.05."
   },
   {
-    "objectID": "indicators.html#parabolic-sar",
-    "href": "indicators.html#parabolic-sar",
-    "title": "Custom Indicators",
-    "section": "Parabolic SAR",
-    "text": "Parabolic SAR\n\nConfirms trend direction\nDefines exit points\nReduces false signals with trailing stops"
+    "objectID": "indicators.html#half-life-calculation",
+    "href": "indicators.html#half-life-calculation",
+    "title": "Pair Trading Indicators",
+    "section": "2.4 Half-Life Calculation",
+    "text": "2.4 Half-Life Calculation\nPurpose: Measure how quickly the spread reverts to its mean.\nHow:\n\nBased on the Ornstein-Uhlenbeck mean-reversion process.\nDerived from a regression of the spread change against its lagged value.\n\nFormula:\n\nRun an AR(1) regression on the spread series: \\[\n\\Delta \\text{Spread}_t = \\alpha + \\rho \\cdot \\text{Spread}_{t-1} + \\varepsilon_t\n\\]\nThen calculate the half-life using: \\[\n\\text{Half-life} = \\frac{-\\ln(2)}{\\rho}\n\\]\n\nInterpretation:\n\n5-25 days: Ideal half-life range for pair trading.\n&lt; 5 days: Very rapid mean reversion, may lead to frequent trading.\n25-60 days: Slower mean reversion, requiring longer holding periods.\n&gt; 60 days or negative: May not be suitable for pair trading."
   },
   {
-    "objectID": "indicators.html#cmf-chaikin-money-flow",
-    "href": "indicators.html#cmf-chaikin-money-flow",
-    "title": "Custom Indicators",
-    "section": "CMF (Chaikin Money Flow)",
-    "text": "CMF (Chaikin Money Flow)\n\nCMF &gt; 0 → buy pressure\nCMF &lt; 0 → sell pressure\nCombines with VWAP and RSI for confirmation"
+    "objectID": "indicators.html#z-score",
+    "href": "indicators.html#z-score",
+    "title": "Pair Trading Indicators",
+    "section": "3.1 Z-Score",
+    "text": "3.1 Z-Score\nPurpose: Measure how many standard deviations the current spread deviates from its mean.\nHow:\n\nBased on the rolling mean and standard deviation of the spread.\nFormula: \\[\n\\text{Z-score} = \\frac{\\text{Current Spread} - \\text{Rolling Mean}}{\\text{Rolling Standard Deviation}}\n\\]\nTypically uses a 20-day rolling window.\n\nInterpretation:\n\n|Z-score| &gt; 2: Typical entry signal threshold.\n|Z-score| &lt; 0.5: Typical exit signal threshold.\nHigh absolute Z-score values indicate extreme divergence from the normal relationship."
+  },
+  {
+    "objectID": "indicators.html#vix-adjusted-thresholds",
+    "href": "indicators.html#vix-adjusted-thresholds",
+    "title": "Pair Trading Indicators",
+    "section": "3.2 VIX-Adjusted Thresholds",
+    "text": "3.2 VIX-Adjusted Thresholds\nPurpose: Adapt entry thresholds based on market volatility.\nHow:\n\nUses VIX index levels to adjust the Z-score thresholds.\nHigher VIX values lead to higher threshold requirements.\n\nInterpretation:\n\nVIX &lt; 20: Entry threshold = 2.0\nVIX 20-25: Entry threshold = 2.25\nVIX 25-30: Entry threshold = 2.5\nVIX &gt; 30: Entry threshold = 3.0\nA higher threshold during periods of high volatility reduces false signals."
+  },
+  {
+    "objectID": "indicators.html#entry-signals",
+    "href": "indicators.html#entry-signals",
+    "title": "Pair Trading Indicators",
+    "section": "4.1 Entry Signals",
+    "text": "4.1 Entry Signals\nPurpose: Determine when to enter pair trades.\nHow:\n\nBased on the Z-score crossing the adjusted threshold values.\nSignal Examples:\n\nZ-score &gt; threshold: Short asset A, Long asset B.\nZ-score &lt; -threshold: Long asset A, Short asset B.\n\n\nInterpretation:\n\nA positive Z-score indicates that the spread is wider than normal.\nA negative Z-score indicates that the spread is narrower than normal.\nA large absolute Z-score suggests a higher probability of mean reversion."
+  },
+  {
+    "objectID": "indicators.html#exit-signals",
+    "href": "indicators.html#exit-signals",
+    "title": "Pair Trading Indicators",
+    "section": "4.2 Exit Signals",
+    "text": "4.2 Exit Signals\nPurpose: Determine when to exit pair trades.\nHow:\n\nPrimary exit: When the Z-score returns to the ±0.5 range.\nSecondary exits: Based on time-based or risk-based conditions.\n\nAdditional Exit Conditions:\n\nMaximum holding time: 1.5 × half-life days.\nStop-loss: 5% divergence between the pair."
+  },
+  {
+    "objectID": "indicators.html#trade-success-rate",
+    "href": "indicators.html#trade-success-rate",
+    "title": "Pair Trading Indicators",
+    "section": "5.1 Trade Success Rate",
+    "text": "5.1 Trade Success Rate\nPurpose: Measure the percentage of profitable trades.\nHow:\n\nCalculated as: \\[\n\\text{Trade Success Rate} = \\left(\\frac{\\text{Number of Profitable Trades}}{\\text{Total Number of Trades}}\\right) \\times 100\\%\n\\]\n\nInterpretation:\n\nHigher percentages indicate a more reliable strategy.\nShould be evaluated alongside the average profit or loss per trade."
+  },
+  {
+    "objectID": "indicators.html#total-return",
+    "href": "indicators.html#total-return",
+    "title": "Pair Trading Indicators",
+    "section": "5.2 Total Return",
+    "text": "5.2 Total Return\nPurpose: Measure the overall profitability of the strategy.\nHow:\n\nCalculated as: \\[\n\\text{Total Return} = \\left(\\frac{\\text{Final Portfolio Value} - \\text{Initial Portfolio Value}}{\\text{Initial Portfolio Value}}\\right) \\times 100\\%\n\\]\n\nInterpretation:\n\nPositive values indicate a profitable strategy.\nShould be compared to benchmark returns over the same period."
+  },
+  {
+    "objectID": "indicators.html#summary-of-screening-criteria",
+    "href": "indicators.html#summary-of-screening-criteria",
+    "title": "Pair Trading Indicators",
+    "section": "5.3 Summary of Screening Criteria",
+    "text": "5.3 Summary of Screening Criteria\n\n\n\n\n\n\n\n\n\nIndicator\nTest\nThreshold\nPurpose\n\n\n\n\nCorrelation\nPearson\n( &gt; 0.7 )\nCo-movement detection\n\n\nCointegration\nCoint\np &lt; 0.05\nLong-term equilibrium\n\n\nADF Test\nADF\np &lt; 0.05\nMean reversion confirmation\n\n\nHalf-Life\nAR(1)\n5–60 days\nTimeframe viability\n\n\nZ-Score\nRolling\n±2.0 to ±3.0\nEntry/exit signal strength\n\n\n\n\n\nThese indicators form the statistical backbone of our market-neutral pairs trading framework. Each filter adds a layer of validation to improve trade quality and reduce noise."
   },
   {
     "objectID": "index.html",
@@ -49,25 +91,74 @@
     "text": "Team Members: Sunny Zhang, Victoria Li, Jackie Xi"
   },
   {
-    "objectID": "results.html",
-    "href": "results.html",
-    "title": "Trade Results",
-    "section": "",
-    "text": "Date\nAMD_Price\nNVIDIA_Price\nLog_Spread\nZ_Score\n\n\n\n\n0\n2025-03-11\n96.76\n108.76\n-0.116910\n1.417985\n\n\n1\n2025-03-12\n100.79\n115.74\n-0.138307\n0.794952\n\n\n2\n2025-03-13\n98.11\n115.58\n-0.163874\n0.144990\n\n\n3\n2025-03-14\n100.97\n121.67\n-0.186489\n-0.441179\n\n\n4\n2025-03-17\n104.59\n119.53\n-0.133519\n0.831934\n\n\n5\n2025-03-18\n103.51\n115.43\n-0.108996\n1.310051\n\n\n6\n2025-03-19\n106.23\n117.52\n-0.101002\n1.347274\n\n\n7\n2025-03-20\n107.14\n118.53\n-0.101030\n1.216555\n\n\n8\n2025-03-21\n106.44\n117.70\n-0.100558\n1.109036\n\n\n9\n2025-03-24\n113.85\n121.41\n-0.064291\n1.719163\n\n\n10\n2025-03-25\n114.81\n120.69\n-0.049947\n1.784611\n\n\n11\n2025-03-26\n110.19\n113.76\n-0.031885\n1.967171\n\n\n12\n2025-03-27\n106.65\n111.43\n-0.043844\n1.535127\n\n\n13\n2025-03-28\n103.22\n109.67\n-0.060613\n1.148534\n\n\n14\n2025-03-31\n102.74\n108.38\n-0.053442\n1.190434\n\n\n15\n2025-04-01\n102.78\n110.15\n-0.069252\n0.734091\n\n\n16\n2025-04-02\n102.96\n110.42\n-0.069951\n0.641832\n\n\n17\n2025-04-03\n93.80\n101.80\n-0.081845\n0.314571\n\n\n18\n2025-04-04\n85.76\n94.31\n-0.095035\n-0.034728\n\n\n19\n2025-04-07\n83.20\n97.30\n-0.156552\n-1.403266"
+    "objectID": "index.html#pairs-trading-strategy-overview",
+    "href": "index.html#pairs-trading-strategy-overview",
+    "title": "Pairs Trading Strategy Overview",
+    "section": "Pairs Trading Strategy Overview",
+    "text": "Pairs Trading Strategy Overview\nWhat is Pairs Trading? Pairs Trading is a market-neutral strategy designed to profit from temporary price divergences between two historically correlated assets. Rather than betting on market direction, it aims to capture statistical arbitrage opportunities when the price relationship between two assets temporarily drifts from its historical mean.\n\nThis strategy offers a robust approach in volatile markets, by:\n\nTargeting mean reversion in asset pairs\nUtilizing long-short positions to hedge market-wide movements\nFocusing on relative pricing rather than absolute market trends\n\n\nBy identifying pairs that move together historically, the strategy capitalizes when their prices diverge and then revert — creating opportunities for low-risk, data-driven trading."
   },
   {
-    "objectID": "results.html#pair-trading-signals-amd-vs-nvidia",
-    "href": "results.html#pair-trading-signals-amd-vs-nvidia",
-    "title": "Trade Results",
+    "objectID": "index.html#sample-trading-pairs-table",
+    "href": "index.html#sample-trading-pairs-table",
+    "title": "Pairs Trading Strategy Overview",
+    "section": "Sample Trading Pairs Table",
+    "text": "Sample Trading Pairs Table\n\n\n\nExample Pairs and Key Drivers\n\n\n\n\n\n\n\n\nCategory\nPairs\nCorrelation\nKeyDrivers\n\n\n\n\nSemiconductor\nAMD vs. NVIDIA\n&gt; 0.7\nGPU/CPU Demand\n\n\nCloud Computing\nMicrosoft vs. Amazon\n&gt; 0.7\nCloud Growth\n\n\nBanking\nJP Morgan vs. Bank of America\nMedium-High\nInterest Rates\n\n\nETF Strategy\nQQQ vs. SMH\n&gt; 0.7\nTech Performance"
+  },
+  {
+    "objectID": "index.html#explore-this-project",
+    "href": "index.html#explore-this-project",
+    "title": "Pairs Trading Strategy Overview",
+    "section": "Explore This Project",
+    "text": "Explore This Project\n\nAbout: Learn the motivation, design, and logic behind the strategy\nIndicators: Statistical tests and thresholds used\nResults: Sample pairs, backtesting results, and insights\n\n\n\n\n“ In markets driven by noise, we trade on the signal. ”"
+  },
+  {
+    "objectID": "results.html",
+    "href": "results.html",
+    "title": "Pairs Trading Analysis: AutoZone (AZO) vs O’Reilly Automotive (ORLY)",
     "section": "",
-    "text": "Date\nAMD_Price\nNVIDIA_Price\nLog_Spread\nZ_Score\n\n\n\n\n0\n2025-03-11\n96.76\n108.76\n-0.116910\n1.417985\n\n\n1\n2025-03-12\n100.79\n115.74\n-0.138307\n0.794952\n\n\n2\n2025-03-13\n98.11\n115.58\n-0.163874\n0.144990\n\n\n3\n2025-03-14\n100.97\n121.67\n-0.186489\n-0.441179\n\n\n4\n2025-03-17\n104.59\n119.53\n-0.133519\n0.831934\n\n\n5\n2025-03-18\n103.51\n115.43\n-0.108996\n1.310051\n\n\n6\n2025-03-19\n106.23\n117.52\n-0.101002\n1.347274\n\n\n7\n2025-03-20\n107.14\n118.53\n-0.101030\n1.216555\n\n\n8\n2025-03-21\n106.44\n117.70\n-0.100558\n1.109036\n\n\n9\n2025-03-24\n113.85\n121.41\n-0.064291\n1.719163\n\n\n10\n2025-03-25\n114.81\n120.69\n-0.049947\n1.784611\n\n\n11\n2025-03-26\n110.19\n113.76\n-0.031885\n1.967171\n\n\n12\n2025-03-27\n106.65\n111.43\n-0.043844\n1.535127\n\n\n13\n2025-03-28\n103.22\n109.67\n-0.060613\n1.148534\n\n\n14\n2025-03-31\n102.74\n108.38\n-0.053442\n1.190434\n\n\n15\n2025-04-01\n102.78\n110.15\n-0.069252\n0.734091\n\n\n16\n2025-04-02\n102.96\n110.42\n-0.069951\n0.641832\n\n\n17\n2025-04-03\n93.80\n101.80\n-0.081845\n0.314571\n\n\n18\n2025-04-04\n85.76\n94.31\n-0.095035\n-0.034728\n\n\n19\n2025-04-07\n83.20\n97.30\n-0.156552\n-1.403266"
+    "text": "## Pair Trading Signals\nThe analysis below examines the pairs trading relationship between:\n- **Stock A**: AutoZone Inc. (AZO)\n- **Stock B**: O'Reilly Automotive Inc. (ORLY)\n\n\n\n\n\n\n\n\n\n\n\nDate\nAZO Price\nORLY Price\nLog_Spread\nZ_Score\n\n\n\n\n0\n2025-04-01\n$3,813.27\n$1,431.80\n0.979555\n-0.974716\n\n\n1\n2025-04-02\n$3,809.26\n$1,417.01\n0.988886\n-0.143995\n\n\n2\n2025-04-03\n$3,826.15\n$1,441.89\n0.975904\n-1.303938\n\n\n3\n2025-04-04\n$3,653.24\n$1,389.87\n0.966404\n-2.000556\n\n\n4\n2025-04-07\n$3,478.38\n$1,333.84\n0.958505\n-2.383379"
+  },
+  {
+    "objectID": "results.html#pair-trading-signals-azo-vs-orly",
+    "href": "results.html#pair-trading-signals-azo-vs-orly",
+    "title": "Pairs Trading Analysis: AZO vs ORLY",
+    "section": "Pair Trading Signals – AZO vs ORLY",
+    "text": "Pair Trading Signals – AZO vs ORLY\n\n\n\n\n\n\n\n\n\nDate\nStock_A_Price\nStock_B_Price\nLog_Spread\nZ_Score\n\n\n\n\n0\n2025-03-11\n3562.76\n1324.06\n0.989833\n1.213648\n\n\n1\n2025-03-12\n3547.13\n1309.29\n0.996654\n1.336010\n\n\n2\n2025-03-13\n3545.65\n1289.49\n1.011475\n1.652931\n\n\n3\n2025-03-14\n3554.91\n1327.41\n0.985100\n0.664568\n\n\n4\n2025-03-17\n3620.82\n1347.99\n0.988086\n0.716633\n\n\n5\n2025-03-18\n3614.27\n1338.75\n0.993154\n0.819737\n\n\n6\n2025-03-19\n3591.61\n1340.09\n0.985864\n0.531886\n\n\n7\n2025-03-20\n3573.38\n1343.15\n0.978494\n0.244672\n\n\n8\n2025-03-21\n3606.34\n1339.09\n0.990703\n0.590982\n\n\n9\n2025-03-24\n3657.82\n1362.74\n0.987370\n0.419903\n\n\n10\n2025-03-25\n3672.23\n1375.48\n0.981996\n0.161267\n\n\n11\n2025-03-26\n3681.68\n1380.98\n0.980576\n0.030481\n\n\n12\n2025-03-27\n3828.11\n1423.62\n0.989168\n0.284125\n\n\n13\n2025-03-28\n3771.00\n1408.55\n0.984779\n-0.016779\n\n\n14\n2025-03-31\n3812.78\n1432.58\n0.978882\n-0.584602\n\n\n15\n2025-04-01\n3813.27\n1431.80\n0.979555\n-0.974716\n\n\n16\n2025-04-02\n3809.26\n1417.01\n0.988886\n-0.143995\n\n\n17\n2025-04-03\n3826.15\n1441.89\n0.975904\n-1.303938\n\n\n18\n2025-04-04\n3653.24\n1389.87\n0.966404\n-2.000556\n\n\n19\n2025-04-07\n3478.38\n1333.84\n0.958505\n-2.383379"
+  },
+  {
+    "objectID": "results.html#statistical-analysis",
+    "href": "results.html#statistical-analysis",
+    "title": "Pairs Trading Analysis: AZO vs ORLY",
+    "section": "Statistical Analysis",
+    "text": "Statistical Analysis\n\n\nCorrelation Analysis:\nPearson correlation coefficient: 0.9478\nConclusion: Strong correlation (≥0.7), suitable for pairs trading\n\nCointegration Test:\np-value: 0.0908\nConclusion: Pair is not cointegrated (p-value &gt;= 0.05)\n\nAugmented Dickey-Fuller Test:\nADF Statistic: -1.8908\np-value: 0.3364\nConclusion: Spread is not stationary (p-value &gt;= 0.05)\n\nMean Reversion Analysis:\nRegression coefficient (ρ): -0.0299\nHalf-life: 23.20 days\nRecommended maximum holding time: 34 days\n\n\n/var/folders/zk/4dqxs3sx5cs0gjztl3554wyw0000gn/T/ipykernel_46674/1503931621.py:60: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`\n  rho = results.params[1]"
+  },
+  {
+    "objectID": "results.html#trading-strategy-implementation",
+    "href": "results.html#trading-strategy-implementation",
+    "title": "Pairs Trading Analysis: AZO vs ORLY",
+    "section": "Trading Strategy Implementation",
+    "text": "Trading Strategy Implementation\n\n\nTrading period length: 5 days\nNumber of trading periods: 72\nNumber of ledger rows: 246\nInitial capital: $1,000,000.00\nShares per trade: 100\nStop-loss percentage: 5.0%\nMaximum holding time: 34 days"
+  },
+  {
+    "objectID": "results.html#trading-results",
+    "href": "results.html#trading-results",
+    "title": "Pairs Trading Analysis: AZO vs ORLY",
+    "section": "Trading Results",
+    "text": "Trading Results\n\nBlotter (Trade Records)\n\n\n\n\n\n\n\n\n\ntrading_period\nentry_timestamp\nexit_timestamp\nAZO Position\nORLY Position\nQuantity\nAZO Entry\nAZO Exit\nAZO P&L\nORLY Entry\nORLY Exit\nORLY P&L\nTotal P&L\nsuccess\n\n\n\n\n0\n8\n2024-05-22\n2024-05-30\nLONG\nSHORT\n100\n$2,772.64\n$2,772.56\n$-8.00\n$991.44\n$963.64\n$2,780.00\n$2,772.00\nTrue\n\n\n1\n19\n2024-07-16\n2024-07-22\nSHORT\nLONG\n100\n$2,985.33\n$2,957.73\n$2,760.00\n$1,043.52\n$1,057.10\n$1,358.00\n$4,118.00\nTrue\n\n\n2\n26\n2024-08-16\n2024-08-21\nSHORT\nLONG\n100\n$3,212.87\n$3,202.22\n$1,065.00\n$1,119.52\n$1,138.16\n$1,864.00\n$2,929.00\nTrue\n\n\n3\n32\n2024-09-17\n2024-09-26\nLONG\nSHORT\n100\n$3,078.31\n$3,189.09\n$11,078.00\n$1,127.92\n$1,159.62\n$-3,170.00\n$7,908.00\nTrue\n\n\n4\n35\n2024-10-02\n2024-10-23\nLONG\nSHORT\n100\n$3,083.43\n$3,196.55\n$11,312.00\n$1,154.92\n$1,199.25\n$-4,433.00\n$6,879.00\nTrue\n\n\n5\n42\n2024-11-08\n2024-11-18\nLONG\nSHORT\n100\n$3,110.12\n$3,166.93\n$5,681.00\n$1,217.70\n$1,216.67\n$103.00\n$5,784.00\nTrue\n\n\n6\n45\n2024-11-22\n2024-11-27\nLONG\nSHORT\n100\n$3,099.38\n$3,190.10\n$9,072.00\n$1,227.37\n$1,244.01\n$-1,664.00\n$7,408.00\nTrue\n\n\n7\n48\n2024-12-06\n2025-01-10\nSHORT\nLONG\n100\n$3,309.44\n$3,251.32\n$5,812.00\n$1,257.78\n$1,197.60\n$-6,018.00\n$-206.00\nFalse\n\n\n8\n59\n2025-01-28\n2025-02-10\nLONG\nSHORT\n100\n$3,318.58\n$3,427.55\n$10,897.00\n$1,278.34\n$1,310.02\n$-3,168.00\n$7,729.00\nTrue\n\n\n9\n64\n2025-02-25\n2025-03-20\nLONG\nSHORT\n100\n$3,425.60\n$3,573.38\n$14,778.00\n$1,346.58\n$1,343.15\n$343.00\n$15,121.00\nTrue\n\n\n\n\n\n\n\n\n\nLedger (Account Daily Status)\n\n\nLedger (first 10 rows):\n\n\n\n\n\n\n\n\n\ndate\nposition\ncash\nAZO Price\nORLY Price\nPortfolio Value\n\n\n\n\n0\n2024-04-15\n0\n$1,000,000.00\n$2,903.51\n$1,069.27\n$1,000,000.00\n\n\n1\n2024-04-16\n0\n$1,000,000.00\n$2,910.27\n$1,089.51\n$1,000,000.00\n\n\n2\n2024-04-17\n0\n$1,000,000.00\n$2,938.26\n$1,094.80\n$1,000,000.00\n\n\n3\n2024-04-18\n0\n$1,000,000.00\n$2,973.17\n$1,101.06\n$1,000,000.00\n\n\n4\n2024-04-19\n0\n$1,000,000.00\n$2,985.54\n$1,090.94\n$1,000,000.00\n\n\n5\n2024-04-22\n0\n$1,000,000.00\n$2,961.66\n$1,091.46\n$1,000,000.00\n\n\n6\n2024-04-23\n0\n$1,000,000.00\n$2,961.04\n$1,092.35\n$1,000,000.00\n\n\n7\n2024-04-24\n0\n$1,000,000.00\n$2,988.51\n$1,092.70\n$1,000,000.00\n\n\n8\n2024-04-25\n0\n$1,000,000.00\n$2,945.25\n$1,054.13\n$1,000,000.00\n\n\n9\n2024-04-26\n0\n$1,000,000.00\n$2,945.98\n$1,043.93\n$1,000,000.00\n\n\n\n\n\n\n\n\n\nPerformance Metrics\n\n\nStrategy Performance Metrics:\nInitial Capital: $1,000,000.00\nFinal Assets: $1,015,121.00\nTotal Return: 1.51%\nAnnualized Return: 39.53%\nAnnualized Volatility: 88.10%\nSharpe Ratio: 0.4487\nMaximum Drawdown: -34.16%"
+  },
+  {
+    "objectID": "results.html#price-and-z-score-charts",
+    "href": "results.html#price-and-z-score-charts",
+    "title": "Pairs Trading Analysis: AZO vs ORLY",
+    "section": "Price and Z-Score Charts",
+    "text": "Price and Z-Score Charts"
   },
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "About the Strategy",
+    "title": "About Our Pairs Trading Strategy",
     "section": "",
-    "text": "In volatile and uncertain markets, market-neutral strategies provide a way to generate returns independent of broader market movements. Our strategy is inspired by the classic concept of pairs trading, which identifies two historically correlated stocks and exploits temporary deviations in their price spread. This method allows us to capitalize on mean-reverting behavior while maintaining a neutral exposure to the overall market."
+    "text": "In today’s fast-changing financial markets, achieving consistent returns without taking on substantial directional risk is increasingly challenging. Our strategy harnesses statistical techniques to capture temporary mispricings between related stocks. By focusing on the intrinsic relationship between asset pairs, we seek to profit from short-term deviations that eventually revert to long-term equilibrium."
   },
   {
     "objectID": "about.html#background-motivation",
@@ -112,31 +203,136 @@
     "text": "Want to Learn More?\nCheck out our Indicators and Results pages to explore our full backtest, performance metrics, and visualizations."
   },
   {
-    "objectID": "index.html#team-members",
-    "href": "index.html#team-members",
-    "title": "Pairs Trading Strategy Overview",
+    "objectID": "results.html#pair-trading-signals",
+    "href": "results.html#pair-trading-signals",
+    "title": "Pairs Trading Analysis: AutoZone (AZO) vs O’Reilly Automotive (ORLY)",
     "section": "",
-    "text": "Sunny Zhang, Victoria Li, Jackie Xi"
+    "text": "## Pair Trading Signals\nThe analysis below examines the pairs trading relationship between:\n- **Stock A**: AutoZone Inc. (AZO)\n- **Stock B**: O'Reilly Automotive Inc. (ORLY)\n\n\n\n\n\n\n\n\n\n\n\nDate\nAZO Price\nORLY Price\nLog_Spread\nZ_Score\n\n\n\n\n0\n2025-04-01\n$3,813.27\n$1,431.80\n0.979555\n-0.974716\n\n\n1\n2025-04-02\n$3,809.26\n$1,417.01\n0.988886\n-0.143995\n\n\n2\n2025-04-03\n$3,826.15\n$1,441.89\n0.975904\n-1.303938\n\n\n3\n2025-04-04\n$3,653.24\n$1,389.87\n0.966404\n-2.000556\n\n\n4\n2025-04-07\n$3,478.38\n$1,333.84\n0.958505\n-2.383379"
   },
   {
-    "objectID": "index.html#pairs-trading-strategy-overview",
-    "href": "index.html#pairs-trading-strategy-overview",
-    "title": "Pairs Trading Strategy Overview",
-    "section": "Pairs Trading Strategy Overview",
-    "text": "Pairs Trading Strategy Overview\nWhat is Pairs Trading? Pairs Trading is a market-neutral strategy designed to profit from temporary price divergences between two historically correlated assets. Rather than betting on market direction, it aims to capture statistical arbitrage opportunities when the price relationship between two assets temporarily drifts from its historical mean.\n\nThis strategy offers a robust approach in volatile markets, by:\n\nTargeting mean reversion in asset pairs\nUtilizing long-short positions to hedge market-wide movements\nFocusing on relative pricing rather than absolute market trends\n\n\nBy identifying pairs that move together historically, the strategy capitalizes when their prices diverge and then revert — creating opportunities for low-risk, data-driven trading."
+    "objectID": "results.html#performance-metrics",
+    "href": "results.html#performance-metrics",
+    "title": "Pairs Trading Analysis: AutoZone (AZO) vs O’Reilly Automotive (ORLY)",
+    "section": "Performance Metrics",
+    "text": "Performance Metrics\n\n\n| Metric                          | Value                                          |\n|---------------------------------|------------------------------------------------|\n| Initial Capital                 | $1,000,000.00                                  |\n| Final Assets                    | $1,015,121.00                                  |\n| Total Return                    | 1.51%                                         |\n| Annualized Return               | 39.53%                                         |\n| Annualized Volatility           | 88.10%                                         |\n| Sharpe Ratio                    | 0.4487                                         |\n| Maximum Drawdown                | -34.16%                                        |"
   },
   {
-    "objectID": "index.html#explore-this-project",
-    "href": "index.html#explore-this-project",
-    "title": "Pairs Trading Strategy Overview",
-    "section": "Explore This Project",
-    "text": "Explore This Project\n\nAbout: Learn the motivation, design, and logic behind the strategy\nIndicators: Statistical tests and thresholds used\nResults: Sample pairs, backtesting results, and insights\n\n\n\n\n“ In markets driven by noise, we trade on the signal. ”"
+    "objectID": "about.html#correlation-analysis",
+    "href": "about.html#correlation-analysis",
+    "title": "Pair Trading Indicators",
+    "section": "2.1 Correlation Analysis",
+    "text": "2.1 Correlation Analysis\nPurpose: Measure the strength of linear relationship between two asset price series.\nHow:\n\nComputed using the Pearson correlation coefficient.\nInputs: Price series of both assets.\nOutputs: A value between -1 and 1.\n\nInterpretation:\n\nValues close to 1 indicate strong positive correlation.\nValues close to -1 indicate strong negative correlation.\nValues close to 0 indicate little or no correlation.\nFor pair trading, correlations above 0.7 are generally desirable."
   },
   {
-    "objectID": "index.html#sample-trading-pairs-table",
-    "href": "index.html#sample-trading-pairs-table",
-    "title": "Pairs Trading Strategy Overview",
-    "section": "Sample Trading Pairs Table",
-    "text": "Sample Trading Pairs Table\n\n\n\nExample Pairs and Key Drivers\n\n\n\n\n\n\n\n\nCategory\nPairs\nCorrelation\nKeyDrivers\n\n\n\n\nSemiconductor\nAMD vs. NVIDIA\n&gt; 0.7\nGPU/CPU Demand\n\n\nCloud Computing\nMicrosoft vs. Amazon\n&gt; 0.7\nCloud Growth\n\n\nBanking\nJP Morgan vs. Bank of America\nMedium-High\nInterest Rates\n\n\nETF Strategy\nQQQ vs. SMH\n&gt; 0.7\nTech Performance"
+    "objectID": "about.html#cointegration-test",
+    "href": "about.html#cointegration-test",
+    "title": "Pair Trading Indicators",
+    "section": "2.2 Cointegration Test",
+    "text": "2.2 Cointegration Test\nPurpose: Test for a long-term equilibrium relationship between two asset price series.\nHow:\n\nComputed using coint() from statsmodels.tsa.stattools.\nInputs: Price series of both assets.\nOutputs: Test statistic and p-value.\n\nInterpretation:\n\np-value &lt; 0.05: Reject the null hypothesis of no cointegration.\nA p-value below 0.05 suggests the pair is suitable for trading, indicating that prices may diverge temporarily but tend to revert to equilibrium."
+  },
+  {
+    "objectID": "about.html#augmented-dickey-fuller-adf-test",
+    "href": "about.html#augmented-dickey-fuller-adf-test",
+    "title": "Pair Trading Indicators",
+    "section": "2.3 Augmented Dickey-Fuller (ADF) Test",
+    "text": "2.3 Augmented Dickey-Fuller (ADF) Test\nPurpose: Test whether the spread between two assets is stationary.\nHow:\n\nComputed using adfuller() from statsmodels.tsa.stattools.\nInput: Log spread between two assets (i.e. log price A - log price B).\nOutputs: Test statistic and p-value.\n\nInterpretation:\n\np-value &lt; 0.05: Reject the null hypothesis of non-stationarity.\nIndicates that the spread is stationary and likely to mean-revert.\nSuitable for pair trading when p &lt; 0.05."
+  },
+  {
+    "objectID": "about.html#half-life-calculation",
+    "href": "about.html#half-life-calculation",
+    "title": "Pair Trading Indicators",
+    "section": "2.4 Half-Life Calculation",
+    "text": "2.4 Half-Life Calculation\nPurpose: Measure how quickly the spread reverts to its mean.\nHow:\n\nBased on the Ornstein-Uhlenbeck mean-reversion process.\nDerived from a regression of the spread change against its lagged value.\n\nFormula:\n\nRun an AR(1) regression on the spread series: \\[\n\\Delta \\text{Spread}_t = \\alpha + \\rho \\cdot \\text{Spread}_{t-1} + \\varepsilon_t\n\\]\nThen calculate the half-life using: \\[\n\\text{Half-life} = \\frac{-\\ln(2)}{\\rho}\n\\]\n\nInterpretation:\n\n5-25 days: Ideal half-life range for pair trading.\n&lt; 5 days: Very rapid mean reversion, may lead to frequent trading.\n25-60 days: Slower mean reversion, requiring longer holding periods.\n&gt; 60 days or negative: May not be suitable for pair trading."
+  },
+  {
+    "objectID": "about.html#z-score",
+    "href": "about.html#z-score",
+    "title": "Pair Trading Indicators",
+    "section": "3.1 Z-Score",
+    "text": "3.1 Z-Score\nPurpose: Measure how many standard deviations the current spread deviates from its mean.\nHow:\n\nBased on the rolling mean and standard deviation of the spread.\nFormula: \\[\n\\text{Z-score} = \\frac{\\text{Current Spread} - \\text{Rolling Mean}}{\\text{Rolling Standard Deviation}}\n\\]\nTypically uses a 20-day rolling window.\n\nInterpretation:\n\n|Z-score| &gt; 2: Typical entry signal threshold.\n|Z-score| &lt; 0.5: Typical exit signal threshold.\nHigh absolute Z-score values indicate extreme divergence from the normal relationship."
+  },
+  {
+    "objectID": "about.html#vix-adjusted-thresholds",
+    "href": "about.html#vix-adjusted-thresholds",
+    "title": "Pair Trading Indicators",
+    "section": "3.2 VIX-Adjusted Thresholds",
+    "text": "3.2 VIX-Adjusted Thresholds\nPurpose: Adapt entry thresholds based on market volatility.\nHow:\n\nUses VIX index levels to adjust the Z-score thresholds.\nHigher VIX values lead to higher threshold requirements.\n\nInterpretation:\n\nVIX &lt; 20: Entry threshold = 2.0\nVIX 20-25: Entry threshold = 2.25\nVIX 25-30: Entry threshold = 2.5\nVIX &gt; 30: Entry threshold = 3.0\nA higher threshold during periods of high volatility reduces false signals."
+  },
+  {
+    "objectID": "about.html#entry-signals",
+    "href": "about.html#entry-signals",
+    "title": "Pair Trading Indicators",
+    "section": "4.1 Entry Signals",
+    "text": "4.1 Entry Signals\nPurpose: Determine when to enter pair trades.\nHow:\n\nBased on the Z-score crossing the adjusted threshold values.\nSignal Examples:\n\nZ-score &gt; threshold: Short asset A, Long asset B.\nZ-score &lt; -threshold: Long asset A, Short asset B.\n\n\nInterpretation:\n\nA positive Z-score indicates that the spread is wider than normal.\nA negative Z-score indicates that the spread is narrower than normal.\nA large absolute Z-score suggests a higher probability of mean reversion."
+  },
+  {
+    "objectID": "about.html#exit-signals",
+    "href": "about.html#exit-signals",
+    "title": "Pair Trading Indicators",
+    "section": "4.2 Exit Signals",
+    "text": "4.2 Exit Signals\nPurpose: Determine when to exit pair trades.\nHow:\n\nPrimary exit: When the Z-score returns to the ±0.5 range.\nSecondary exits: Based on time-based or risk-based conditions.\n\nAdditional Exit Conditions:\n\nMaximum holding time: 1.5 × half-life days.\nStop-loss: 5% divergence between the pair."
+  },
+  {
+    "objectID": "about.html#trade-success-rate",
+    "href": "about.html#trade-success-rate",
+    "title": "Pair Trading Indicators",
+    "section": "5.1 Trade Success Rate",
+    "text": "5.1 Trade Success Rate\nPurpose: Measure the percentage of profitable trades.\nHow:\n\nCalculated as: \\[\n\\text{Trade Success Rate} = \\left(\\frac{\\text{Number of Profitable Trades}}{\\text{Total Number of Trades}}\\right) \\times 100\\%\n\\]\n\nInterpretation:\n\nHigher percentages indicate a more reliable strategy.\nShould be evaluated alongside the average profit or loss per trade."
+  },
+  {
+    "objectID": "about.html#total-return",
+    "href": "about.html#total-return",
+    "title": "Pair Trading Indicators",
+    "section": "5.2 Total Return",
+    "text": "5.2 Total Return\nPurpose: Measure the overall profitability of the strategy.\nHow:\n\nCalculated as: \\[\n\\text{Total Return} = \\left(\\frac{\\text{Final Portfolio Value} - \\text{Initial Portfolio Value}}{\\text{Initial Portfolio Value}}\\right) \\times 100\\%\n\\]\n\nInterpretation:\n\nPositive values indicate a profitable strategy.\nShould be compared to benchmark returns over the same period."
+  },
+  {
+    "objectID": "about.html#summary-of-screening-criteria",
+    "href": "about.html#summary-of-screening-criteria",
+    "title": "Pair Trading Indicators",
+    "section": "5.3 Summary of Screening Criteria",
+    "text": "5.3 Summary of Screening Criteria\n\n\n\n\n\n\n\n\n\nIndicator\nTest\nThreshold\nPurpose\n\n\n\n\nCorrelation\nPearson\n( &gt; 0.7 )\nCo-movement detection\n\n\nCointegration\nCoint\np &lt; 0.05\nLong-term equilibrium\n\n\nADF Test\nADF\np &lt; 0.05\nMean reversion confirmation\n\n\nHalf-Life\nAR(1)\n5–60 days\nTimeframe viability\n\n\nZ-Score\nRolling\n±2.0 to ±3.0\nEntry/exit signal strength\n\n\n\n\n\nThese indicators form the statistical backbone of our market-neutral pairs trading framework. Each filter adds a layer of validation to improve trade quality and reduce noise."
+  },
+  {
+    "objectID": "about.html#overview",
+    "href": "about.html#overview",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "",
+    "text": "In today’s fast-changing financial markets, achieving consistent returns without taking on substantial directional risk is increasingly challenging. Our strategy harnesses statistical techniques to capture temporary mispricings between related stocks. By focusing on the intrinsic relationship between asset pairs, we seek to profit from short-term deviations that eventually revert to long-term equilibrium."
+  },
+  {
+    "objectID": "about.html#our-approach",
+    "href": "about.html#our-approach",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "Our Approach",
+    "text": "Our Approach\nWe begin by scanning a broad universe of equities and then narrowing our focus to pairs that exhibit strong historical relationships. Key steps include:\n\nCorrelation Screening: We select pairs with strong historical price correlation (typically over 0.7) based on daily data over one year.\nCointegration Validation: Statistical tests confirm that the selected price series maintain a long-term equilibrium relationship.\nDynamic Signal Generation: Our entry and exit signals are derived from the Z-score of the price spread, which adapts to market conditions with volatility adjustments via the VIX index."
+  },
+  {
+    "objectID": "about.html#quantitative-methodology",
+    "href": "about.html#quantitative-methodology",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "Quantitative Methodology",
+    "text": "Quantitative Methodology\nOur method relies on straightforward yet robust quantitative techniques:\n\nLog-Price Transformation: \\[\\text{Log Price}_i = \\log(\\text{Price}_i)\\] This normalization allows us to manage multiplicative effects and volatility.\nSpread and Z-Score Calculation: The spread is computed as the difference between the log-prices of the paired assets: \\[\\text{Spread} = \\text{Log Price}_A - \\text{Log Price}_B\\] The Z-score, calculated over a rolling window (typically 20 days), quantifies the deviation of the current spread from its mean: \\[Z\\text{-score} = \\frac{\\text{Spread} - \\text{Mean(Spread)}}{\\text{Std(Spread)}}\\]\nHalf-Life Estimation: To understand how quickly the spread returns to its mean, we estimate the half-life using an AR(1) model: \\[\\text{Half-life} = \\frac{-\\ln(2)}{\\rho}\\] where () is the coefficient from the regression of the spread’s change on its lagged value.\nVolatility Adjustment: By incorporating the VIX index, we adjust our Z-score entry thresholds dynamically so that the strategy is more conservative in volatile markets."
+  },
+  {
+    "objectID": "about.html#risk-controls",
+    "href": "about.html#risk-controls",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "Risk Controls",
+    "text": "Risk Controls\nRisk management is integral to our strategy. Key measures include:\n\nDollar-Neutral Positions: Each trade is structured to maintain a near-neutral market exposure.\nStop-Loss Implementation: Positions are exited if adverse movements exceed 5% of the trade’s value.\nHolding Period Limits: We impose a maximum holding time (typically based on 1.5 times the estimated half-life) to avoid extended exposure.\nDiversification Across Pairs: Trading multiple, uncorrelated pairs helps mitigate the risk of any single pair underperforming."
+  },
+  {
+    "objectID": "about.html#strategy-rationale",
+    "href": "about.html#strategy-rationale",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "Strategy Rationale",
+    "text": "Strategy Rationale\nThe rationale behind our strategy is that even highly correlated stocks can temporarily deviate from their equilibrium due to market inefficiencies, news events, or short-term supply/demand imbalances. By capturing these transient mispricings and applying strict risk controls, we aim to generate steady, low-risk returns independent of overall market direction."
+  },
+  {
+    "objectID": "about.html#learn-more",
+    "href": "about.html#learn-more",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "Learn More",
+    "text": "Learn More\nTo delve deeper into the technical details, please visit our Indicators page where we explain our statistical filters and signal generation methods. For performance metrics and trade execution details, check out our Results page."
   }
 ]
