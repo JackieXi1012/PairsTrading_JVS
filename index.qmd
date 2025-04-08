@@ -6,11 +6,9 @@ title: "Pairs Trading Strategy Overview"
 <br>
 
 ## Pairs Trading Strategy Overview
-**What is Pairs Trading?**
 Pairs Trading is a **market-neutral strategy** designed to profit from **temporary price divergences** between two historically correlated assets. Rather than betting on market direction, it aims to capture **statistical arbitrage opportunities** when the price relationship between two assets temporarily drifts from its historical mean.
 
 <br>
-
 This strategy offers a robust approach in volatile markets, by:
 
 - Targeting **mean reversion** in asset pairs
