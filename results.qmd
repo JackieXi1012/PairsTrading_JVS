@@ -410,7 +410,7 @@ else:
     display_blotter = display_blotter.reset_index()
 
     # Create a more organized display with clearer trade details
-    display_blotter = display_blotter[['trading_period', 'entry_timestamp', 'exit_timestamp',
+    display_blotter = display_blotter[['entry_timestamp', 'exit_timestamp',
                                       'position_A', 'position_B', 'qty',
                                       'entry_price_A', 'exit_price_A', 'pnl_A',
                                       'entry_price_B', 'exit_price_B', 'pnl_B',
