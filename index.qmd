@@ -29,10 +29,57 @@ By identifying pairs that move together historically, the strategy capitalizes w
 ```{r}
 #| echo: false
 pairs <- data.frame(
-  Category = c("Semiconductor", "Cloud Computing", "Banking", "ETF Strategy"),
-  Pairs = c("AMD vs. NVIDIA", "Microsoft vs. Amazon", "JP Morgan vs. Bank of America", "QQQ vs. SMH"),
-  Correlation = c("> 0.7", "> 0.7", "Medium-High", "> 0.7"),
-  KeyDrivers = c("GPU/CPU Demand", "Cloud Growth", "Interest Rates", "Tech Performance")
+  Category = c(
+    "Semiconductor",
+    "Cloud Computing",
+    "Auto Parts Retail",
+    "Banking",
+    "ETF Strategy",
+    "Oil & Gas",
+    "Home Improvement",
+    "Telecom",
+    "Payment Processing",
+    "Beverage",
+    "Fast Food",
+    "Streaming",
+    "Retail",
+    "Airlines",
+    "Social Media"
+  ),
+  Pairs = c(
+    "AMD (AMD) vs. NVIDIA (NVDA)",
+    "Microsoft (MSFT) vs. Amazon (AMZN)",
+    "AutoZone (AZO) vs. O'Reilly (ORLY)",
+    "JP Morgan (JPM) vs. Bank of America (BAC)",
+    "Nasdaq ETF (QQQ) vs. Semiconductor ETF (SMH)",
+    "Exxon Mobil (XOM) vs. Chevron (CVX)",
+    "Home Depot (HD) vs. Lowe's (LOW)",
+    "AT&T (T) vs. Verizon (VZ)",
+    "Visa (V) vs. Mastercard (MA)",
+    "Coca-Cola (KO) vs. PepsiCo (PEP)",
+    "McDonald's (MCD) vs. Yum! Brands (YUM)",
+    "Netflix (NFLX) vs. Disney (DIS)",
+    "Walmart (WMT) vs. Target (TGT)",
+    "Delta (DAL) vs. United Airlines (UAL)",
+    "Meta (META) vs. Snap (SNAP)"
+  ),
+  KeyDrivers = c(
+    "GPU/CPU Demand & AI Adoption",
+    "Cloud Computing Growth & Enterprise IT Spending",
+    "Auto Repair Market & DIY Trends",
+    "Interest Rates & Loan Growth",
+    "Technology Sector Performance",
+    "Oil Prices & Global Energy Demand",
+    "Housing Market & Home Improvement Spending",
+    "Wireless Subscriptions & 5G Adoption",
+    "Consumer Spending & Digital Payments",
+    "Beverage Market Share & Pricing Power",
+    "Fast Food Consumption & International Expansion",
+    "Streaming Subscribers & Content Investment",
+    "Consumer Retail Spending & E-commerce Growth",
+    "Travel Demand & Fuel Costs",
+    "Digital Advertising & User Engagement"
+  )
 )
 
 knitr::kable(pairs, caption = "Example Pairs and Key Drivers")

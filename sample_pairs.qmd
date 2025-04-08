@@ -71,6 +71,7 @@ results_df = results_df.round({'Stock_A_Price': 2, 'Stock_B_Price': 2, 'Log_Spre
 results_df = results_df.sort_values(by="Date").reset_index(drop=True)
 results_df
 ```
+> Stock prices are all from Shinybroker. Thanks Professor Jacob :)
 
 ## Statistical Analysis
 
@@ -503,10 +504,10 @@ display(last_row)
 
 ```{python}
 #| echo: false
-print("Strategy Performance Metrics:")
 initial_value = ledger['mkt_value'].iloc[0] if not ledger.empty else initial_cash
 final_value = ledger['mkt_value'].iloc[-1] if not ledger.empty else initial_cash
 total_return = (final_value - initial_value) / initial_value * 100
+
 
 print(f"Initial Capital: ${initial_cash:,.2f}")
 print(f"Final Assets: ${final_value:,.2f}")
