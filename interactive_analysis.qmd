@@ -32,7 +32,7 @@ This interactive analysis tool lets you perform pairs trading analysis on any tw
 
 Use the tool below to analyze potential pairs trading opportunities. Simply enter the ticker symbols for two stocks and adjust the trading parameters as needed.
 
-<iframe src="https://your-streamlit-app-url.streamlit.app"></iframe>
+<iframe src="https://pairstradingjvs.streamlit.app"></iframe>
 
 ## How To Use {.content-block}
 
