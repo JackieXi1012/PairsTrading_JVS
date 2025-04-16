@@ -14,9 +14,6 @@ website:
         file: indicators.qmd
       - text: Sample pairs
         file: sample_pairs.qmd
-      - text: Interactive analysis
-        file: interactive_analysis.qmd
-
     right:
       - icon: github
         href: https://github.com/szhang95/PairsTrading_JVS
@@ -24,10 +21,6 @@ website:
 
 format:
   html:
-    theme: cerulean
+    theme: cosmo
     toc: true
     math: mathjax
-
-execute:
-  enabled: true
-  freeze: false
