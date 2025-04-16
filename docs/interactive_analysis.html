@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Pair Trading Indicators – Pairs Trading</title>
+<title>Interactive Pairs Trading Analysis – Pairs Trading</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -38,7 +38,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-a78bc22c21c5275f96438b53095d57b2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -66,6 +66,21 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<style>
+iframe {
+  border: none;
+  width: 100%;
+  height: 850px;
+  margin: 0;
+  padding: 0;
+}
+.content-block {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+}
+</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -99,7 +114,7 @@ window.Quarto = {
 
 </head>
 
-<body class="nav-fixed">
+<body class="floating nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -125,7 +140,7 @@ window.Quarto = {
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./indicators.html" aria-current="page"> 
+    <a class="nav-link" href="./indicators.html"> 
 <span class="menu-text">Indicators</span></a>
   </li>  
   <li class="nav-item">
@@ -133,7 +148,7 @@ window.Quarto = {
 <span class="menu-text">Sample pairs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./interactive_analysis.html"> 
+    <a class="nav-link active" href="./interactive_analysis.html" aria-current="page"> 
 <span class="menu-text">Interactive analysis</span></a>
   </li>  
 </ul>
@@ -151,51 +166,40 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#statistical-indicators" id="toc-statistical-indicators" class="nav-link active" data-scroll-target="#statistical-indicators"><span class="header-section-number">1</span> Statistical Indicators</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#interactive-analysis-tool" id="toc-interactive-analysis-tool" class="nav-link" data-scroll-target="#interactive-analysis-tool">Interactive Analysis Tool</a></li>
+  <li><a href="#how-to-use" id="toc-how-to-use" class="nav-link" data-scroll-target="#how-to-use">How To Use</a></li>
+  <li><a href="#interpretation-guide" id="toc-interpretation-guide" class="nav-link" data-scroll-target="#interpretation-guide">Interpretation Guide</a>
   <ul class="collapse">
-  <li><a href="#correlation-analysis" id="toc-correlation-analysis" class="nav-link" data-scroll-target="#correlation-analysis"><span class="header-section-number">1.1</span> Correlation Analysis</a></li>
-  <li><a href="#cointegration-test" id="toc-cointegration-test" class="nav-link" data-scroll-target="#cointegration-test"><span class="header-section-number">1.2</span> Cointegration Test</a></li>
-  <li><a href="#augmented-dickey-fuller-adf-test" id="toc-augmented-dickey-fuller-adf-test" class="nav-link" data-scroll-target="#augmented-dickey-fuller-adf-test"><span class="header-section-number">1.3</span> Augmented Dickey-Fuller (ADF) Test</a></li>
-  <li><a href="#half-life-calculation" id="toc-half-life-calculation" class="nav-link" data-scroll-target="#half-life-calculation"><span class="header-section-number">1.4</span> Half-Life Calculation</a></li>
+  <li><a href="#statistical-indicators" id="toc-statistical-indicators" class="nav-link" data-scroll-target="#statistical-indicators">Statistical Indicators</a></li>
+  <li><a href="#trading-signals" id="toc-trading-signals" class="nav-link" data-scroll-target="#trading-signals">Trading Signals</a></li>
   </ul></li>
-  <li><a href="#trading-signals" id="toc-trading-signals" class="nav-link" data-scroll-target="#trading-signals"><span class="header-section-number">2</span> Trading Signals</a>
-  <ul class="collapse">
-  <li><a href="#z-score" id="toc-z-score" class="nav-link" data-scroll-target="#z-score"><span class="header-section-number">2.1</span> Z-Score</a></li>
-  <li><a href="#vix-adjusted-thresholds" id="toc-vix-adjusted-thresholds" class="nav-link" data-scroll-target="#vix-adjusted-thresholds"><span class="header-section-number">2.2</span> VIX-Adjusted Thresholds</a></li>
-  </ul></li>
-  <li><a href="#trade-execution" id="toc-trade-execution" class="nav-link" data-scroll-target="#trade-execution"><span class="header-section-number">3</span> Trade Execution</a>
-  <ul class="collapse">
-  <li><a href="#entry-signals" id="toc-entry-signals" class="nav-link" data-scroll-target="#entry-signals"><span class="header-section-number">3.1</span> Entry Signals</a></li>
-  <li><a href="#exit-signals" id="toc-exit-signals" class="nav-link" data-scroll-target="#exit-signals"><span class="header-section-number">3.2</span> Exit Signals</a></li>
-  </ul></li>
-  <li><a href="#performance-metrics" id="toc-performance-metrics" class="nav-link" data-scroll-target="#performance-metrics"><span class="header-section-number">4</span> Performance Metrics</a>
-  <ul class="collapse">
-  <li><a href="#trade-success-rate" id="toc-trade-success-rate" class="nav-link" data-scroll-target="#trade-success-rate"><span class="header-section-number">4.1</span> Trade Success Rate</a></li>
-  <li><a href="#total-return" id="toc-total-return" class="nav-link" data-scroll-target="#total-return"><span class="header-section-number">4.2</span> Total Return</a></li>
-  <li><a href="#summary-of-screening-criteria" id="toc-summary-of-screening-criteria" class="nav-link" data-scroll-target="#summary-of-screening-criteria"><span class="header-section-number">4.3</span> Summary of Screening Criteria</a></li>
-  </ul></li>
+  <li><a href="#about-the-implementation" id="toc-about-the-implementation" class="nav-link" data-scroll-target="#about-the-implementation">About The Implementation</a></li>
   </ul>
 </nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-right" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Pair Trading Indicators</h1>
+<h1 class="title">Interactive Pairs Trading Analysis</h1>
 </div>
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page-right">
 
     
   
@@ -207,246 +211,64 @@ window.Quarto = {
 </header>
 
 
-<section id="statistical-indicators" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Statistical Indicators</h1>
-<section id="correlation-analysis" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="correlation-analysis"><span class="header-section-number">1.1</span> Correlation Analysis</h2>
-<p><strong>Purpose</strong>: Measure the strength of linear relationship between two asset price series.</p>
-<p><strong>How</strong>:</p>
-<ul>
-<li>Computed using the Pearson correlation coefficient.</li>
-<li><strong>Inputs</strong>: Price series of both assets.</li>
-<li><strong>Outputs</strong>: A value between -1 and 1.</li>
-</ul>
-<p><strong>Interpretation</strong>:</p>
-<ul>
-<li>Values close to 1 indicate strong positive correlation.</li>
-<li>Values close to -1 indicate strong negative correlation.</li>
-<li>Values close to 0 indicate little or no correlation.</li>
-<li>For pair trading, correlations above 0.7 are generally desirable.</li>
-</ul>
+<section id="introduction" class="level2 content-block">
+<h2 class="content-block anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This interactive analysis tool lets you perform pairs trading analysis on any two stocks of your choice. Pairs trading is a market-neutral strategy that matches a long position in one stock with a short position in another stock that has historically moved in a similar pattern. When the pair diverges from its historical relationship, a trade is initiated with the expectation that the relationship will revert to its mean.</p>
 </section>
-<section id="cointegration-test" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="cointegration-test"><span class="header-section-number">1.2</span> Cointegration Test</h2>
-<p><strong>Purpose</strong>: Test for a long-term equilibrium relationship between two asset price series.</p>
-<p><strong>How</strong>:</p>
-<ul>
-<li>Computed using <code>coint()</code> from <code>statsmodels.tsa.stattools</code>.</li>
-<li><strong>Inputs</strong>: Price series of both assets.</li>
-<li><strong>Outputs</strong>: Test statistic and p-value.</li>
-</ul>
-<p><strong>Interpretation</strong>:</p>
-<ul>
-<li><strong>p-value &lt; 0.05</strong>: Reject the null hypothesis of no cointegration.</li>
-<li>A p-value below 0.05 suggests the pair is suitable for trading, indicating that prices may diverge temporarily but tend to revert to equilibrium.</li>
-</ul>
+<section id="interactive-analysis-tool" class="level2 content-block">
+<h2 class="content-block anchored" data-anchor-id="interactive-analysis-tool">Interactive Analysis Tool</h2>
+<p>Use the tool below to analyze potential pairs trading opportunities. Simply enter the ticker symbols for two stocks and adjust the trading parameters as needed.</p>
+<iframe src="https://pairstradingjvs.streamlit.app">
+</iframe>
 </section>
-<section id="augmented-dickey-fuller-adf-test" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="augmented-dickey-fuller-adf-test"><span class="header-section-number">1.3</span> Augmented Dickey-Fuller (ADF) Test</h2>
-<p><strong>Purpose</strong>: Test whether the spread between two assets is stationary.</p>
-<p><strong>How</strong>:</p>
+<section id="how-to-use" class="level2 content-block">
+<h2 class="content-block anchored" data-anchor-id="how-to-use">How To Use</h2>
+<ol type="1">
+<li><strong>Select Stock Pairs</strong>: Enter the ticker symbols for two stocks in the sidebar (e.g., “AZO” and “ORLY”)</li>
+<li><strong>Configure Parameters</strong>:
 <ul>
-<li>Computed using <code>adfuller()</code> from <code>statsmodels.tsa.stattools</code>.</li>
-<li><strong>Input</strong>: Log spread between two assets (i.e.&nbsp;log price A - log price B).</li>
-<li><strong>Outputs</strong>: Test statistic and p-value.</li>
-</ul>
-<p><strong>Interpretation</strong>:</p>
-<ul>
-<li><strong>p-value &lt; 0.05</strong>: Reject the null hypothesis of non-stationarity.</li>
-<li>Indicates that the spread is stationary and likely to mean-revert.</li>
-<li>Suitable for pair trading when p &lt; 0.05.</li>
-</ul>
-</section>
-<section id="half-life-calculation" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="half-life-calculation"><span class="header-section-number">1.4</span> Half-Life Calculation</h2>
-<p><strong>Purpose</strong>: Measure how quickly the spread reverts to its mean.</p>
-<p><strong>How</strong>:</p>
-<ul>
-<li>Based on the Ornstein-Uhlenbeck mean-reversion process.</li>
-<li>Derived from a regression of the spread change against its lagged value.</li>
-</ul>
-<p><strong>Formula</strong>:</p>
-<ul>
-<li>Run an AR(1) regression on the spread series: <span class="math display">\[
-\Delta \text{Spread}_t = \alpha + \rho \cdot \text{Spread}_{t-1} + \varepsilon_t
-\]</span></li>
-<li>Then calculate the half-life using: <span class="math display">\[
-\text{Half-life} = \frac{-\ln(2)}{\rho}
-\]</span></li>
-</ul>
-<p><strong>Interpretation</strong>:</p>
-<ul>
-<li><strong>5-25 days</strong>: Ideal half-life range for pair trading.</li>
-<li><strong>&lt; 5 days</strong>: Very rapid mean reversion, may lead to frequent trading.</li>
-<li><strong>25-60 days</strong>: Slower mean reversion, requiring longer holding periods.</li>
-<li><strong>&gt; 60 days or negative</strong>: May not be suitable for pair trading.</li>
-</ul>
-</section>
-</section>
-<section id="trading-signals" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Trading Signals</h1>
-<section id="z-score" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="z-score"><span class="header-section-number">2.1</span> Z-Score</h2>
-<p><strong>Purpose</strong>: Measure how many standard deviations the current spread deviates from its mean.</p>
-<p><strong>How</strong>:</p>
-<ul>
-<li>Based on the rolling mean and standard deviation of the spread.</li>
-<li><strong>Formula</strong>: <span class="math display">\[
-\text{Z-score} = \frac{\text{Current Spread} - \text{Rolling Mean}}{\text{Rolling Standard Deviation}}
-\]</span></li>
-<li>Typically uses a 20-day rolling window.</li>
-</ul>
-<p><strong>Interpretation</strong>:</p>
-<ul>
-<li><strong>|Z-score| &gt; 2</strong>: Typical entry signal threshold.</li>
-<li><strong>|Z-score| &lt; 0.5</strong>: Typical exit signal threshold.</li>
-<li>High absolute Z-score values indicate extreme divergence from the normal relationship.</li>
-</ul>
-</section>
-<section id="vix-adjusted-thresholds" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="vix-adjusted-thresholds"><span class="header-section-number">2.2</span> VIX-Adjusted Thresholds</h2>
-<p><strong>Purpose</strong>: Adapt entry thresholds based on market volatility.</p>
-<p><strong>How</strong>:</p>
-<ul>
-<li>Uses VIX index levels to adjust the Z-score thresholds.</li>
-<li>Higher VIX values lead to higher threshold requirements.</li>
-</ul>
-<p><strong>Interpretation</strong>:</p>
-<ul>
-<li><strong>VIX &lt; 20</strong>: Entry threshold = 2.0</li>
-<li><strong>VIX 20-25</strong>: Entry threshold = 2.25</li>
-<li><strong>VIX 25-30</strong>: Entry threshold = 2.5</li>
-<li><strong>VIX &gt; 30</strong>: Entry threshold = 3.0</li>
-<li>A higher threshold during periods of high volatility reduces false signals.</li>
-</ul>
-</section>
-</section>
-<section id="trade-execution" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Trade Execution</h1>
-<section id="entry-signals" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="entry-signals"><span class="header-section-number">3.1</span> Entry Signals</h2>
-<p><strong>Purpose</strong>: Determine when to enter pair trades.</p>
-<p><strong>How</strong>:</p>
-<ul>
-<li>Based on the Z-score crossing the adjusted threshold values.</li>
-<li><strong>Signal Examples</strong>:
-<ul>
-<li>Z-score &gt; threshold: Short asset A, Long asset B.</li>
-<li>Z-score &lt; -threshold: Long asset A, Short asset B.</li>
+<li><strong>Initial Capital</strong>: Set the starting investment amount</li>
+<li><strong>Shares Per Trade</strong>: Specify how many shares to trade with each signal</li>
+<li><strong>Stop-Loss Percentage</strong>: Set the maximum loss allowed before exiting a position</li>
 </ul></li>
-</ul>
-<p><strong>Interpretation</strong>:</p>
+<li><strong>Analyze</strong>: Click the “Analyze Pair” button to generate results</li>
+<li><strong>Review Results</strong>: Examine the statistical analysis, performance metrics, and visualizations</li>
+</ol>
+</section>
+<section id="interpretation-guide" class="level2 content-block">
+<h2 class="content-block anchored" data-anchor-id="interpretation-guide">Interpretation Guide</h2>
+<section id="statistical-indicators" class="level3">
+<h3 class="anchored" data-anchor-id="statistical-indicators">Statistical Indicators</h3>
 <ul>
-<li>A positive Z-score indicates that the spread is wider than normal.</li>
-<li>A negative Z-score indicates that the spread is narrower than normal.</li>
-<li>A large absolute Z-score suggests a higher probability of mean reversion.</li>
+<li><strong>Correlation</strong>: Values above 0.7 indicate strong correlation, suitable for pairs trading</li>
+<li><strong>Cointegration p-value</strong>: Values below 0.05 suggest the pair is cointegrated</li>
+<li><strong>ADF p-value</strong>: Values below 0.05 indicate the spread is stationary</li>
+<li><strong>Half-life</strong>: Optimal values range from 5 to 60 days</li>
 </ul>
 </section>
-<section id="exit-signals" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="exit-signals"><span class="header-section-number">3.2</span> Exit Signals</h2>
-<p><strong>Purpose</strong>: Determine when to exit pair trades.</p>
-<p><strong>How</strong>:</p>
+<section id="trading-signals" class="level3">
+<h3 class="anchored" data-anchor-id="trading-signals">Trading Signals</h3>
+<p>The Z-score chart shows the normalized deviation of the pair relationship:</p>
 <ul>
-<li><strong>Primary exit</strong>: When the Z-score returns to the ±0.5 range.</li>
-<li><strong>Secondary exits</strong>: Based on time-based or risk-based conditions.</li>
-</ul>
-<p><strong>Additional Exit Conditions</strong>:</p>
-<ul>
-<li><strong>Maximum holding time</strong>: 1.5 × half-life days.</li>
-<li><strong>Stop-loss</strong>: 5% divergence between the pair.</li>
+<li><strong>Entry Signals</strong>: Positions are opened when the Z-score crosses beyond the threshold lines (typically ±2.0)</li>
+<li><strong>Exit Signals</strong>: Positions are closed when the Z-score returns to the mean (between ±0.5)</li>
 </ul>
 </section>
 </section>
-<section id="performance-metrics" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Performance Metrics</h1>
-<section id="trade-success-rate" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="trade-success-rate"><span class="header-section-number">4.1</span> Trade Success Rate</h2>
-<p><strong>Purpose</strong>: Measure the percentage of profitable trades.</p>
-<p><strong>How</strong>:</p>
+<section id="about-the-implementation" class="level2 content-block">
+<h2 class="content-block anchored" data-anchor-id="about-the-implementation">About The Implementation</h2>
+<p>This interactive tool is powered by Streamlit and uses the <code>interactive_pairs.py</code> module to perform the analysis. The analysis includes:</p>
 <ul>
-<li>Calculated as: <span class="math display">\[
-\text{Trade Success Rate} = \left(\frac{\text{Number of Profitable Trades}}{\text{Total Number of Trades}}\right) \times 100\%
-\]</span></li>
+<li>Historical price data retrieval</li>
+<li>Statistical tests for correlation and cointegration</li>
+<li>Z-score calculation for trading signals</li>
+<li>Backtesting with position tracking</li>
+<li>Performance evaluation with metrics such as total return, Sharpe ratio, and maximum drawdown</li>
 </ul>
-<p><strong>Interpretation</strong>:</p>
-<ul>
-<li>Higher percentages indicate a more reliable strategy.</li>
-<li>Should be evaluated alongside the average profit or loss per trade.</li>
-</ul>
-</section>
-<section id="total-return" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="total-return"><span class="header-section-number">4.2</span> Total Return</h2>
-<p><strong>Purpose</strong>: Measure the overall profitability of the strategy.</p>
-<p><strong>How</strong>:</p>
-<ul>
-<li>Calculated as: <span class="math display">\[
-\text{Total Return} = \left(\frac{\text{Final Portfolio Value} - \text{Initial Portfolio Value}}{\text{Initial Portfolio Value}}\right) \times 100\%
-\]</span></li>
-</ul>
-<p><strong>Interpretation</strong>:</p>
-<ul>
-<li>Positive values indicate a profitable strategy.</li>
-<li>Should be compared to benchmark returns over the same period.</li>
-</ul>
-</section>
-<section id="summary-of-screening-criteria" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="summary-of-screening-criteria"><span class="header-section-number">4.3</span> Summary of Screening Criteria</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 22%">
-<col style="width: 14%">
-<col style="width: 22%">
-<col style="width: 41%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Indicator</th>
-<th>Test</th>
-<th>Threshold</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Correlation</td>
-<td>Pearson</td>
-<td>( &gt; 0.7 )</td>
-<td>Co-movement detection</td>
-</tr>
-<tr class="even">
-<td>Cointegration</td>
-<td>Coint</td>
-<td>p &lt; 0.05</td>
-<td>Long-term equilibrium</td>
-</tr>
-<tr class="odd">
-<td>ADF Test</td>
-<td>ADF</td>
-<td>p &lt; 0.05</td>
-<td>Mean reversion confirmation</td>
-</tr>
-<tr class="even">
-<td>Half-Life</td>
-<td>AR(1)</td>
-<td>5–60 days</td>
-<td>Timeframe viability</td>
-</tr>
-<tr class="odd">
-<td>Z-Score</td>
-<td>Rolling</td>
-<td>±2.0 to ±3.0</td>
-<td>Entry/exit signal strength</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<blockquote class="blockquote">
-<p>These indicators form the statistical backbone of our market-neutral pairs trading framework. Each filter adds a layer of validation to improve trade quality and reduce noise.</p>
-</blockquote>
+<p>For more technical details on the implementation, please see the <a href="./sample_pairs.html">sample_pairs.qmd</a> document or examine the source code on GitHub.</p>
 
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
