@@ -1,0 +1,73 @@
+---
+title: "Interactive Pairs Trading Analysis"
+format:
+  html:
+    page-layout: full
+    toc: true
+    toc-location: left
+    include-in-header:
+      text: |
+        <style>
+        iframe {
+          border: none;
+          width: 100%;
+          height: 850px;
+          margin: 0;
+          padding: 0;
+        }
+        .content-block {
+          padding: 1rem;
+          margin-bottom: 1.5rem;
+          background-color: #f8f9fa;
+          border-radius: 0.25rem;
+        }
+        </style>
+---
+
+## Introduction {.content-block}
+
+This interactive analysis tool lets you perform pairs trading analysis on any two stocks of your choice. Pairs trading is a market-neutral strategy that matches a long position in one stock with a short position in another stock that has historically moved in a similar pattern. When the pair diverges from its historical relationship, a trade is initiated with the expectation that the relationship will revert to its mean.
+
+## Interactive Analysis Tool {.content-block}
+
+Use the tool below to analyze potential pairs trading opportunities. Simply enter the ticker symbols for two stocks and adjust the trading parameters as needed.
+
+<iframe src="https://pairstradingjvs.streamlit.app"></iframe>
+
+## How To Use {.content-block}
+
+1. **Select Stock Pairs**: Enter the ticker symbols for two stocks in the sidebar (e.g., "AZO" and "ORLY")
+2. **Configure Parameters**:
+   - **Initial Capital**: Set the starting investment amount
+   - **Shares Per Trade**: Specify how many shares to trade with each signal
+   - **Stop-Loss Percentage**: Set the maximum loss allowed before exiting a position
+3. **Analyze**: Click the "Analyze Pair" button to generate results
+4. **Review Results**: Examine the statistical analysis, performance metrics, and visualizations
+
+## Interpretation Guide {.content-block}
+
+### Statistical Indicators
+
+- **Correlation**: Values above 0.7 indicate strong correlation, suitable for pairs trading
+- **Cointegration p-value**: Values below 0.05 suggest the pair is cointegrated
+- **ADF p-value**: Values below 0.05 indicate the spread is stationary
+- **Half-life**: Optimal values range from 5 to 60 days
+
+### Trading Signals
+
+The Z-score chart shows the normalized deviation of the pair relationship:
+
+- **Entry Signals**: Positions are opened when the Z-score crosses beyond the threshold lines (typically ±2.0)
+- **Exit Signals**: Positions are closed when the Z-score returns to the mean (between ±0.5)
+
+## About The Implementation {.content-block}
+
+This interactive tool is powered by Streamlit and uses the `interactive_pairs.py` module to perform the analysis. The analysis includes:
+
+- Historical price data retrieval
+- Statistical tests for correlation and cointegration
+- Z-score calculation for trading signals
+- Backtesting with position tracking
+- Performance evaluation with metrics such as total return, Sharpe ratio, and maximum drawdown
+
+For more technical details on the implementation, please see the [sample_pairs.qmd](sample_pairs.qmd) document or examine the source code on GitHub.
