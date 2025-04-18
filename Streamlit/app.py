@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
-from interactive_pairs import analyze_pair  # Make sure this matches your file name
+from interactive_pairs import analyze_pair
 
 # Set page config
 st.set_page_config(page_title="Pairs Trading Analyzer", layout="wide")
 
 # Title
-st.title("📈 Pairs Trading Analysis Tool")
+st.title(" Pairs Trading Analysis Tool")
 
 # Sidebar inputs
 st.sidebar.header("Input Parameters")
@@ -54,13 +54,13 @@ if run_analysis:
         st.header("Ledger")
         st.dataframe(result["ledger"].tail(20), use_container_width=True)
 
-        st.header("📉 Visualizations")
+        st.header("Visualizations")
         st.pyplot(result["figure"])
 else:
     st.markdown(
         """
         👈 Use the sidebar to choose two stocks and define parameters.
 
-        Then click **"🚀 Run Analysis"** to begin your backtest.
+        Then click **" Run Analysis"** to begin your backtest.
         """
     )

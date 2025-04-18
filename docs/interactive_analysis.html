@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.43">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -35,10 +35,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a78bc22c21c5275f96438b53095d57b2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -66,21 +66,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<style>
-iframe {
-  border: none;
-  width: 100%;
-  height: 850px;
-  margin: 0;
-  padding: 0;
-}
-.content-block {
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  background-color: #f8f9fa;
-  border-radius: 0.25rem;
-}
-</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -114,7 +99,7 @@ window.Quarto = {
 
 </head>
 
-<body class="floating nav-fixed">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -166,31 +151,28 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <nav id="TOC" role="doc-toc" class="toc-active">
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#interactive-analysis-tool" id="toc-interactive-analysis-tool" class="nav-link" data-scroll-target="#interactive-analysis-tool">Interactive Analysis Tool</a></li>
-  <li><a href="#how-to-use" id="toc-how-to-use" class="nav-link" data-scroll-target="#how-to-use">How To Use</a></li>
-  <li><a href="#interpretation-guide" id="toc-interpretation-guide" class="nav-link" data-scroll-target="#interpretation-guide">Interpretation Guide</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#interactive-analysis-tool" id="toc-interactive-analysis-tool" class="nav-link" data-scroll-target="#interactive-analysis-tool"><span class="header-section-number">2</span> Interactive Analysis Tool</a></li>
+  <li><a href="#how-to-use" id="toc-how-to-use" class="nav-link" data-scroll-target="#how-to-use"><span class="header-section-number">3</span> How To Use</a></li>
+  <li><a href="#interpretation-guide" id="toc-interpretation-guide" class="nav-link" data-scroll-target="#interpretation-guide"><span class="header-section-number">4</span> Interpretation Guide</a>
   <ul class="collapse">
-  <li><a href="#statistical-indicators" id="toc-statistical-indicators" class="nav-link" data-scroll-target="#statistical-indicators">Statistical Indicators</a></li>
-  <li><a href="#trading-signals" id="toc-trading-signals" class="nav-link" data-scroll-target="#trading-signals">Trading Signals</a></li>
+  <li><a href="#statistical-indicators" id="toc-statistical-indicators" class="nav-link" data-scroll-target="#statistical-indicators"><span class="header-section-number">4.1</span> Statistical Indicators</a></li>
+  <li><a href="#trading-signals" id="toc-trading-signals" class="nav-link" data-scroll-target="#trading-signals"><span class="header-section-number">4.2</span> Trading Signals</a></li>
   </ul></li>
-  <li><a href="#about-the-implementation" id="toc-about-the-implementation" class="nav-link" data-scroll-target="#about-the-implementation">About The Implementation</a></li>
+  <li><a href="#about-the-implementation" id="toc-about-the-implementation" class="nav-link" data-scroll-target="#about-the-implementation"><span class="header-section-number">5</span> About The Implementation</a></li>
   </ul>
 </nav>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content column-page-right" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -199,7 +181,7 @@ window.Quarto = {
 
 
 
-<div class="quarto-title-meta column-page-right">
+<div class="quarto-title-meta">
 
     
   
@@ -211,18 +193,17 @@ window.Quarto = {
 </header>
 
 
-<section id="introduction" class="level2 content-block">
-<h2 class="content-block anchored" data-anchor-id="introduction">Introduction</h2>
+<section id="introduction" class="level2 content-block" data-number="1">
+<h2 class="content-block anchored" data-number="1" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
 <p>This interactive analysis tool lets you perform pairs trading analysis on any two stocks of your choice. Pairs trading is a market-neutral strategy that matches a long position in one stock with a short position in another stock that has historically moved in a similar pattern. When the pair diverges from its historical relationship, a trade is initiated with the expectation that the relationship will revert to its mean.</p>
 </section>
-<section id="interactive-analysis-tool" class="level2 content-block">
-<h2 class="content-block anchored" data-anchor-id="interactive-analysis-tool">Interactive Analysis Tool</h2>
+<section id="interactive-analysis-tool" class="level2 content-block" data-number="2">
+<h2 class="content-block anchored" data-number="2" data-anchor-id="interactive-analysis-tool"><span class="header-section-number">2</span> Interactive Analysis Tool</h2>
 <p>Use the tool below to analyze potential pairs trading opportunities. Simply enter the ticker symbols for two stocks and adjust the trading parameters as needed.</p>
-<iframe src="https://pairstradingjvs.streamlit.app">
-</iframe>
+<p><a href="https://pairstradingjvs.streamlit.app" target="_blank" class="btn btn-primary"> Launch Interactive Analysis </a></p>
 </section>
-<section id="how-to-use" class="level2 content-block">
-<h2 class="content-block anchored" data-anchor-id="how-to-use">How To Use</h2>
+<section id="how-to-use" class="level2 content-block" data-number="3">
+<h2 class="content-block anchored" data-number="3" data-anchor-id="how-to-use"><span class="header-section-number">3</span> How To Use</h2>
 <ol type="1">
 <li><strong>Select Stock Pairs</strong>: Enter the ticker symbols for two stocks in the sidebar (e.g., “AZO” and “ORLY”)</li>
 <li><strong>Configure Parameters</strong>:
@@ -235,10 +216,10 @@ window.Quarto = {
 <li><strong>Review Results</strong>: Examine the statistical analysis, performance metrics, and visualizations</li>
 </ol>
 </section>
-<section id="interpretation-guide" class="level2 content-block">
-<h2 class="content-block anchored" data-anchor-id="interpretation-guide">Interpretation Guide</h2>
-<section id="statistical-indicators" class="level3">
-<h3 class="anchored" data-anchor-id="statistical-indicators">Statistical Indicators</h3>
+<section id="interpretation-guide" class="level2 content-block" data-number="4">
+<h2 class="content-block anchored" data-number="4" data-anchor-id="interpretation-guide"><span class="header-section-number">4</span> Interpretation Guide</h2>
+<section id="statistical-indicators" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="statistical-indicators"><span class="header-section-number">4.1</span> Statistical Indicators</h3>
 <ul>
 <li><strong>Correlation</strong>: Values above 0.7 indicate strong correlation, suitable for pairs trading</li>
 <li><strong>Cointegration p-value</strong>: Values below 0.05 suggest the pair is cointegrated</li>
@@ -246,8 +227,8 @@ window.Quarto = {
 <li><strong>Half-life</strong>: Optimal values range from 5 to 60 days</li>
 </ul>
 </section>
-<section id="trading-signals" class="level3">
-<h3 class="anchored" data-anchor-id="trading-signals">Trading Signals</h3>
+<section id="trading-signals" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="trading-signals"><span class="header-section-number">4.2</span> Trading Signals</h3>
 <p>The Z-score chart shows the normalized deviation of the pair relationship:</p>
 <ul>
 <li><strong>Entry Signals</strong>: Positions are opened when the Z-score crosses beyond the threshold lines (typically ±2.0)</li>
@@ -255,8 +236,8 @@ window.Quarto = {
 </ul>
 </section>
 </section>
-<section id="about-the-implementation" class="level2 content-block">
-<h2 class="content-block anchored" data-anchor-id="about-the-implementation">About The Implementation</h2>
+<section id="about-the-implementation" class="level2 content-block" data-number="5">
+<h2 class="content-block anchored" data-number="5" data-anchor-id="about-the-implementation"><span class="header-section-number">5</span> About The Implementation</h2>
 <p>This interactive tool is powered by Streamlit and uses the <code>interactive_pairs.py</code> module to perform the analysis. The analysis includes:</p>
 <ul>
 <li>Historical price data retrieval</li>

@@ -2,26 +2,11 @@
 title: "Interactive Pairs Trading Analysis"
 format:
   html:
-    page-layout: full
     toc: true
-    toc-location: left
-    include-in-header:
-      text: |
-        <style>
-        iframe {
-          border: none;
-          width: 100%;
-          height: 850px;
-          margin: 0;
-          padding: 0;
-        }
-        .content-block {
-          padding: 1rem;
-          margin-bottom: 1.5rem;
-          background-color: #f8f9fa;
-          border-radius: 0.25rem;
-        }
-        </style>
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+    code-fold: true
 ---
 
 ## Introduction {.content-block}
@@ -32,7 +17,9 @@ This interactive analysis tool lets you perform pairs trading analysis on any tw
 
 Use the tool below to analyze potential pairs trading opportunities. Simply enter the ticker symbols for two stocks and adjust the trading parameters as needed.
 
-<iframe src="https://pairstradingjvs.streamlit.app"></iframe>
+<a href="https://pairstradingjvs.streamlit.app" target="_blank" class="btn btn-primary">
+  Launch Interactive Analysis
+</a>
 
 ## How To Use {.content-block}
 

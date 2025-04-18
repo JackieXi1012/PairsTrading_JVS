@@ -24,7 +24,7 @@ website:
 
 format:
   html:
-    theme: cerulean
+    theme: cosmos
     toc: true
     math: mathjax
 

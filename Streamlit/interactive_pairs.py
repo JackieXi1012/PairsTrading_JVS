@@ -311,18 +311,43 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
         # Clean blotter, keep only rows with trades
         blotter = blotter[blotter['entry_timestamp'].notna()]
 
-        # Calculate performance metrics
-        initial_value = ledger['mkt_value'].iloc[0] if not ledger.empty else initial_cash
-        final_value = ledger['mkt_value'].iloc[-1] if not ledger.empty else initial_cash
+        # Store complete ledger for calculations
+        complete_ledger = ledger.copy()
+
+        # Filter ledger to only show positions != 0 and the last row
+        if not ledger.empty:
+            # Get the last row of the ledger
+            last_row = ledger.iloc[[-1]]
+            # Add a marker column to identify the last row
+            last_row['row_type'] = 'FINAL_ROW'
+
+            # Get all rows where position is not 0
+            positions_not_zero = ledger[ledger['position'] != 0].copy()
+            # Add marker for position rows
+            positions_not_zero['row_type'] = 'POSITION'
+
+            # Combine the filtered positions with the last row
+            ledger = pd.concat([positions_not_zero, last_row])
+
+            # If the last row already had a position != 0, it will be duplicated
+            # So drop duplicates based on date
+            ledger = ledger.drop_duplicates(subset=['date'])
+
+            # Sort by date to maintain chronological order
+            ledger = ledger.sort_values('date').reset_index(drop=True)
+
+        # Calculate performance metrics (using complete_ledger)
+        initial_value = complete_ledger['mkt_value'].iloc[0] if not complete_ledger.empty else initial_cash
+        final_value = complete_ledger['mkt_value'].iloc[-1] if not complete_ledger.empty else initial_cash
         total_return = (final_value - initial_value) / initial_value * 100
 
         # Additional performance metrics
-        if not ledger.empty:
-            ledger['daily_return'] = ledger['mkt_value'].pct_change()
-            annualized_return = ledger['daily_return'].mean() * 252 * 100
-            annualized_volatility = ledger['daily_return'].std() * np.sqrt(252) * 100
+        if not complete_ledger.empty:
+            complete_ledger['daily_return'] = complete_ledger['mkt_value'].pct_change()
+            annualized_return = complete_ledger['daily_return'].mean() * 252 * 100
+            annualized_volatility = complete_ledger['daily_return'].std() * np.sqrt(252) * 100
             sharpe_ratio = annualized_return / annualized_volatility if annualized_volatility != 0 else 0
-            max_drawdown = (ledger['mkt_value'] / ledger['mkt_value'].cummax() - 1).min() * 100
+            max_drawdown = (complete_ledger['mkt_value'] / complete_ledger['mkt_value'].cummax() - 1).min() * 100
         else:
             annualized_return = 0
             annualized_volatility = 0

@@ -1,5 +1,12 @@
 ---
 title: "Pairs Trading Strategy Overview"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+    code-fold: true
 ---
 <p style="font-size: 20px;"><strong>Team Members:</strong> Sunny Zhang, Victoria Li, Jackie Xi</p>
 
