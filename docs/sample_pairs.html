@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.6.43">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -35,7 +35,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -205,7 +205,7 @@ window.Quarto = {
 </section>
 <section id="important-values" class="level2">
 <h2 class="anchored" data-anchor-id="important-values">Important Values</h2>
-<div id="ecae7bbb" class="cell" data-execution_count="1">
+<div id="2b3700a5" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 
@@ -377,10 +377,10 @@ window.Quarto = {
 <tr class="even">
 <td data-quarto-table-cell-role="th">19</td>
 <td>2025-04-17</td>
-<td>3603.47</td>
-<td>1390.90</td>
-<td>0.951946</td>
-<td>-1.765290</td>
+<td>3608.25</td>
+<td>1393.52</td>
+<td>0.951390</td>
+<td>-1.800351</td>
 </tr>
 </tbody>
 </table>
@@ -394,33 +394,33 @@ window.Quarto = {
 </section>
 <section id="statistical-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="statistical-analysis">Statistical Analysis</h2>
-<div id="37931c38" class="cell" data-execution_count="2">
+<div id="7debf82c" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>Correlation Analysis:
 Pearson correlation coefficient: 0.9523
 Conclusion: Strong correlation (≥0.7), suitable for pairs trading
 
 Cointegration Test:
-p-value: 0.0811
+p-value: 0.0810
 Conclusion: Pair is not cointegrated (p-value &gt;= 0.05)
 
 Augmented Dickey-Fuller Test:
-ADF Statistic: -1.6592
-p-value: 0.4523
+ADF Statistic: -1.6550
+p-value: 0.4545
 Conclusion: Spread is not stationary (p-value &gt;= 0.05)
 
 AZO and ORLY are somewhat suitable for pairs trading, meeting most test conditions
 
 Mean Reversion Analysis:
 Regression coefficient (ρ): -0.0280
-Half-life: 24.72 days
+Half-life: 24.77 days
 Recommended maximum holding time: 37 days</code></pre>
 </div>
 </div>
 </section>
 <section id="trading-strategy-implementation" class="level2">
 <h2 class="anchored" data-anchor-id="trading-strategy-implementation">Trading Strategy Implementation</h2>
-<div id="5e13d97b" class="cell" data-execution_count="3">
+<div id="0e849937" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>Trading period length: 5 days
 Initial capital: $1,000,000.00
@@ -434,7 +434,7 @@ Maximum holding time: 37 days</code></pre>
 <h2 class="anchored" data-anchor-id="trading-results">Trading Results</h2>
 <section id="blotter-trade-records" class="level3">
 <h3 class="anchored" data-anchor-id="blotter-trade-records">Blotter (Trade Records)</h3>
-<div id="1d80e367" class="cell" data-execution_count="4">
+<div id="e258e0c4" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -628,7 +628,7 @@ Maximum holding time: 37 days</code></pre>
 </section>
 <section id="ledger-account-daily-statuswith-active-position" class="level3">
 <h3 class="anchored" data-anchor-id="ledger-account-daily-statuswith-active-position">Ledger (Account Daily Status–With active position)</h3>
-<div id="a7566a0c" class="cell" data-execution_count="5">
+<div id="5f24e3c3" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -777,8 +777,8 @@ Last date of this trading period:</code></pre>
 <td>2025-04-17</td>
 <td>0</td>
 <td>$1,015,121.00</td>
-<td>$3,603.47</td>
-<td>$1,390.90</td>
+<td>$3,608.25</td>
+<td>$1,393.52</td>
 <td>$1,015,121.00</td>
 </tr>
 </tbody>
@@ -790,7 +790,7 @@ Last date of this trading period:</code></pre>
 </section>
 <section id="performance-metrics" class="level3">
 <h3 class="anchored" data-anchor-id="performance-metrics">Performance Metrics</h3>
-<div id="9bc0bf2e" class="cell" data-execution_count="6">
+<div id="dfd2cbc8" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-stdout">
 <pre><code>Initial Capital: $1,000,000.00
 Final Assets: $1,015,121.00
@@ -805,7 +805,7 @@ Maximum Drawdown: -34.16%</code></pre>
 </section>
 <section id="price-and-z-score-charts" class="level2">
 <h2 class="anchored" data-anchor-id="price-and-z-score-charts">Price and Z-Score Charts</h2>
-<div id="ddec29c7" class="cell" data-fig-height="10" data-fig-width="12" data-execution_count="7">
+<div id="a99b25b3" class="cell" data-fig-height="10" data-fig-width="12" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
