@@ -3,4 +3,4 @@ pandas
 numpy
 matplotlib
 statsmodels
-shinybroker
+yfinance>=0.2.0

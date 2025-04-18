@@ -4,7 +4,11 @@ import datetime
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import adfuller, coint
-import shinybroker as sb
+# Replace shinybroker with yfinance
+import yfinance as yf
+import warnings
+
+warnings.filterwarnings('ignore')  # Suppress warnings for cleaner output
 
 
 def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_per_trade=100, stop_loss_pct=0.05):
@@ -31,32 +35,21 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
         account ledger, and visualization figure
     """
     try:
-        # Create stock contracts
-        stock_a = sb.Contract({'symbol': stock_a_symbol, 'secType': "STK", 'exchange': "SMART", 'currency': "USD"})
-        stock_b = sb.Contract({'symbol': stock_b_symbol, 'secType': "STK", 'exchange': "SMART", 'currency': "USD"})
+        # Fetch historical data using yfinance
+        stock_a_data = yf.download(stock_a_symbol, period="1y", auto_adjust=False)
+        stock_b_data = yf.download(stock_b_symbol, period="1y", auto_adjust=False)
 
-        # Fetch historical data
-        stock_a_data = sb.fetch_historical_data(contract=stock_a, barSizeSetting="1 day", durationStr="1 Y")['hst_dta']
-        stock_b_data = sb.fetch_historical_data(contract=stock_b, barSizeSetting="1 day", durationStr="1 Y")['hst_dta']
+        # Ensure both datasets have the same dates
+        common_dates = stock_a_data.index.intersection(stock_b_data.index)
+        stock_a_data = stock_a_data.loc[common_dates]
+        stock_b_data = stock_b_data.loc[common_dates]
 
-        # Prepare and align price data
-        try:
-            date_column = next((col for col in ['date', 'time'] if col in stock_a_data.columns), None)
-            if not date_column:
-                date_column = [col for col in stock_a_data.columns if 'date' in col.lower() or 'time' in col.lower()][0]
-            data = pd.DataFrame({
-                'Date': pd.to_datetime(stock_a_data[date_column]),
-                'Stock_A_Price': stock_a_data['close'],
-                'Stock_B_Price': stock_b_data['close']
-            })
-        except:
-            data = pd.DataFrame({
-                'Stock_A_Price': stock_a_data['close'],
-                'Stock_B_Price': stock_b_data['close']
-            })
-            end_date = datetime.datetime.now()
-            start_date = end_date - datetime.timedelta(days=365)
-            data['Date'] = pd.date_range(start=start_date, periods=len(data), freq='B')
+        # Create DataFrame with aligned price data
+        data = pd.DataFrame({
+            'Date': common_dates,
+            'Stock_A_Price': stock_a_data['Close'].values.flatten(),  # Ensure 1D array
+            'Stock_B_Price': stock_b_data['Close'].values.flatten()  # Ensure 1D array
+        })
 
         # Ensure Date is datetime type and sort data
         data['Date'] = pd.to_datetime(data['Date'])
@@ -70,7 +63,7 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
 
         # Statistical analysis
         correlation = data['Stock_A_Price'].corr(data['Stock_B_Price'])
-        score, pvalue, _ = coint(data['Stock_A_Price'], data['Stock_B_Price'])
+        score, pvalue, _ = coint(data['Stock_A_Price'].astype(float), data['Stock_B_Price'].astype(float))
         adf_result = adfuller(data['Log_Spread'].dropna())
 
         # Half-life calculation
@@ -84,14 +77,18 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
             spread_diff = spread_diff.dropna()
 
             # Set up regression model: ΔSpread_t = α + ρ*Spread_{t-1} + ε_t
-            spread_lag = sm.add_constant(spread_lag)
+            spread_lag_values = sm.add_constant(spread_lag.values)
 
-            # Run OLS regression - using .iloc[] for positional indexing
-            model = sm.OLS(spread_diff.iloc[1:], spread_lag.iloc[1:])
+            # Run OLS regression
+            # Extract values to 1D arrays
+            y = spread_diff.iloc[1:].values.flatten()
+            X = spread_lag_values[1:, :]  # Already 2D array
+
+            model = sm.OLS(y, X)
             results = model.fit()
 
             # Get coefficient for Spread_{t-1} (ρ)
-            rho = results.params.iloc[1]
+            rho = results.params[1]
 
             # Calculate half-life: t_{1/2} = -ln(2)/ln(1+ρ)
             if rho >= 0:  # No mean reversion
@@ -106,25 +103,51 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
         # Determine maximum holding time based on half-life
         max_holding_time = int(1.5 * half_life) if half_life < 100 else 20
 
-        # Try to get VIX data
+        # Try to get VIX data using yfinance
         try:
-            vix = sb.Contract({'symbol': "VIX", 'secType': "IND", 'exchange': "CBOE", 'currency': "USD"})
-            vix_data = sb.fetch_historical_data(contract=vix, barSizeSetting="1 day", durationStr="1 Y")['hst_dta']
-            data['VIX'] = vix_data['close']
-        except:
+            vix_data = yf.download("^VIX", period="1y", auto_adjust=False)
+            # Create a mapping from date string to VIX value for easier lookup
+            vix_dict = {d.strftime('%Y-%m-%d'): v for d, v in zip(vix_data.index, vix_data['Close'].values)}
+
+            # Create aligned VIX data using the dictionary
+            vix_values = []
+            for date in data['Date']:
+                date_str = date.strftime('%Y-%m-%d')
+                if date_str in vix_dict:
+                    vix_values.append(vix_dict[date_str])
+                else:
+                    vix_values.append(None)
+
+            data['VIX'] = vix_values
+            # Forward fill manually
+            last_valid = 15  # Default starting value
+            for i in range(len(data)):
+                if pd.isna(data.at[i, 'VIX']):
+                    data.at[i, 'VIX'] = last_valid
+                else:
+                    last_valid = data.at[i, 'VIX']
+        except Exception as e:
+            print(f"Error getting VIX data: {e}")
             # If no VIX data, use a simple estimate of price volatility
-            data['VIX'] = data['Stock_A_Price'].pct_change().rolling(20).std() * 100
-            data['VIX'].fillna(15, inplace=True)  # Use 15 as default value
+            vol_data = data['Stock_A_Price'].pct_change().rolling(20).std() * 100
+            vol_data = vol_data.fillna(15)  # Use 15 as default value
+            data['VIX'] = vol_data.values
 
         # Adjust thresholds based on VIX
-        conditions = [
-            (data['VIX'] < 20),
-            (data['VIX'] >= 20) & (data['VIX'] < 25),
-            (data['VIX'] >= 25) & (data['VIX'] < 30),
-            (data['VIX'] >= 30)
-        ]
-        choices = [2.0, 2.25, 2.5, 3.0]
-        data['threshold'] = np.select(conditions, choices, default=2.0)
+        data['threshold'] = 2.0  # Default threshold
+
+        # Apply conditions one by one to avoid Series truth value ambiguity
+        mask1 = data['VIX'] < 20
+        data.loc[mask1, 'threshold'] = 2.0
+
+        mask2 = (data['VIX'] >= 20) & (data['VIX'] < 25)
+        data.loc[mask2, 'threshold'] = 2.25
+
+        mask3 = (data['VIX'] >= 25) & (data['VIX'] < 30)
+        data.loc[mask3, 'threshold'] = 2.5
+
+        mask4 = data['VIX'] >= 30
+        data.loc[mask4, 'threshold'] = 3.0
 
         # Define trading periods function
         def define_trading_periods(df, period_length_days=5):
@@ -199,23 +222,24 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
 
         for i, row in filtered_data.iterrows():
             current_date = row['Date']
-            current_period = row['trading_period']
+            current_period = int(row['trading_period'])  # Ensure integer
+            signal_value = int(row['signal'])  # Ensure integer
+            exit_signal_value = int(row['exit_signal'])  # Ensure integer
 
             # Find index for current date in ledger
-            ledger_idx = ledger[ledger['date'] == current_date].index
+            ledger_idx_list = ledger[ledger['date'] == current_date].index.tolist()
 
-            if len(ledger_idx) == 0:
+            if len(ledger_idx_list) == 0:
                 continue
 
-            ledger_idx = ledger_idx[0]
+            ledger_idx = ledger_idx_list[0]
 
             # Check if there's an entry signal and no current position
-            if row['signal'] != 0 and current_position == 0:
+            if signal_value != 0 and current_position == 0:
                 # Record entry information
-                current_position = row[
-                                       'signal'] * shares_per_trade  # Positive means long Stock A/short Stock B, negative means short Stock A/long Stock B
-                entry_price_A = row['Stock_A_Price']
-                entry_price_B = row['Stock_B_Price']
+                current_position = signal_value * shares_per_trade  # Positive means long Stock A/short Stock B, negative means short Stock A/long Stock B
+                entry_price_A = float(row['Stock_A_Price'])  # Ensure float
+                entry_price_B = float(row['Stock_B_Price'])  # Ensure float
                 entry_date = current_date
 
                 # Update blotter
@@ -236,56 +260,67 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
                 # Update ledger
                 ledger.loc[ledger_idx, 'position'] = current_position
 
-            # Check if there's an exit signal and current position exists
-            elif ((row['exit_signal'] == 1 or
-                   (entry_date and (current_date - entry_date).days > max_holding_time) or
-                   (entry_price_A and entry_price_B and
-                    abs(((row['Stock_A_Price'] / entry_price_A) - (
-                            row['Stock_B_Price'] / entry_price_B)) / 2) > stop_loss_pct))
-                  and current_position != 0):
+            # Check if there's an exit signal and current position exists - break into simple conditions
+            elif current_position != 0:
+                exit_condition1 = exit_signal_value == 1
 
-                # Calculate pairs trading P&L
-                exit_price_A = row['Stock_A_Price']
-                exit_price_B = row['Stock_B_Price']
+                exit_condition2 = False
+                if entry_date is not None:
+                    exit_condition2 = (current_date - entry_date).days > max_holding_time
 
-                # Calculate P&L for both directions
-                if current_position > 0:  # Long Stock A, Short Stock B
-                    pnl_A = current_position * (exit_price_A - entry_price_A)  # Stock A long P&L
-                    pnl_B = current_position * (entry_price_B - exit_price_B)  # Stock B short P&L
-                else:  # Short Stock A, Long Stock B
-                    pnl_A = -current_position * (entry_price_A - exit_price_A)  # Stock A short P&L
-                    pnl_B = -current_position * (exit_price_B - entry_price_B)  # Stock B long P&L
+                exit_condition3 = False
+                if entry_price_A != 0 and entry_price_B != 0:
+                    ratio_diff = abs(((float(row['Stock_A_Price']) / entry_price_A) -
+                                      (float(row['Stock_B_Price']) / entry_price_B)) / 2)
+                    exit_condition3 = ratio_diff > stop_loss_pct
 
-                total_pnl = pnl_A + pnl_B
+                # Combine exit conditions
+                if exit_condition1 or exit_condition2 or exit_condition3:
+                    # Calculate pairs trading P&L
+                    exit_price_A = float(row['Stock_A_Price'])  # Ensure float
+                    exit_price_B = float(row['Stock_B_Price'])  # Ensure float
 
-                # Update blotter
-                period_of_entry = blotter[blotter['entry_timestamp'] == entry_date].index
-                if len(period_of_entry) == 0:
-                    pass
+                    # Calculate P&L for both directions
+                    if current_position > 0:  # Long Stock A, Short Stock B
+                        pnl_A = current_position * (exit_price_A - entry_price_A)  # Stock A long P&L
+                        pnl_B = current_position * (entry_price_B - exit_price_B)  # Stock B short P&L
+                    else:  # Short Stock A, Long Stock B
+                        pnl_A = -current_position * (entry_price_A - exit_price_A)  # Stock A short P&L
+                        pnl_B = -current_position * (exit_price_B - entry_price_B)  # Stock B long P&L
+
+                    total_pnl = pnl_A + pnl_B
+
+                    # Update blotter
+                    periods_of_entry = blotter.index[blotter['entry_timestamp'] == entry_date].tolist()
+                    if periods_of_entry:
+                        period_of_entry = periods_of_entry[0]
+                        blotter.loc[period_of_entry, 'exit_timestamp'] = current_date
+                        blotter.loc[period_of_entry, 'exit_price_A'] = exit_price_A
+                        blotter.loc[period_of_entry, 'exit_price_B'] = exit_price_B
+                        blotter.loc[period_of_entry, 'success'] = total_pnl > 0
+                        blotter.loc[period_of_entry, 'pnl_A'] = pnl_A
+                        blotter.loc[period_of_entry, 'pnl_B'] = pnl_B
+                        blotter.loc[period_of_entry, 'total_pnl'] = total_pnl
+
+                    # Update ledger cash
+                    if ledger_idx > 0:
+                        ledger.loc[ledger_idx, 'cash'] = ledger.loc[ledger_idx - 1, 'cash'] + total_pnl
+                    else:
+                        ledger.loc[ledger_idx, 'cash'] = initial_cash + total_pnl
+
+                    # Reset position information
+                    current_position = 0
+                    entry_price_A = 0
+                    entry_price_B = 0
+                    entry_date = None
                 else:
-                    period_of_entry = period_of_entry[0]
-                    blotter.loc[period_of_entry, 'exit_timestamp'] = current_date
-                    blotter.loc[period_of_entry, 'exit_price_A'] = exit_price_A
-                    blotter.loc[period_of_entry, 'exit_price_B'] = exit_price_B
-                    blotter.loc[period_of_entry, 'success'] = total_pnl > 0
-                    blotter.loc[period_of_entry, 'pnl_A'] = pnl_A
-                    blotter.loc[period_of_entry, 'pnl_B'] = pnl_B
-                    blotter.loc[period_of_entry, 'total_pnl'] = total_pnl
-
-                # Update ledger cash
-                if ledger_idx > 0:
-                    ledger.loc[ledger_idx, 'cash'] = ledger.loc[ledger_idx - 1, 'cash'] + total_pnl
-                else:
-                    ledger.loc[ledger_idx, 'cash'] = initial_cash + total_pnl
-
-                # Reset position information
-                current_position = 0
-                entry_price_A = 0
-                entry_price_B = 0
-                entry_date = None
-
+                    # If no exit signal but have position, copy cash from previous day
+                    if ledger_idx > 0:
+                        ledger.loc[ledger_idx, 'cash'] = ledger.loc[ledger_idx - 1, 'cash']
+                    else:
+                        ledger.loc[ledger_idx, 'cash'] = initial_cash
             else:
-                # If no trade signal, copy cash from previous day
+                # If no trade signal and no position, copy cash from previous day
                 if ledger_idx > 0:
                     ledger.loc[ledger_idx, 'cash'] = ledger.loc[ledger_idx - 1, 'cash']
                 else:
@@ -295,12 +330,15 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
             ledger.loc[ledger_idx, 'position'] = current_position
 
             # Calculate market value (considering both positions)
+            stock_a_price = float(row['Stock_A_Price'])  # Ensure float
+            stock_b_price = float(row['Stock_B_Price'])  # Ensure float
+
             if current_position > 0:  # Long Stock A, Short Stock B
-                value_A = current_position * row['Stock_A_Price']  # Stock A long value
-                value_B = -current_position * row['Stock_B_Price']  # Stock B short value
+                value_A = current_position * stock_a_price  # Stock A long value
+                value_B = -current_position * stock_b_price  # Stock B short value
             elif current_position < 0:  # Short Stock A, Long Stock B
-                value_A = current_position * row['Stock_A_Price']  # Stock A short value
-                value_B = -current_position * row['Stock_B_Price']  # Stock B long value
+                value_A = current_position * stock_a_price  # Stock A short value
+                value_B = -current_position * stock_b_price  # Stock B long value
             else:
                 value_A = 0
                 value_B = 0
@@ -317,7 +355,7 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
         # Filter ledger to only show positions != 0 and the last row
         if not ledger.empty:
             # Get the last row of the ledger
-            last_row = ledger.iloc[[-1]]
+            last_row = ledger.iloc[[-1]].copy()  # Make a copy to avoid SettingWithCopyWarning
             # Add a marker column to identify the last row
             last_row['row_type'] = 'FINAL_ROW'
 
@@ -419,5 +457,7 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
         }
 
     except Exception as e:
+        import traceback
         print(f"Analysis failed: {e}")
+        print(traceback.format_exc())
         return None
