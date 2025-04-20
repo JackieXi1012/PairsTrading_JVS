@@ -39,23 +39,17 @@ website:
 
 format:
   html:
-    theme:
-      light: [cosmo, styles.css]
-      dark: [darkly, styles.css]
+    theme: darkly
+    css: styles.css
     toc: true
     toc-depth: 3
     toc-title: "On this page"
     code-copy: true
-    code-tools: true
     highlight-style: github
-    math: mathjax
-    css: styles.css
     include-in-header:
       text: |
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
 
 execute:
   enabled: true
