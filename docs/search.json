@@ -126,83 +126,6 @@
     "text": "Price and Z-Score Charts"
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About Our Pairs Trading Strategy",
-    "section": "",
-    "text": "In today’s fast-changing financial markets, achieving consistent returns without taking on substantial directional risk is increasingly challenging. Our strategy harnesses statistical techniques to capture temporary mispricings between related stocks. By focusing on the intrinsic relationship between asset pairs, we seek to profit from short-term deviations that eventually revert to long-term equilibrium."
-  },
-  {
-    "objectID": "about.html#overview",
-    "href": "about.html#overview",
-    "title": "About Our Pairs Trading Strategy",
-    "section": "",
-    "text": "In today’s fast-changing financial markets, achieving consistent returns without taking on substantial directional risk is increasingly challenging. Our strategy harnesses statistical techniques to capture temporary mispricings between related stocks. By focusing on the intrinsic relationship between asset pairs, we seek to profit from short-term deviations that eventually revert to long-term equilibrium."
-  },
-  {
-    "objectID": "about.html#our-approach",
-    "href": "about.html#our-approach",
-    "title": "About Our Pairs Trading Strategy",
-    "section": "Our Approach",
-    "text": "Our Approach\nWe begin by scanning a broad universe of equities and then narrowing our focus to pairs that exhibit strong historical relationships. Key steps include:\n\nCorrelation Screening: We select pairs with strong historical price correlation (typically over 0.7) based on daily data over one year.\nCointegration Validation: Statistical tests confirm that the selected price series maintain a long-term equilibrium relationship.\nDynamic Signal Generation: Our entry and exit signals are derived from the Z-score of the price spread, which adapts to market conditions with volatility adjustments via the VIX index."
-  },
-  {
-    "objectID": "about.html#quantitative-methodology",
-    "href": "about.html#quantitative-methodology",
-    "title": "About Our Pairs Trading Strategy",
-    "section": "Quantitative Methodology",
-    "text": "Quantitative Methodology\nOur method relies on straightforward yet robust quantitative techniques:\n\nLog-Price Transformation: \\[\\text{Log Price}_i = \\log(\\text{Price}_i)\\] This normalization allows us to manage multiplicative effects and volatility.\nSpread and Z-Score Calculation: The spread is computed as the difference between the log-prices of the paired assets: \\[\\text{Spread} = \\text{Log Price}_A - \\text{Log Price}_B\\] The Z-score, calculated over a rolling window (typically 20 days), quantifies the deviation of the current spread from its mean: \\[Z\\text{-score} = \\frac{\\text{Spread} - \\text{Mean(Spread)}}{\\text{Std(Spread)}}\\]\nHalf-Life Estimation: To understand how quickly the spread returns to its mean, we estimate the half-life using an AR(1) model: \\[\\text{Half-life} = \\frac{-\\ln(2)}{\\rho}\\] where () is the coefficient from the regression of the spread’s change on its lagged value.\nVolatility Adjustment: By incorporating the VIX index, we adjust our Z-score entry thresholds dynamically so that the strategy is more conservative in volatile markets."
-  },
-  {
-    "objectID": "about.html#risk-controls",
-    "href": "about.html#risk-controls",
-    "title": "About Our Pairs Trading Strategy",
-    "section": "Risk Controls",
-    "text": "Risk Controls\nRisk management is integral to our strategy. Key measures include:\n\nDollar-Neutral Positions: Each trade is structured to maintain a near-neutral market exposure.\nStop-Loss Implementation: Positions are exited if adverse movements exceed 5% of the trade’s value.\nHolding Period Limits: We impose a maximum holding time (typically based on 1.5 times the estimated half-life) to avoid extended exposure.\nDiversification Across Pairs: Trading multiple, uncorrelated pairs helps mitigate the risk of any single pair underperforming."
-  },
-  {
-    "objectID": "about.html#strategy-rationale",
-    "href": "about.html#strategy-rationale",
-    "title": "About Our Pairs Trading Strategy",
-    "section": "Strategy Rationale",
-    "text": "Strategy Rationale\nThe rationale behind our strategy is that even highly correlated stocks can temporarily deviate from their equilibrium due to market inefficiencies, news events, or short-term supply/demand imbalances. By capturing these transient mispricings and applying strict risk controls, we aim to generate steady, low-risk returns independent of overall market direction."
-  },
-  {
-    "objectID": "about.html#learn-more",
-    "href": "about.html#learn-more",
-    "title": "About Our Pairs Trading Strategy",
-    "section": "Learn More",
-    "text": "Learn More\nTo delve deeper into the technical details, please visit our Indicators page where we explain our statistical filters and signal generation methods. For performance metrics and trade execution details, check out our Results page."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Pairs Trading Strategy Overview",
-    "section": "",
-    "text": "Team Members: Sunny Zhang, Victoria Li, Jackie Xi"
-  },
-  {
-    "objectID": "index.html#pairs-trading-strategy-overview",
-    "href": "index.html#pairs-trading-strategy-overview",
-    "title": "Pairs Trading Strategy Overview",
-    "section": "1 Pairs Trading Strategy Overview",
-    "text": "1 Pairs Trading Strategy Overview\nPairs Trading is a market-neutral strategy designed to profit from temporary price divergences between two historically correlated assets. Rather than betting on market direction, it aims to capture statistical arbitrage opportunities when the price relationship between two assets temporarily drifts from its historical mean.\n This strategy offers a robust approach in volatile markets, by:\n\nTargeting mean reversion in asset pairs\nUtilizing long-short positions to hedge market-wide movements\nFocusing on relative pricing rather than absolute market trends\n\n\nBy identifying pairs that move together historically, the strategy capitalizes when their prices diverge and then revert — creating opportunities for low-risk, data-driven trading."
-  },
-  {
-    "objectID": "index.html#sample-trading-pairs-table",
-    "href": "index.html#sample-trading-pairs-table",
-    "title": "Pairs Trading Strategy Overview",
-    "section": "2 Sample Trading Pairs Table",
-    "text": "2 Sample Trading Pairs Table\n\n\n\nExample Pairs and Key Drivers\n\n\n\n\n\n\n\nCategory\nPairs\nKeyDrivers\n\n\n\n\nSemiconductor\nAMD (AMD) vs. NVIDIA (NVDA)\nGPU/CPU Demand & AI Adoption\n\n\nCloud Computing\nMicrosoft (MSFT) vs. Amazon (AMZN)\nCloud Computing Growth & Enterprise IT Spending\n\n\nAuto Parts Retail\nAutoZone (AZO) vs. O’Reilly (ORLY)\nAuto Repair Market & DIY Trends\n\n\nBanking\nJP Morgan (JPM) vs. Bank of America (BAC)\nInterest Rates & Loan Growth\n\n\nETF Strategy\nNasdaq ETF (QQQ) vs. Semiconductor ETF (SMH)\nTechnology Sector Performance\n\n\nOil & Gas\nExxon Mobil (XOM) vs. Chevron (CVX)\nOil Prices & Global Energy Demand\n\n\nHome Improvement\nHome Depot (HD) vs. Lowe’s (LOW)\nHousing Market & Home Improvement Spending\n\n\nTelecom\nAT&T (T) vs. Verizon (VZ)\nWireless Subscriptions & 5G Adoption\n\n\nPayment Processing\nVisa (V) vs. Mastercard (MA)\nConsumer Spending & Digital Payments\n\n\nBeverage\nCoca-Cola (KO) vs. PepsiCo (PEP)\nBeverage Market Share & Pricing Power\n\n\nFast Food\nMcDonald’s (MCD) vs. Yum! Brands (YUM)\nFast Food Consumption & International Expansion\n\n\nStreaming\nNetflix (NFLX) vs. Disney (DIS)\nStreaming Subscribers & Content Investment\n\n\nRetail\nWalmart (WMT) vs. Target (TGT)\nConsumer Retail Spending & E-commerce Growth\n\n\nAirlines\nDelta (DAL) vs. United Airlines (UAL)\nTravel Demand & Fuel Costs\n\n\nSocial Media\nMeta (META) vs. Snap (SNAP)\nDigital Advertising & User Engagement"
-  },
-  {
-    "objectID": "index.html#explore-this-project",
-    "href": "index.html#explore-this-project",
-    "title": "Pairs Trading Strategy Overview",
-    "section": "3 Explore This Project",
-    "text": "3 Explore This Project\n\nAbout: Learn the motivation, design, and logic behind the strategy\nIndicators: Statistical indicators, trading signals, and performance metrics\nSample pairs: Sample pairs, backtesting results, and insights\n\n\n\n\n“ In markets driven by noise, we trade on the signal. ”"
-  },
-  {
     "objectID": "interactive_analysis.html",
     "href": "interactive_analysis.html",
     "title": "Interactive Pairs Trading Analysis",
@@ -243,5 +166,117 @@
     "title": "Interactive Pairs Trading Analysis",
     "section": "5 About The Implementation",
     "text": "5 About The Implementation\nThis interactive tool is powered by Streamlit and uses the interactive_pairs.py module to perform the analysis. The analysis includes:\n\nHistorical price data retrieval\nStatistical tests for correlation and cointegration\nZ-score calculation for trading signals\nBacktesting with position tracking\nPerformance evaluation with metrics such as total return, Sharpe ratio, and maximum drawdown\n\nFor more technical details on the implementation, please see the sample_pairs.qmd document or examine the source code on GitHub."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Pairs Trading Strategy Overview",
+    "section": "",
+    "text": "Team Members: Sunny Zhang, Victoria Li, Jackie Xi"
+  },
+  {
+    "objectID": "index.html#pairs-trading-strategy-overview",
+    "href": "index.html#pairs-trading-strategy-overview",
+    "title": "Pairs Trading Strategy Overview",
+    "section": "1 Pairs Trading Strategy Overview",
+    "text": "1 Pairs Trading Strategy Overview\nPairs Trading is a market-neutral strategy designed to profit from temporary price divergences between two historically correlated assets. Rather than betting on market direction, it aims to capture statistical arbitrage opportunities when the price relationship between two assets temporarily drifts from its historical mean.\n This strategy offers a robust approach in volatile markets, by:\n\nTargeting mean reversion in asset pairs\nUtilizing long-short positions to hedge market-wide movements\nFocusing on relative pricing rather than absolute market trends\n\n\nBy identifying pairs that move together historically, the strategy capitalizes when their prices diverge and then revert — creating opportunities for low-risk, data-driven trading."
+  },
+  {
+    "objectID": "index.html#sample-trading-pairs-table",
+    "href": "index.html#sample-trading-pairs-table",
+    "title": "Pairs Trading Strategy Overview",
+    "section": "2 Sample Trading Pairs Table",
+    "text": "2 Sample Trading Pairs Table\n\n\n\nExample Pairs and Key Drivers\n\n\n\n\n\n\n\nCategory\nPairs\nKeyDrivers\n\n\n\n\nSemiconductor\nAMD (AMD) vs. NVIDIA (NVDA)\nGPU/CPU Demand & AI Adoption\n\n\nCloud Computing\nMicrosoft (MSFT) vs. Amazon (AMZN)\nCloud Computing Growth & Enterprise IT Spending\n\n\nAuto Parts Retail\nAutoZone (AZO) vs. O’Reilly (ORLY)\nAuto Repair Market & DIY Trends\n\n\nBanking\nJP Morgan (JPM) vs. Bank of America (BAC)\nInterest Rates & Loan Growth\n\n\nETF Strategy\nNasdaq ETF (QQQ) vs. Semiconductor ETF (SMH)\nTechnology Sector Performance\n\n\nOil & Gas\nExxon Mobil (XOM) vs. Chevron (CVX)\nOil Prices & Global Energy Demand\n\n\nHome Improvement\nHome Depot (HD) vs. Lowe’s (LOW)\nHousing Market & Home Improvement Spending\n\n\nTelecom\nAT&T (T) vs. Verizon (VZ)\nWireless Subscriptions & 5G Adoption\n\n\nPayment Processing\nVisa (V) vs. Mastercard (MA)\nConsumer Spending & Digital Payments\n\n\nBeverage\nCoca-Cola (KO) vs. PepsiCo (PEP)\nBeverage Market Share & Pricing Power\n\n\nFast Food\nMcDonald’s (MCD) vs. Yum! Brands (YUM)\nFast Food Consumption & International Expansion\n\n\nStreaming\nNetflix (NFLX) vs. Disney (DIS)\nStreaming Subscribers & Content Investment\n\n\nRetail\nWalmart (WMT) vs. Target (TGT)\nConsumer Retail Spending & E-commerce Growth\n\n\nAirlines\nDelta (DAL) vs. United Airlines (UAL)\nTravel Demand & Fuel Costs\n\n\nSocial Media\nMeta (META) vs. Snap (SNAP)\nDigital Advertising & User Engagement"
+  },
+  {
+    "objectID": "index.html#explore-this-project",
+    "href": "index.html#explore-this-project",
+    "title": "Pairs Trading Strategy Overview",
+    "section": "3 Explore This Project",
+    "text": "3 Explore This Project\n\nAbout: Learn the motivation, design, and logic behind the strategy\nIndicators: Statistical indicators, trading signals, and performance metrics\nSample pairs: Sample pairs, backtesting results, and insights\n\n\n\n\n“ In markets driven by noise, we trade on the signal. ”"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "",
+    "text": "In today’s fast-changing financial markets, achieving consistent returns without taking on substantial directional risk is increasingly challenging. Our strategy harnesses statistical techniques to capture temporary mispricings between related stocks. By focusing on the intrinsic relationship between asset pairs, we seek to profit from short-term deviations that eventually revert to long-term equilibrium.",
+    "crumbs": [
+      "Home",
+      "Main Navigation",
+      "About Our Pairs Trading Strategy"
+    ]
+  },
+  {
+    "objectID": "about.html#overview",
+    "href": "about.html#overview",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "",
+    "text": "In today’s fast-changing financial markets, achieving consistent returns without taking on substantial directional risk is increasingly challenging. Our strategy harnesses statistical techniques to capture temporary mispricings between related stocks. By focusing on the intrinsic relationship between asset pairs, we seek to profit from short-term deviations that eventually revert to long-term equilibrium.",
+    "crumbs": [
+      "Home",
+      "Main Navigation",
+      "About Our Pairs Trading Strategy"
+    ]
+  },
+  {
+    "objectID": "about.html#our-approach",
+    "href": "about.html#our-approach",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "Our Approach",
+    "text": "Our Approach\nWe begin by scanning a broad universe of equities and then narrowing our focus to pairs that exhibit strong historical relationships. Key steps include:\n\nCorrelation Screening: We select pairs with strong historical price correlation (typically over 0.7) based on daily data over one year.\nCointegration Validation: Statistical tests confirm that the selected price series maintain a long-term equilibrium relationship.\nDynamic Signal Generation: Our entry and exit signals are derived from the Z-score of the price spread, which adapts to market conditions with volatility adjustments via the VIX index.",
+    "crumbs": [
+      "Home",
+      "Main Navigation",
+      "About Our Pairs Trading Strategy"
+    ]
+  },
+  {
+    "objectID": "about.html#quantitative-methodology",
+    "href": "about.html#quantitative-methodology",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "Quantitative Methodology",
+    "text": "Quantitative Methodology\nOur method relies on straightforward yet robust quantitative techniques:\n\nLog-Price Transformation: \\[\\text{Log Price}_i = \\log(\\text{Price}_i)\\] This normalization allows us to manage multiplicative effects and volatility.\nSpread and Z-Score Calculation: The spread is computed as the difference between the log-prices of the paired assets: \\[\\text{Spread} = \\text{Log Price}_A - \\text{Log Price}_B\\] The Z-score, calculated over a rolling window (typically 20 days), quantifies the deviation of the current spread from its mean: \\[Z\\text{-score} = \\frac{\\text{Spread} - \\text{Mean(Spread)}}{\\text{Std(Spread)}}\\]\nHalf-Life Estimation: To understand how quickly the spread returns to its mean, we estimate the half-life using an AR(1) model: \\[\\text{Half-life} = \\frac{-\\ln(2)}{\\rho}\\] where () is the coefficient from the regression of the spread’s change on its lagged value.\nVolatility Adjustment: By incorporating the VIX index, we adjust our Z-score entry thresholds dynamically so that the strategy is more conservative in volatile markets.",
+    "crumbs": [
+      "Home",
+      "Main Navigation",
+      "About Our Pairs Trading Strategy"
+    ]
+  },
+  {
+    "objectID": "about.html#risk-controls",
+    "href": "about.html#risk-controls",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "Risk Controls",
+    "text": "Risk Controls\nRisk management is integral to our strategy. Key measures include:\n\nDollar-Neutral Positions: Each trade is structured to maintain a near-neutral market exposure.\nStop-Loss Implementation: Positions are exited if adverse movements exceed 5% of the trade’s value.\nHolding Period Limits: We impose a maximum holding time (typically based on 1.5 times the estimated half-life) to avoid extended exposure.\nDiversification Across Pairs: Trading multiple, uncorrelated pairs helps mitigate the risk of any single pair underperforming.",
+    "crumbs": [
+      "Home",
+      "Main Navigation",
+      "About Our Pairs Trading Strategy"
+    ]
+  },
+  {
+    "objectID": "about.html#strategy-rationale",
+    "href": "about.html#strategy-rationale",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "Strategy Rationale",
+    "text": "Strategy Rationale\nThe rationale behind our strategy is that even highly correlated stocks can temporarily deviate from their equilibrium due to market inefficiencies, news events, or short-term supply/demand imbalances. By capturing these transient mispricings and applying strict risk controls, we aim to generate steady, low-risk returns independent of overall market direction.",
+    "crumbs": [
+      "Home",
+      "Main Navigation",
+      "About Our Pairs Trading Strategy"
+    ]
+  },
+  {
+    "objectID": "about.html#learn-more",
+    "href": "about.html#learn-more",
+    "title": "About Our Pairs Trading Strategy",
+    "section": "Learn More",
+    "text": "Learn More\nTo delve deeper into the technical details, please visit our Indicators page where we explain our statistical filters and signal generation methods. For performance metrics and trade execution details, check out our Results page.",
+    "crumbs": [
+      "Home",
+      "Main Navigation",
+      "About Our Pairs Trading Strategy"
+    ]
   }
 ]
