@@ -37,19 +37,50 @@ website:
       - icon: github
         href: https://github.com/szhang95/PairsTrading_JVS
 
+  sidebar:
+    style: "floating"
+    search: true
+    contents:
+      - section: "Main Navigation"
+        contents:
+          - index.qmd
+          - about.qmd
+          - indicators.qmd
+          - sample_pairs.qmd
+          - interactive_analysis.qmd
+
 format:
   html:
-    theme: darkly
-    css: styles.css
+    theme:
+      light: [cosmo, styles.css]
+      dark: [darkly, styles.css]
     toc: true
     toc-depth: 3
     toc-title: "On this page"
+    toc-location: left
     code-copy: true
+    code-tools: true
     highlight-style: github
+    math: mathjax
+    css: styles.css
     include-in-header:
       text: |
-        <meta charset="UTF-8">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
+        <style>
+          /* Quick fix for sidebar overlapping content */
+          @media (min-width: 992px) {
+            .sidebar-content {
+              max-width: 280px;
+            }
+            .content-with-sidebar {
+              margin-left: 300px !important;
+            }
+            #quarto-sidebar {
+              padding-right: 1rem;
+            }
+          }
+        </style>
 
 execute:
   enabled: true

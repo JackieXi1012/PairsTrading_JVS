@@ -104,7 +104,29 @@ header, .navbar {
   transform: translateY(-2px);
 }
 
-/* Main content */
+/* Main content and layout structure */
+.quarto-title-banner {
+  padding: 1.5rem;
+  background: rgba(15, 52, 96, 0.6);
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* FIX: Adjust layout for pages with sidebar */
+.page-layout-custom .column-page {
+  max-width: none !important;
+}
+
+.page-layout-custom .column-screen {
+  max-width: none !important;
+}
+
+/* Adjust main page layout */
+#quarto-content {
+  display: flex;
+}
+
 main {
   padding: 2rem;
   max-width: 1100px;
@@ -113,6 +135,57 @@ main {
   border-radius: 8px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.3);
   backdrop-filter: blur(5px);
+}
+
+/* FIX: Specific adjustments for pages with TOC */
+body:has(.nav-tabs) {
+  overflow-x: hidden;
+}
+
+/* TOC sidebar specific fixes */
+.sidebar.toc-left, .sidebar.margin-sidebar {
+  left: 0;
+  padding: 1.5rem;
+  background: rgba(20, 20, 30, 0.7);
+  border-radius: 0 8px 8px 0;
+  box-shadow: 4px 0 12px rgba(0,0,0,0.2);
+  max-width: 280px;
+  z-index: 100;
+}
+
+.sidebar-title {
+  color: var(--secondary-color);
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* FIX: Ensure content doesn't overlap with sidebar */
+.column-body {
+  padding-left: 300px; /* Adjust based on sidebar width */
+}
+
+/* FIX: For specific pages with TOC issues */
+#sample_pairs, #interactive_analysis {
+  margin-left: 300px;
+}
+
+/* On mobile, clear the margin */
+@media (max-width: 991px) {
+  .column-body, #sample_pairs, #interactive_analysis {
+    padding-left: 0;
+    margin-left: 0;
+  }
+
+  .sidebar.toc-left, .sidebar.margin-sidebar {
+    position: static;
+    max-width: 100%;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+  }
 }
 
 /* Headings */
@@ -370,7 +443,31 @@ main {
   border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Responsive adjustments */
+/* FIX: Make sure content is accessible when TOC is present */
+.content-with-toc {
+  margin-left: 300px;
+}
+
+/* Quarto-specific layout adjustments */
+.quarto-title {
+  margin-bottom: 2rem;
+}
+
+/* FIX: Ensure the sidebar on specific pages doesn't overlap content */
+body:has(#sample_pairs) .toc-actions,
+body:has(#interactive_analysis) .toc-actions {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* Additional responsive adjustments */
+@media (max-width: 1200px) {
+  .content-with-toc, .column-body, #sample_pairs, #interactive_analysis {
+    margin-left: 0;
+    padding-left: 0;
+  }
+}
+
 @media (max-width: 768px) {
   main {
     padding: 1rem;
@@ -391,5 +488,11 @@ main {
 
   .logo {
     height: 30px;
+  }
+
+  .sidebar {
+    position: static;
+    width: 100%;
+    margin-bottom: 1.5rem;
   }
 }
