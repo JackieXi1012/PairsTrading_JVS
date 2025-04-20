@@ -4,17 +4,26 @@ project:
 
 website:
   title: "Pairs Trading"
+  favicon: images/background.jpg
   navbar:
+    background: dark
+    logo: images/background.jpg
+    title: "Pairs Trading"
     left:
-      - text: Home
+      - text: "Home"
+        icon: house
         file: index.qmd
-      - text: About
+      - text: "About"
+        icon: info-circle
         file: about.qmd
-      - text: Indicators
+      - text: "Indicators"
+        icon: graph-up
         file: indicators.qmd
-      - text: Sample pairs
+      - text: "Sample pairs"
+        icon: bar-chart
         file: sample_pairs.qmd
-      - text: Interactive analysis
+      - text: "Interactive analysis"
+        icon: gear-fill
         file: interactive_analysis.qmd
 
     right:
@@ -22,11 +31,29 @@ website:
         href: https://github.com/szhang95/PairsTrading_JVS
         aria-label: GitHub
 
+  page-footer:
+    left: "© 2025 Pairs Trading JVS. All rights reserved."
+    right:
+      - icon: github
+        href: https://github.com/szhang95/PairsTrading_JVS
+
 format:
   html:
-    theme: cosmos
+    theme:
+      light: [cosmo, styles.css]
+      dark: [darkly, styles.css]
     toc: true
+    toc-depth: 3
+    toc-title: "On this page"
+    code-copy: true
+    code-tools: true
+    highlight-style: github
     math: mathjax
+    css: styles.css
+    include-in-header:
+      text: |
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
 
 execute:
   enabled: true

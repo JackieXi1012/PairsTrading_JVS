@@ -1,1 +1,395 @@
-/* css styles */
+/* Import Google Fonts - Added more font options */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Raleway:wght@300;400;600&display=swap');
+
+/* CSS Variables - Enhanced color scheme */
+:root {
+  --primary-color: #f0f0f0;
+  --secondary-color: #00bcd4;
+  --accent-color: #5e35b1;
+  --highlight-color: #ff9800;
+  --background-color: #121212;
+  --background-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  --card-bg: rgba(30, 30, 40, 0.7);
+  --font-heading: 'Montserrat', Arial, sans-serif;
+  --font-sans: 'Raleway', Arial, sans-serif;
+  --text-color: #e0e0e0;
+  --link-color: #29b6f6;
+  --link-hover-color: #81d4fa;
+  --code-bg: #1e1e2e;
+  --nav-gradient: linear-gradient(90deg, #0f3460 0%, #1a1a2e 100%);
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-sans);
+  color: var(--text-color);
+  background: var(--background-color);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background-gradient);
+  z-index: -1;
+}
+
+/* Header and Navigation */
+header, .navbar {
+  background: var(--nav-gradient);
+  padding: 0.8rem 2rem;
+  color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+  margin-right: 15px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(41, 182, 246, 0.5);
+}
+
+.navbar .navbar-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  color: var(--primary-color);
+  background: linear-gradient(90deg, #ffffff, #29b6f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.navbar-nav .nav-link {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin: 0 0.8rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--secondary-color);
+  transition: width 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover::after {
+  width: 100%;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+/* Main content */
+main {
+  padding: 2rem;
+  max-width: 1100px;
+  margin: 2rem auto;
+  background: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  backdrop-filter: blur(5px);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-heading);
+  color: var(--primary-color);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+h1::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+  border-radius: 2px;
+}
+
+h2 {
+  font-size: 2rem;
+  color: var(--secondary-color);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+
+h3 {
+  font-size: 1.5rem;
+  color: var(--highlight-color);
+}
+
+/* Paragraphs */
+p {
+  margin-bottom: 1.5rem;
+  font-size: 1.05rem;
+}
+
+/* Links */
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+a:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+/* Code blocks */
+pre {
+  background: var(--code-bg);
+  color: var(--text-color);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+  border-left: 4px solid var(--secondary-color);
+}
+
+code {
+  font-family: 'Fira Code', monospace;
+  padding: 2px 5px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid var(--secondary-color);
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  background: rgba(0,0,0,0.2);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  position: relative;
+}
+
+blockquote::before {
+  content: '"';
+  font-size: 3rem;
+  position: absolute;
+  top: -15px;
+  left: 10px;
+  color: rgba(255,255,255,0.1);
+  font-family: Georgia, serif;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  background: rgba(30,30,40,0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+table th, table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+table th {
+  background: var(--accent-color);
+  color: var(--primary-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+}
+
+table tr:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+}
+
+/* Buttons */
+button, .btn {
+  background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+  color: var(--primary-color);
+  border: none;
+  border-radius: 4px;
+  padding: 0.8rem 1.5rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+button:hover, .btn:hover {
+  background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+/* Footer */
+footer {
+  background: var(--nav-gradient);
+  color: #aaa;
+  text-align: center;
+  padding: 2rem;
+  margin-top: 3rem;
+  font-size: 0.9rem;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
+}
+
+footer a {
+  color: var(--secondary-color);
+}
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+  color: white;
+  padding: 1rem;
+  font-weight: bold;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* TOC styles */
+#toc {
+  background: rgba(20,20,30,0.7);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  border-left: 4px solid var(--secondary-color);
+}
+
+#toc h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: var(--secondary-color);
+}
+
+#toc ul {
+  padding-left: 1.5rem;
+}
+
+#toc li {
+  margin-bottom: 0.5rem;
+}
+
+/* Math equations */
+.math {
+  padding: 0.5rem 0;
+  overflow-x: auto;
+}
+
+/* Animations for page elements */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+main {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom class for the logo container in navbar */
+.site-logo {
+  border-radius: 50%;
+  overflow: hidden;
+  width: 40px;
+  height: 40px;
+  margin-right: 15px;
+  box-shadow: 0 0 15px rgba(0, 188, 212, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  main {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .navbar {
+    padding: 0.5rem 1rem;
+  }
+
+  .logo {
+    height: 30px;
+  }
+}
