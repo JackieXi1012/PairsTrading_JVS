@@ -39,7 +39,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ce0e55362e37bb3d6d8d4dc634734ef4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c3706126062ec0aeb5c8e832a8b65032.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -67,8 +67,34 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<meta charset="UTF-8">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
+<style>
+  /* Additional fix for sidebar overlapping content */
+  @media (min-width: 992px) {
+    .page-columns {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: minmax(0, 1fr) 300px;
+    }
+    .toc-content {
+      grid-column: 1;
+    }
+    #toc-title {
+      padding-top: 0;
+    }
+    main > div.sidebar.toc-left {
+      padding-right: 0.5rem;
+    }
+    main > div.sidebar.toc-right {
+      padding-left: 0.5rem;
+    }
+    main {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -167,7 +193,7 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
@@ -242,6 +268,7 @@ window.Quarto = {
 <section id="learn-more" class="level2">
 <h2 class="anchored" data-anchor-id="learn-more">Learn More</h2>
 <p>To delve deeper into the technical details, please visit our <a href="./indicators.html">Indicators</a> page where we explain our statistical filters and signal generation methods. For performance metrics and trade execution details, check out our <a href="results.qmd">Results</a> page.</p>
+
 
 
 </section>

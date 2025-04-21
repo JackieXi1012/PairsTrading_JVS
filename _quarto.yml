@@ -47,8 +47,6 @@ format:
     toc-title: "On this page"
     toc-location: right
     toc-expand: true
-    code-copy: true
-    code-tools: true
     highlight-style: github
     math: mathjax
     css: styles.css
