@@ -201,8 +201,116 @@ Measure the overall profitability of the strategy.
 - Positive values indicate a profitable strategy.
 - Should be compared to benchmark returns over the same period.
 
+## Alpha & Beta
 
-## Summary of Screening Criteria
+**Purpose**:
+Measure performance relative to a benchmark and sensitivity to market movements.
+
+**How**:
+
+- Perform a linear regression of strategy returns \( r_s \) against benchmark returns \( r_b \).
+- **Formula**:
+  $$
+  r_s = \alpha + \beta r_b + \varepsilon
+  $$
+  where:
+  - \( \alpha \) = Alpha (strategy's excess return independent of the market)
+  - \( \beta \) = Beta (sensitivity to market movements)
+  - \( \varepsilon \) = Residuals (errors)
+
+**Interpretation**:
+
+- **Alpha > 0**: Outperformance vs. benchmark.
+- **Beta ≈ 0**: Market-neutral; low market risk exposure.
+- **Beta > 1**: Strategy more volatile than market.
+
+## Volatility
+
+**Purpose**:
+Measure the degree of variation in strategy returns.
+
+**How**:
+
+- Computed as the standard deviation of periodic returns \( r_t \).
+
+- **Formula**:
+  $$
+  \text{Volatility} = \sqrt{\frac{1}{n-1} \sum_{t=1}^{n} (r_t - \bar{r})^2}
+  $$
+  where:
+  - \( r_t \) = return at time \( t \)
+  - \( \bar{r} \) = average return
+  - \( n \) = number of periods
+
+**Interpretation**:
+
+- Higher volatility indicates larger swings in returns.
+- Prefer lower volatility for more stable strategies.
+
+## Geometric Mean Rate of Return (GMRR)
+
+**Purpose**:
+Capture the compounded average rate of return per period.
+
+**How**:
+
+- Computed as:
+  $$
+  \text{GMRR} = \left(\prod_{i=1}^n (1 + r_i)\right)^{\frac{1}{n}} - 1
+  $$
+  where \(r_i\) are the periodic returns.
+
+**Interpretation**:
+
+- Provides a more accurate measure of return over time, accounting for compounding.
+
+## Sharpe Ratio
+
+**Purpose**:
+Measure the risk-adjusted return.
+
+**How**:
+
+- Computed as:
+  $$
+  \text{Sharpe Ratio} = \frac{\text{Average Return} - \text{Risk-Free Rate}}{\text{Standard Deviation of Returns}}
+  $$
+
+**Interpretation**:
+
+- Higher Sharpe ratios indicate better risk-adjusted returns.
+
+## Average Return per Trade
+
+**Purpose**:
+Measure the average profitability of each trade.
+
+**How**:
+
+- Computed as:
+  $$
+  \text{Average Return per Trade} = \frac{\text{Total Return}}{\text{Number of Trades}}
+  $$
+
+**Interpretation**:
+
+- Higher values indicate more profitable trades.
+
+## Average Number of Trades per Year
+
+**Purpose**:
+Annualize trading activity based on backtest data.
+
+**How**:
+
+- Computed by scaling the number of trades by the ratio of 12 months to backtest months.
+- Example: 35 trades over 3 months → \(35 \times 4 = 140\) trades per year.
+
+**Interpretation**:
+
+- Helps assess strategy activity and transaction cost implications.
+
+# Summary of Screening Criteria
 
 | Indicator       | Test      | Threshold       | Purpose                        |
 |-----------------|-----------|-----------------|--------------------------------|
@@ -214,4 +322,4 @@ Measure the overall profitability of the strategy.
 
 ---
 
-> These indicators form the statistical backbone of our market-neutral pairs trading framework. Each filter adds a layer of validation to improve trade quality and reduce noise.
+> These indicators form the statistical and performance backbone of our market-neutral pairs trading framework. Each filter and metric adds a layer of validation to improve trade quality, reduce noise, and enhance strategy evaluation.

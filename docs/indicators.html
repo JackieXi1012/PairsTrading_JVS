@@ -218,8 +218,14 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#trade-success-rate" id="toc-trade-success-rate" class="nav-link" data-scroll-target="#trade-success-rate"><span class="header-section-number">4.1</span> Trade Success Rate</a></li>
   <li><a href="#total-return" id="toc-total-return" class="nav-link" data-scroll-target="#total-return"><span class="header-section-number">4.2</span> Total Return</a></li>
-  <li><a href="#summary-of-screening-criteria" id="toc-summary-of-screening-criteria" class="nav-link" data-scroll-target="#summary-of-screening-criteria"><span class="header-section-number">4.3</span> Summary of Screening Criteria</a></li>
+  <li><a href="#alpha-beta" id="toc-alpha-beta" class="nav-link" data-scroll-target="#alpha-beta"><span class="header-section-number">4.3</span> Alpha &amp; Beta</a></li>
+  <li><a href="#volatility" id="toc-volatility" class="nav-link" data-scroll-target="#volatility"><span class="header-section-number">4.4</span> Volatility</a></li>
+  <li><a href="#geometric-mean-rate-of-return-gmrr" id="toc-geometric-mean-rate-of-return-gmrr" class="nav-link" data-scroll-target="#geometric-mean-rate-of-return-gmrr"><span class="header-section-number">4.5</span> Geometric Mean Rate of Return (GMRR)</a></li>
+  <li><a href="#sharpe-ratio" id="toc-sharpe-ratio" class="nav-link" data-scroll-target="#sharpe-ratio"><span class="header-section-number">4.6</span> Sharpe Ratio</a></li>
+  <li><a href="#average-return-per-trade" id="toc-average-return-per-trade" class="nav-link" data-scroll-target="#average-return-per-trade"><span class="header-section-number">4.7</span> Average Return per Trade</a></li>
+  <li><a href="#average-number-of-trades-per-year" id="toc-average-number-of-trades-per-year" class="nav-link" data-scroll-target="#average-number-of-trades-per-year"><span class="header-section-number">4.8</span> Average Number of Trades per Year</a></li>
   </ul></li>
+  <li><a href="#summary-of-screening-criteria" id="toc-summary-of-screening-criteria" class="nav-link" data-scroll-target="#summary-of-screening-criteria"><span class="header-section-number">5</span> Summary of Screening Criteria</a></li>
   </ul>
 </nav>
     </div>
@@ -427,8 +433,107 @@ window.Quarto = {
 <li>Should be compared to benchmark returns over the same period.</li>
 </ul>
 </section>
-<section id="summary-of-screening-criteria" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="summary-of-screening-criteria"><span class="header-section-number">4.3</span> Summary of Screening Criteria</h2>
+<section id="alpha-beta" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="alpha-beta"><span class="header-section-number">4.3</span> Alpha &amp; Beta</h2>
+<p><strong>Purpose</strong>: Measure performance relative to a benchmark and sensitivity to market movements.</p>
+<p><strong>How</strong>:</p>
+<ul>
+<li>Perform a linear regression of strategy returns ( r_s ) against benchmark returns ( r_b ).</li>
+<li><strong>Formula</strong>: <span class="math display">\[
+r_s = \alpha + \beta r_b + \varepsilon
+\]</span> where:
+<ul>
+<li>( ) = Alpha (strategy’s excess return independent of the market)</li>
+<li>( ) = Beta (sensitivity to market movements)</li>
+<li>( ) = Residuals (errors)</li>
+</ul></li>
+</ul>
+<p><strong>Interpretation</strong>:</p>
+<ul>
+<li><strong>Alpha &gt; 0</strong>: Outperformance vs.&nbsp;benchmark.</li>
+<li><strong>Beta ≈ 0</strong>: Market-neutral; low market risk exposure.</li>
+<li><strong>Beta &gt; 1</strong>: Strategy more volatile than market.</li>
+</ul>
+</section>
+<section id="volatility" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="volatility"><span class="header-section-number">4.4</span> Volatility</h2>
+<p><strong>Purpose</strong>: Measure the degree of variation in strategy returns.</p>
+<p><strong>How</strong>:</p>
+<ul>
+<li><p>Computed as the standard deviation of periodic returns ( r_t ).</p></li>
+<li><p><strong>Formula</strong>: <span class="math display">\[
+\text{Volatility} = \sqrt{\frac{1}{n-1} \sum_{t=1}^{n} (r_t - \bar{r})^2}
+\]</span> where:</p>
+<ul>
+<li>( r_t ) = return at time ( t )</li>
+<li>( {r} ) = average return</li>
+<li>( n ) = number of periods</li>
+</ul></li>
+</ul>
+<p><strong>Interpretation</strong>:</p>
+<ul>
+<li>Higher volatility indicates larger swings in returns.</li>
+<li>Prefer lower volatility for more stable strategies.</li>
+</ul>
+</section>
+<section id="geometric-mean-rate-of-return-gmrr" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="geometric-mean-rate-of-return-gmrr"><span class="header-section-number">4.5</span> Geometric Mean Rate of Return (GMRR)</h2>
+<p><strong>Purpose</strong>: Capture the compounded average rate of return per period.</p>
+<p><strong>How</strong>:</p>
+<ul>
+<li>Computed as: <span class="math display">\[
+\text{GMRR} = \left(\prod_{i=1}^n (1 + r_i)\right)^{\frac{1}{n}} - 1
+\]</span> where (r_i) are the periodic returns.</li>
+</ul>
+<p><strong>Interpretation</strong>:</p>
+<ul>
+<li>Provides a more accurate measure of return over time, accounting for compounding.</li>
+</ul>
+</section>
+<section id="sharpe-ratio" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="sharpe-ratio"><span class="header-section-number">4.6</span> Sharpe Ratio</h2>
+<p><strong>Purpose</strong>: Measure the risk-adjusted return.</p>
+<p><strong>How</strong>:</p>
+<ul>
+<li>Computed as: <span class="math display">\[
+\text{Sharpe Ratio} = \frac{\text{Average Return} - \text{Risk-Free Rate}}{\text{Standard Deviation of Returns}}
+\]</span></li>
+</ul>
+<p><strong>Interpretation</strong>:</p>
+<ul>
+<li>Higher Sharpe ratios indicate better risk-adjusted returns.</li>
+</ul>
+</section>
+<section id="average-return-per-trade" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="average-return-per-trade"><span class="header-section-number">4.7</span> Average Return per Trade</h2>
+<p><strong>Purpose</strong>: Measure the average profitability of each trade.</p>
+<p><strong>How</strong>:</p>
+<ul>
+<li>Computed as: <span class="math display">\[
+\text{Average Return per Trade} = \frac{\text{Total Return}}{\text{Number of Trades}}
+\]</span></li>
+</ul>
+<p><strong>Interpretation</strong>:</p>
+<ul>
+<li>Higher values indicate more profitable trades.</li>
+</ul>
+</section>
+<section id="average-number-of-trades-per-year" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="average-number-of-trades-per-year"><span class="header-section-number">4.8</span> Average Number of Trades per Year</h2>
+<p><strong>Purpose</strong>: Annualize trading activity based on backtest data.</p>
+<p><strong>How</strong>:</p>
+<ul>
+<li>Computed by scaling the number of trades by the ratio of 12 months to backtest months.</li>
+<li>Example: 35 trades over 3 months → (35 = 140) trades per year.</li>
+</ul>
+<p><strong>Interpretation</strong>:</p>
+<ul>
+<li>Helps assess strategy activity and transaction cost implications.</li>
+</ul>
+</section>
+</section>
+<section id="summary-of-screening-criteria" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Summary of Screening Criteria</h1>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 22%">
@@ -479,12 +584,11 @@ window.Quarto = {
 </table>
 <hr>
 <blockquote class="blockquote">
-<p>These indicators form the statistical backbone of our market-neutral pairs trading framework. Each filter adds a layer of validation to improve trade quality and reduce noise.</p>
+<p>These indicators form the statistical and performance backbone of our market-neutral pairs trading framework. Each filter and metric adds a layer of validation to improve trade quality, reduce noise, and enhance strategy evaluation.</p>
 </blockquote>
 
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

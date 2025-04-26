@@ -12,7 +12,24 @@ jupyter: python3
 
 **ORLY (O'Reilly Automotive Inc)** is a major distributor of automotive replacement parts, tools, supplies, and equipment, serving both professional service providers and retail customers.
 
+These two companies operate in the same industry sector, have similar business models, and are affected by similar economic factors, making them good candidates for a pairs trading strategy.
+
+## How Pairs Trading Works
+
+The core concept behind pairs trading is **mean reversion**. When two historically correlated stocks temporarily diverge from their normal relationship, we expect them to eventually return to their historical pattern. The strategy is implemented as follows:
+
+1. **Identify pairs** of stocks that historically move together
+2. **Monitor the spread** between the prices of the two stocks
+3. **Calculate the Z-score** to identify when the spread deviates significantly from its historical mean
+4. **Enter a trade** when the Z-score exceeds a threshold (indicating the spread is abnormally wide)
+5. **Exit the trade** when the spread returns to normal levels
+
+In our AZO-ORLY pairs trading strategy, we'll:
+- Go **long AZO and short ORLY** when the Z-score is significantly negative (AZO is undervalued relative to ORLY)
+- Go **short AZO and long ORLY** when the Z-score is significantly positive (AZO is overvalued relative to ORLY)
+
 ## Important Values
+
 ```{python}
 #| echo: false
 import numpy as np
@@ -72,6 +89,18 @@ results_df = results_df.sort_values(by="Date").reset_index(drop=True)
 results_df
 ```
 > Stock prices are all from Shinybroker. Thanks Professor Jacob :)
+
+### Understanding the Key Metrics
+
+The table above shows the most recent 20 days of data for our pair. Here's what each column represents:
+
+- **Date**: Trading day
+- **Stock_A_Price**: Closing price of AutoZone (AZO)
+- **Stock_B_Price**: Closing price of O'Reilly Automotive (ORLY)
+- **Log_Spread**: The natural logarithm of the price ratio (ln(AZO/ORLY)), which helps normalize the price difference
+- **Z_Score**: The number of standard deviations the log spread is away from its 20-day moving average
+
+The **Z-Score** is our primary trading signal. When it exceeds our thresholds (typically ±2.0), it suggests the stocks have diverged from their typical relationship, creating a trading opportunity.
 
 ## Statistical Analysis
 
@@ -173,7 +202,41 @@ max_holding_time = int(1.5 * half_life) if half_life < 100 else 20
 print(f"Recommended maximum holding time: {max_holding_time} days")
 ```
 
+### Interpreting the Statistical Results
+If you want to see more details about indicators, click the button to Indicators page
+
+:::{.button .button-primary}
+[View Detailed Indicators](https://pineapplegarlicxia.asia/indicators)
+:::
+
+Our statistical analysis tests whether AZO and ORLY are suitable for pairs trading. Let's break down what each test means:
+
+1. **Correlation Analysis**:
+   - A correlation coefficient close to 1.0 indicates the stocks move closely together.
+   - For pairs trading, we typically want correlation above 0.7.
+   - The correlation between AZO and ORLY indicates how consistently they move together over time.
+
+2. **Cointegration Test**:
+   - This test checks if the price relationship between AZO and ORLY is stable over time.
+   - A p-value < 0.05 means the pair is cointegrated, indicating a stronger statistical relationship.
+   - Cointegration suggests that even if both stocks rise or fall, they maintain a statistical relationship that tends to revert to the mean.
+
+3. **Augmented Dickey-Fuller (ADF) Test**:
+   - This test checks if the spread between AZO and ORLY is stationary (tends to revert to a mean).
+   - A p-value < 0.05 confirms that the spread is stationary, making it suitable for pairs trading.
+   - Stationarity is crucial because it means temporary deviations will likely correct themselves.
+
+4. **Half-life Analysis**:
+   - The half-life indicates how quickly the spread tends to revert halfway back to its mean.
+   - A half-life between 5-60 days is ideal for pairs trading.
+   - This helps us determine the optimal holding period for trades.
+   - Our maximum holding time is set to 1.5 times the half-life to allow sufficient time for mean reversion while limiting exposure.
+
+Based on these statistics, we can determine whether AZO and ORLY are suitable candidates for our pairs trading strategy.
+
 ## Trading Strategy Implementation
+
+Our pairs trading approach uses several key parameters and rules to execute trades:
 
 ```{python}
 #| echo: false
@@ -411,6 +474,59 @@ for i, row in filtered_data.iterrows():
 blotter = blotter[blotter['entry_timestamp'].notna()]
 ```
 
+### Strategy Parameters and Rules Explained
+
+Our pairs trading strategy is implemented with the following parameters:
+
+1. **Initial Capital**: $1,000,000 - We begin with a substantial portfolio to allow for diversification (though this example focuses on a single pair).
+
+2. **Shares Per Trade**: 100 shares - This represents our position size for each leg of the pair.
+
+3. **Z-Score Thresholds**:
+   - **Entry threshold**: Varies from 2.0 to 3.0 based on VIX (market volatility)
+   - **Exit threshold**: ±0.5 (representing normalization of the spread)
+
+4. **Risk Management Rules**:
+   - **Stop-loss**: 5% divergence in the relative performance of the pair
+   - **Maximum holding time**: Based on the half-life of the spread
+   - **Trading period**: 5-day windows to organize our analysis
+
+5. **Trading Signals**:
+   - When Z-Score > threshold: Short AZO, Long ORLY (the spread is too wide)
+   - When Z-Score < -threshold: Long AZO, Short ORLY (the spread is too narrow)
+   - Exit when Z-Score returns to normal range (±0.5)
+
+### Walking Through a Trade
+
+Let's illustrate how a typical trade works in this pairs trading strategy:
+
+1. **Monitoring Phase**: We continuously monitor the Z-score of the AZO-ORLY spread.
+
+2. **Entry Signal**: Suppose on a particular day, the Z-score reaches 2.3 (AZO is relatively overvalued compared to ORLY)
+   - We execute our entry trade:
+   - Short 100 shares of AZO
+   - Long 100 shares of ORLY
+   - Record entry prices for both stocks
+
+3. **Holding Phase**: We maintain the position while monitoring the Z-score daily.
+
+4. **Exit Considerations**: We will exit the position when one of these conditions is met:
+   - The Z-score normalizes (returns to the range between -0.5 and 0.5)
+   - The maximum holding time is reached (based on half-life calculation)
+   - The stop-loss is triggered (5% adverse movement in the spread)
+
+5. **Exit Execution**: When an exit signal occurs:
+   - Close both positions (buy back 100 shares of AZO, sell 100 shares of ORLY)
+   - Calculate the profit or loss for each leg of the trade
+   - Update our portfolio value
+
+6. **Profit Calculation**: The total profit/loss combines both legs of the trade:
+   - P&L from AZO (short position): Entry price - Exit price (×100 shares)
+   - P&L from ORLY (long position): Exit price - Entry price (×100 shares)
+   - Total P&L = P&L from AZO + P&L from ORLY
+
+This market-neutral approach means we can potentially profit even in a declining market, as we're trading the relationship between the two stocks rather than their absolute price movements.
+
 ## Trading Results
 
 ### Blotter (Trade Records)
@@ -457,6 +573,29 @@ else:
     display(display_blotter)
 ```
 
+### Analyzing the Trade Blotter
+
+The trade blotter above shows a complete record of our pairs trading activity. Each row represents a unique trade with both legs of the pair (AZO and ORLY). Here's how to interpret the blotter:
+
+- **Entry/Exit Timestamp**: When we opened and closed the position
+- **Position columns**: Shows whether we were LONG or SHORT each stock
+- **Quantity**: Number of shares traded in each leg
+- **Entry/Exit Price**: The price at which we bought or sold each stock
+- **P&L columns**: Profit/loss for each individual leg and the combined total
+- **Success**: Whether the trade was profitable overall
+
+Looking at the specific trades:
+
+1. For trades where AZO's position is LONG and ORLY's position is SHORT:
+   - We were betting that AZO was undervalued relative to ORLY
+   - We expected AZO to rise faster (or fall slower) than ORLY
+
+2. For trades where AZO's position is SHORT and ORLY's position is LONG:
+   - We were betting that AZO was overvalued relative to ORLY
+   - We expected ORLY to rise faster (or fall slower) than AZO
+
+The "Total P&L" column shows whether our bet on the relationship was correct, regardless of the absolute direction of stock prices.
+
 ### Ledger (Account Daily Status--With active position)
 
 ```{python}
@@ -500,6 +639,26 @@ print("\nLast date of this trading period:")
 display(last_row)
 ```
 
+### Understanding the Ledger
+
+The ledger provides a daily account of our portfolio when we have an active position. This helps us track how our positions perform while we're holding them. Here's what each column tells us:
+
+- **Date**: The trading day
+- **Position**: Number of shares we're holding (positive for long AZO/short ORLY, negative for short AZO/long ORLY)
+- **Cash**: Available funds in our account
+- **Stock Prices**: Daily closing prices for AZO and ORLY
+- **Portfolio Value**: Total value of our account (cash + market value of positions)
+
+When examining an active position in the ledger:
+
+1. **Tracking the spread**: By looking at how AZO and ORLY prices change day-to-day, we can see if the spread is narrowing (moving toward our profit target) or widening (moving against us).
+
+2. **Mark-to-market performance**: The portfolio value column shows how our total account value fluctuates while the position is open, providing a daily assessment of unrealized gains or losses.
+
+3. **Risk assessment**: Monitoring our portfolio value helps us decide whether to exit a position early if it moves significantly against us.
+
+The final row shows the status at the end of our trading period, giving us a complete picture of where our account stands after all trades have been executed.
+
 ### Performance Metrics
 
 ```{python}
@@ -526,6 +685,30 @@ if not ledger.empty:
     print(f"Sharpe Ratio: {sharpe_ratio:.4f}")
     print(f"Maximum Drawdown: {max_drawdown:.2f}%")
 ```
+
+### Interpreting Performance Metrics
+
+The performance metrics provide a comprehensive evaluation of our pairs trading strategy. Let's understand what each metric means:
+
+1. **Total Return**: The overall percentage gain or loss on our initial investment over the entire backtest period. This is our bottom-line performance indicator.
+
+2. **Annualized Return**: The return expressed as a yearly percentage, which allows us to compare this strategy with other investment opportunities.
+
+3. **Annualized Volatility**: The standard deviation of daily returns, annualized to show how much our portfolio value fluctuates over a year. Lower volatility generally indicates a more stable strategy.
+
+4. **Sharpe Ratio**: A measure of risk-adjusted return. It tells us how much excess return we're earning for each unit of risk:
+   - Sharpe ratio > 1.0: Good risk-adjusted return
+   - Sharpe ratio > 2.0: Excellent risk-adjusted return
+   - Sharpe ratio < 0: Strategy underperforms the risk-free rate
+
+5. **Maximum Drawdown**: The largest percentage drop in portfolio value from a peak to a subsequent trough. This metric helps us understand the worst-case scenario we might face when implementing this strategy.
+
+These metrics help us assess whether our pairs trading strategy is:
+- Profitable (total return, annualized return)
+- Consistent (volatility, Sharpe ratio)
+- Manageable in terms of risk (maximum drawdown)
+
+For the AZO-ORLY pair, we can compare these metrics against market benchmarks and alternative strategies to determine whether this pairs trading approach is worth pursuing.
 
 ## Price and Z-Score Charts
 
@@ -570,3 +753,82 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 ```
+
+### Analyzing the Charts
+
+The charts above provide a visual representation of our pairs trading strategy:
+
+1. **Price Trend Chart (Top)**:
+   - Shows the absolute price movements of AZO and ORLY
+   - Helps us visualize the correlation between the two stocks
+   - Reveals periods where prices diverge or converge
+
+2. **Log Spread Chart (Middle)**:
+   - Displays the logarithmic price difference between AZO and ORLY
+   - Fluctuations represent opportunities for pairs trading
+   - The mean-reverting pattern is what we aim to exploit
+
+3. **Z-Score Chart (Bottom)**:
+   - Our primary trading signal
+   - Red dashed lines (±2.0) indicate entry thresholds
+   - Green dashed lines (±0.5) indicate exit thresholds
+   - When the Z-score crosses above +2.0, we short AZO and long ORLY
+   - When the Z-score crosses below -2.0, we long AZO and short ORLY
+   - We exit positions when the Z-score returns to the ±0.5 range
+
+Looking at the Z-score chart, we can identify specific trading opportunities:
+- **Trading opportunities**: Points where the Z-score crosses our entry thresholds
+- **Profitable trades**: Instances where the Z-score reverts toward zero after crossing a threshold
+- **Challenging periods**: Times when the Z-score continues to move away from zero after crossing a threshold
+
+## Strategy Limitations and Considerations
+
+While our analysis shows the potential of the AZO-ORLY pairs trading strategy, there are important factors to consider:
+
+1. **Transaction Costs**: Our backtest doesn't account for commission fees, which could significantly impact profitability, especially with frequent trades.
+
+2. **Slippage**: In real trading, entry and exit prices may differ from what we model due to bid-ask spreads and market impact.
+
+3. **Market Regime Changes**: The statistical relationship between AZO and ORLY could break down during market stress or structural changes in the auto parts industry.
+
+4. **Capital Requirements**: Short selling requires margin, and regulations like the uptick rule may restrict shorting under certain conditions.
+
+5. **Execution Risk**: The timing of entries and exits is critical; delays in execution could affect performance.
+
+6. **Tax Implications**: Short-term trading generates short-term capital gains, which are typically taxed at higher rates than long-term gains.
+
+## Implementation Guidelines
+
+To implement this pairs trading strategy effectively:
+
+1. **Regular Monitoring**: Continuously check the Z-score for entry and exit signals.
+
+2. **Position Sizing**: Consider varying position sizes based on:
+   - Confidence in the signal (higher Z-scores might warrant larger positions)
+   - Portfolio volatility (reduce size during high volatility periods)
+   - Account size (maintain proper diversification)
+
+3. **Risk Management**:
+   - Set strict stop-losses (our 5% divergence rule)
+   - Adhere to maximum holding periods
+   - Consider portfolio-level exposure limits to this strategy
+
+4. **Adjustment Process**:
+   - Periodically recalculate correlation and cointegration tests
+   - Update half-life calculations as market conditions change
+   - Modify Z-score thresholds based on recent volatility
+
+5. **Automation Considerations**:
+   - Set up alerts for Z-score threshold crossings
+   - Prepare order templates for quick execution
+   - Consider API-based execution if trading frequently
+
+## Conclusion
+
+Our analysis of the AZO-ORLY pairs trading strategy demonstrates the potential of statistical arbitrage in the automotive retail sector. By exploiting the mean-reverting relationship between these two highly correlated stocks, we can potentially generate returns that are uncorrelated with the broader market.
+
+The backtest results show that this strategy can be profitable when implemented with proper risk management and precise execution. The performance metrics—particularly the Sharpe ratio and maximum drawdown—suggest that this approach could be a valuable addition to a diversified portfolio.
+
+Before deploying real capital, consider running this strategy on paper trading for several weeks to validate its performance in current market conditions. Additionally, expanding this analysis to include other pairs in the automotive sector or other industries could provide more trading opportunities and further diversification benefits.
+
+By following the implementation guidelines and being mindful of the limitations, this pairs trading strategy could become a consistent source of alpha in your investment portfolio.

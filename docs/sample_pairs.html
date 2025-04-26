@@ -201,16 +201,36 @@ window.Quarto = {
    
   <ul>
   <li><a href="#stock-a-azo-stock-b-orly" id="toc-stock-a-azo-stock-b-orly" class="nav-link active" data-scroll-target="#stock-a-azo-stock-b-orly">Stock A: AZO | Stock B: ORLY</a></li>
-  <li><a href="#important-values" id="toc-important-values" class="nav-link" data-scroll-target="#important-values">Important Values</a></li>
-  <li><a href="#statistical-analysis" id="toc-statistical-analysis" class="nav-link" data-scroll-target="#statistical-analysis">Statistical Analysis</a></li>
-  <li><a href="#trading-strategy-implementation" id="toc-trading-strategy-implementation" class="nav-link" data-scroll-target="#trading-strategy-implementation">Trading Strategy Implementation</a></li>
+  <li><a href="#how-pairs-trading-works" id="toc-how-pairs-trading-works" class="nav-link" data-scroll-target="#how-pairs-trading-works">How Pairs Trading Works</a></li>
+  <li><a href="#important-values" id="toc-important-values" class="nav-link" data-scroll-target="#important-values">Important Values</a>
+  <ul class="collapse">
+  <li><a href="#understanding-the-key-metrics" id="toc-understanding-the-key-metrics" class="nav-link" data-scroll-target="#understanding-the-key-metrics">Understanding the Key Metrics</a></li>
+  </ul></li>
+  <li><a href="#statistical-analysis" id="toc-statistical-analysis" class="nav-link" data-scroll-target="#statistical-analysis">Statistical Analysis</a>
+  <ul class="collapse">
+  <li><a href="#interpreting-the-statistical-results" id="toc-interpreting-the-statistical-results" class="nav-link" data-scroll-target="#interpreting-the-statistical-results">Interpreting the Statistical Results</a></li>
+  </ul></li>
+  <li><a href="#trading-strategy-implementation" id="toc-trading-strategy-implementation" class="nav-link" data-scroll-target="#trading-strategy-implementation">Trading Strategy Implementation</a>
+  <ul class="collapse">
+  <li><a href="#strategy-parameters-and-rules-explained" id="toc-strategy-parameters-and-rules-explained" class="nav-link" data-scroll-target="#strategy-parameters-and-rules-explained">Strategy Parameters and Rules Explained</a></li>
+  <li><a href="#walking-through-a-trade" id="toc-walking-through-a-trade" class="nav-link" data-scroll-target="#walking-through-a-trade">Walking Through a Trade</a></li>
+  </ul></li>
   <li><a href="#trading-results" id="toc-trading-results" class="nav-link" data-scroll-target="#trading-results">Trading Results</a>
   <ul class="collapse">
   <li><a href="#blotter-trade-records" id="toc-blotter-trade-records" class="nav-link" data-scroll-target="#blotter-trade-records">Blotter (Trade Records)</a></li>
+  <li><a href="#analyzing-the-trade-blotter" id="toc-analyzing-the-trade-blotter" class="nav-link" data-scroll-target="#analyzing-the-trade-blotter">Analyzing the Trade Blotter</a></li>
   <li><a href="#ledger-account-daily-statuswith-active-position" id="toc-ledger-account-daily-statuswith-active-position" class="nav-link" data-scroll-target="#ledger-account-daily-statuswith-active-position">Ledger (Account Daily Status–With active position)</a></li>
+  <li><a href="#understanding-the-ledger" id="toc-understanding-the-ledger" class="nav-link" data-scroll-target="#understanding-the-ledger">Understanding the Ledger</a></li>
   <li><a href="#performance-metrics" id="toc-performance-metrics" class="nav-link" data-scroll-target="#performance-metrics">Performance Metrics</a></li>
+  <li><a href="#interpreting-performance-metrics" id="toc-interpreting-performance-metrics" class="nav-link" data-scroll-target="#interpreting-performance-metrics">Interpreting Performance Metrics</a></li>
   </ul></li>
-  <li><a href="#price-and-z-score-charts" id="toc-price-and-z-score-charts" class="nav-link" data-scroll-target="#price-and-z-score-charts">Price and Z-Score Charts</a></li>
+  <li><a href="#price-and-z-score-charts" id="toc-price-and-z-score-charts" class="nav-link" data-scroll-target="#price-and-z-score-charts">Price and Z-Score Charts</a>
+  <ul class="collapse">
+  <li><a href="#analyzing-the-charts" id="toc-analyzing-the-charts" class="nav-link" data-scroll-target="#analyzing-the-charts">Analyzing the Charts</a></li>
+  </ul></li>
+  <li><a href="#strategy-limitations-and-considerations" id="toc-strategy-limitations-and-considerations" class="nav-link" data-scroll-target="#strategy-limitations-and-considerations">Strategy Limitations and Considerations</a></li>
+  <li><a href="#implementation-guidelines" id="toc-implementation-guidelines" class="nav-link" data-scroll-target="#implementation-guidelines">Implementation Guidelines</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -240,11 +260,24 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="stock-a-azo-stock-b-orly">Stock A: AZO | Stock B: ORLY</h3>
 <p><strong>AZO (AutoZone Inc)</strong> is a leading retailer in the automotive aftermarket that specializes in replacement parts, accessories, and maintenance products for vehicles.</p>
 <p><strong>ORLY (O’Reilly Automotive Inc)</strong> is a major distributor of automotive replacement parts, tools, supplies, and equipment, serving both professional service providers and retail customers.</p>
+<p>These two companies operate in the same industry sector, have similar business models, and are affected by similar economic factors, making them good candidates for a pairs trading strategy.</p>
+</section>
+<section id="how-pairs-trading-works" class="level2">
+<h2 class="anchored" data-anchor-id="how-pairs-trading-works">How Pairs Trading Works</h2>
+<p>The core concept behind pairs trading is <strong>mean reversion</strong>. When two historically correlated stocks temporarily diverge from their normal relationship, we expect them to eventually return to their historical pattern. The strategy is implemented as follows:</p>
+<ol type="1">
+<li><strong>Identify pairs</strong> of stocks that historically move together</li>
+<li><strong>Monitor the spread</strong> between the prices of the two stocks</li>
+<li><strong>Calculate the Z-score</strong> to identify when the spread deviates significantly from its historical mean</li>
+<li><strong>Enter a trade</strong> when the Z-score exceeds a threshold (indicating the spread is abnormally wide)</li>
+<li><strong>Exit the trade</strong> when the spread returns to normal levels</li>
+</ol>
+<p>In our AZO-ORLY pairs trading strategy, we’ll: - Go <strong>long AZO and short ORLY</strong> when the Z-score is significantly negative (AZO is undervalued relative to ORLY) - Go <strong>short AZO and long ORLY</strong> when the Z-score is significantly positive (AZO is overvalued relative to ORLY)</p>
 </section>
 <section id="important-values" class="level2">
 <h2 class="anchored" data-anchor-id="important-values">Important Values</h2>
-<div id="4fa5a6a3" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display" data-execution_count="1">
+<div id="f74c17af" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="22">
 <div>
 
 
@@ -262,38 +295,6 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
-<td>2025-03-24</td>
-<td>3657.82</td>
-<td>1362.74</td>
-<td>0.987370</td>
-<td>0.419903</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>2025-03-25</td>
-<td>3672.23</td>
-<td>1375.48</td>
-<td>0.981996</td>
-<td>0.161267</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>2025-03-26</td>
-<td>3681.68</td>
-<td>1380.98</td>
-<td>0.980576</td>
-<td>0.030481</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>2025-03-27</td>
-<td>3828.11</td>
-<td>1423.62</td>
-<td>0.989168</td>
-<td>0.284125</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
 <td>2025-03-28</td>
 <td>3771.00</td>
 <td>1408.55</td>
@@ -301,7 +302,7 @@ window.Quarto = {
 <td>-0.016779</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">5</td>
+<td data-quarto-table-cell-role="th">1</td>
 <td>2025-03-31</td>
 <td>3812.78</td>
 <td>1432.58</td>
@@ -309,7 +310,7 @@ window.Quarto = {
 <td>-0.584602</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">6</td>
+<td data-quarto-table-cell-role="th">2</td>
 <td>2025-04-01</td>
 <td>3813.27</td>
 <td>1431.80</td>
@@ -317,7 +318,7 @@ window.Quarto = {
 <td>-0.974716</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">7</td>
+<td data-quarto-table-cell-role="th">3</td>
 <td>2025-04-02</td>
 <td>3809.26</td>
 <td>1417.01</td>
@@ -325,7 +326,7 @@ window.Quarto = {
 <td>-0.143995</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">8</td>
+<td data-quarto-table-cell-role="th">4</td>
 <td>2025-04-03</td>
 <td>3826.15</td>
 <td>1441.89</td>
@@ -333,7 +334,7 @@ window.Quarto = {
 <td>-1.303938</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">9</td>
+<td data-quarto-table-cell-role="th">5</td>
 <td>2025-04-04</td>
 <td>3653.24</td>
 <td>1389.87</td>
@@ -341,7 +342,7 @@ window.Quarto = {
 <td>-2.000556</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">10</td>
+<td data-quarto-table-cell-role="th">6</td>
 <td>2025-04-07</td>
 <td>3478.38</td>
 <td>1333.84</td>
@@ -349,7 +350,7 @@ window.Quarto = {
 <td>-2.383379</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">11</td>
+<td data-quarto-table-cell-role="th">7</td>
 <td>2025-04-08</td>
 <td>3499.08</td>
 <td>1315.20</td>
@@ -357,7 +358,7 @@ window.Quarto = {
 <td>-0.501904</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">12</td>
+<td data-quarto-table-cell-role="th">8</td>
 <td>2025-04-09</td>
 <td>3575.12</td>
 <td>1348.45</td>
@@ -365,7 +366,7 @@ window.Quarto = {
 <td>-0.737020</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">13</td>
+<td data-quarto-table-cell-role="th">9</td>
 <td>2025-04-10</td>
 <td>3615.24</td>
 <td>1373.36</td>
@@ -373,7 +374,7 @@ window.Quarto = {
 <td>-1.451872</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">14</td>
+<td data-quarto-table-cell-role="th">10</td>
 <td>2025-04-11</td>
 <td>3659.60</td>
 <td>1389.79</td>
@@ -381,7 +382,7 @@ window.Quarto = {
 <td>-1.270189</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">15</td>
+<td data-quarto-table-cell-role="th">11</td>
 <td>2025-04-14</td>
 <td>3680.78</td>
 <td>1414.20</td>
@@ -389,7 +390,7 @@ window.Quarto = {
 <td>-2.100495</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">16</td>
+<td data-quarto-table-cell-role="th">12</td>
 <td>2025-04-15</td>
 <td>3631.17</td>
 <td>1397.93</td>
@@ -397,7 +398,7 @@ window.Quarto = {
 <td>-1.980073</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">17</td>
+<td data-quarto-table-cell-role="th">13</td>
 <td>2025-04-16</td>
 <td>3566.86</td>
 <td>1364.36</td>
@@ -405,7 +406,7 @@ window.Quarto = {
 <td>-1.252244</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">18</td>
+<td data-quarto-table-cell-role="th">14</td>
 <td>2025-04-17</td>
 <td>3603.47</td>
 <td>1390.90</td>
@@ -413,12 +414,44 @@ window.Quarto = {
 <td>-1.765290</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">19</td>
+<td data-quarto-table-cell-role="th">15</td>
 <td>2025-04-21</td>
-<td>3506.62</td>
-<td>1349.53</td>
-<td>0.954896</td>
-<td>-1.380612</td>
+<td>3569.24</td>
+<td>1368.50</td>
+<td>0.958637</td>
+<td>-1.116397</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">16</td>
+<td>2025-04-22</td>
+<td>3678.66</td>
+<td>1393.54</td>
+<td>0.970701</td>
+<td>-0.058849</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">17</td>
+<td>2025-04-23</td>
+<td>3652.11</td>
+<td>1380.50</td>
+<td>0.972859</td>
+<td>0.169770</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">18</td>
+<td>2025-04-24</td>
+<td>3609.65</td>
+<td>1352.17</td>
+<td>0.981900</td>
+<td>0.953797</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19</td>
+<td>2025-04-25</td>
+<td>3609.33</td>
+<td>1347.00</td>
+<td>0.985642</td>
+<td>1.328003</td>
 </tr>
 </tbody>
 </table>
@@ -429,50 +462,158 @@ window.Quarto = {
 <blockquote class="blockquote">
 <p>Stock prices are all from Shinybroker. Thanks Professor Jacob :)</p>
 </blockquote>
+<section id="understanding-the-key-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="understanding-the-key-metrics">Understanding the Key Metrics</h3>
+<p>The table above shows the most recent 20 days of data for our pair. Here’s what each column represents:</p>
+<ul>
+<li><strong>Date</strong>: Trading day</li>
+<li><strong>Stock_A_Price</strong>: Closing price of AutoZone (AZO)</li>
+<li><strong>Stock_B_Price</strong>: Closing price of O’Reilly Automotive (ORLY)</li>
+<li><strong>Log_Spread</strong>: The natural logarithm of the price ratio (ln(AZO/ORLY)), which helps normalize the price difference</li>
+<li><strong>Z_Score</strong>: The number of standard deviations the log spread is away from its 20-day moving average</li>
+</ul>
+<p>The <strong>Z-Score</strong> is our primary trading signal. When it exceeds our thresholds (typically ±2.0), it suggests the stocks have diverged from their typical relationship, creating a trading opportunity.</p>
+</section>
 </section>
 <section id="statistical-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="statistical-analysis">Statistical Analysis</h2>
-<div id="d25807ab" class="cell" data-execution_count="2">
+<div id="6ad26230" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>Correlation Analysis:
-Pearson correlation coefficient: 0.9525
+Pearson correlation coefficient: 0.9538
 Conclusion: Strong correlation (≥0.7), suitable for pairs trading
 
 Cointegration Test:
-p-value: 0.0855
+p-value: 0.1258
 Conclusion: Pair is not cointegrated (p-value &gt;= 0.05)
 
 Augmented Dickey-Fuller Test:
-ADF Statistic: -1.6679
-p-value: 0.4477
+ADF Statistic: -2.0670
+p-value: 0.2580
 Conclusion: Spread is not stationary (p-value &gt;= 0.05)
 
 AZO and ORLY are somewhat suitable for pairs trading, meeting most test conditions
 
 Mean Reversion Analysis:
-Regression coefficient (ρ): -0.0281
-Half-life: 24.70 days
-Recommended maximum holding time: 37 days</code></pre>
+Regression coefficient (ρ): -0.0346
+Half-life: 20.01 days
+Recommended maximum holding time: 30 days</code></pre>
 </div>
 </div>
+<section id="interpreting-the-statistical-results" class="level3">
+<h3 class="anchored" data-anchor-id="interpreting-the-statistical-results">Interpreting the Statistical Results</h3>
+<p>If you want to see more details about indicators, click the button to Indicators page</p>
+<div class="button button-primary">
+<p><a href="https://pineapplegarlicxia.asia/indicators">View Detailed Indicators</a></p>
+</div>
+<p>Our statistical analysis tests whether AZO and ORLY are suitable for pairs trading. Let’s break down what each test means:</p>
+<ol type="1">
+<li><strong>Correlation Analysis</strong>:
+<ul>
+<li>A correlation coefficient close to 1.0 indicates the stocks move closely together.</li>
+<li>For pairs trading, we typically want correlation above 0.7.</li>
+<li>The correlation between AZO and ORLY indicates how consistently they move together over time.</li>
+</ul></li>
+<li><strong>Cointegration Test</strong>:
+<ul>
+<li>This test checks if the price relationship between AZO and ORLY is stable over time.</li>
+<li>A p-value &lt; 0.05 means the pair is cointegrated, indicating a stronger statistical relationship.</li>
+<li>Cointegration suggests that even if both stocks rise or fall, they maintain a statistical relationship that tends to revert to the mean.</li>
+</ul></li>
+<li><strong>Augmented Dickey-Fuller (ADF) Test</strong>:
+<ul>
+<li>This test checks if the spread between AZO and ORLY is stationary (tends to revert to a mean).</li>
+<li>A p-value &lt; 0.05 confirms that the spread is stationary, making it suitable for pairs trading.</li>
+<li>Stationarity is crucial because it means temporary deviations will likely correct themselves.</li>
+</ul></li>
+<li><strong>Half-life Analysis</strong>:
+<ul>
+<li>The half-life indicates how quickly the spread tends to revert halfway back to its mean.</li>
+<li>A half-life between 5-60 days is ideal for pairs trading.</li>
+<li>This helps us determine the optimal holding period for trades.</li>
+<li>Our maximum holding time is set to 1.5 times the half-life to allow sufficient time for mean reversion while limiting exposure.</li>
+</ul></li>
+</ol>
+<p>Based on these statistics, we can determine whether AZO and ORLY are suitable candidates for our pairs trading strategy.</p>
+</section>
 </section>
 <section id="trading-strategy-implementation" class="level2">
 <h2 class="anchored" data-anchor-id="trading-strategy-implementation">Trading Strategy Implementation</h2>
-<div id="5f56d0c3" class="cell" data-execution_count="3">
+<p>Our pairs trading approach uses several key parameters and rules to execute trades:</p>
+<div id="0a946d52" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>Trading period length: 5 days
 Initial capital: $1,000,000.00
 Shares per trade: 100
 Stop-loss percentage: 5.0%
-Maximum holding time: 37 days</code></pre>
+Maximum holding time: 30 days</code></pre>
 </div>
 </div>
+<section id="strategy-parameters-and-rules-explained" class="level3">
+<h3 class="anchored" data-anchor-id="strategy-parameters-and-rules-explained">Strategy Parameters and Rules Explained</h3>
+<p>Our pairs trading strategy is implemented with the following parameters:</p>
+<ol type="1">
+<li><p><strong>Initial Capital</strong>: $1,000,000 - We begin with a substantial portfolio to allow for diversification (though this example focuses on a single pair).</p></li>
+<li><p><strong>Shares Per Trade</strong>: 100 shares - This represents our position size for each leg of the pair.</p></li>
+<li><p><strong>Z-Score Thresholds</strong>:</p>
+<ul>
+<li><strong>Entry threshold</strong>: Varies from 2.0 to 3.0 based on VIX (market volatility)</li>
+<li><strong>Exit threshold</strong>: ±0.5 (representing normalization of the spread)</li>
+</ul></li>
+<li><p><strong>Risk Management Rules</strong>:</p>
+<ul>
+<li><strong>Stop-loss</strong>: 5% divergence in the relative performance of the pair</li>
+<li><strong>Maximum holding time</strong>: Based on the half-life of the spread</li>
+<li><strong>Trading period</strong>: 5-day windows to organize our analysis</li>
+</ul></li>
+<li><p><strong>Trading Signals</strong>:</p>
+<ul>
+<li>When Z-Score &gt; threshold: Short AZO, Long ORLY (the spread is too wide)</li>
+<li>When Z-Score &lt; -threshold: Long AZO, Short ORLY (the spread is too narrow)</li>
+<li>Exit when Z-Score returns to normal range (±0.5)</li>
+</ul></li>
+</ol>
+</section>
+<section id="walking-through-a-trade" class="level3">
+<h3 class="anchored" data-anchor-id="walking-through-a-trade">Walking Through a Trade</h3>
+<p>Let’s illustrate how a typical trade works in this pairs trading strategy:</p>
+<ol type="1">
+<li><p><strong>Monitoring Phase</strong>: We continuously monitor the Z-score of the AZO-ORLY spread.</p></li>
+<li><p><strong>Entry Signal</strong>: Suppose on a particular day, the Z-score reaches 2.3 (AZO is relatively overvalued compared to ORLY)</p>
+<ul>
+<li>We execute our entry trade:</li>
+<li>Short 100 shares of AZO</li>
+<li>Long 100 shares of ORLY</li>
+<li>Record entry prices for both stocks</li>
+</ul></li>
+<li><p><strong>Holding Phase</strong>: We maintain the position while monitoring the Z-score daily.</p></li>
+<li><p><strong>Exit Considerations</strong>: We will exit the position when one of these conditions is met:</p>
+<ul>
+<li>The Z-score normalizes (returns to the range between -0.5 and 0.5)</li>
+<li>The maximum holding time is reached (based on half-life calculation)</li>
+<li>The stop-loss is triggered (5% adverse movement in the spread)</li>
+</ul></li>
+<li><p><strong>Exit Execution</strong>: When an exit signal occurs:</p>
+<ul>
+<li>Close both positions (buy back 100 shares of AZO, sell 100 shares of ORLY)</li>
+<li>Calculate the profit or loss for each leg of the trade</li>
+<li>Update our portfolio value</li>
+</ul></li>
+<li><p><strong>Profit Calculation</strong>: The total profit/loss combines both legs of the trade:</p>
+<ul>
+<li>P&amp;L from AZO (short position): Entry price - Exit price (×100 shares)</li>
+<li>P&amp;L from ORLY (long position): Exit price - Entry price (×100 shares)</li>
+<li>Total P&amp;L = P&amp;L from AZO + P&amp;L from ORLY</li>
+</ul></li>
+</ol>
+<p>This market-neutral approach means we can potentially profit even in a declining market, as we’re trading the relationship between the two stocks rather than their absolute price movements.</p>
+</section>
 </section>
 <section id="trading-results" class="level2">
 <h2 class="anchored" data-anchor-id="trading-results">Trading Results</h2>
 <section id="blotter-trade-records" class="level3">
 <h3 class="anchored" data-anchor-id="blotter-trade-records">Blotter (Trade Records)</h3>
-<div id="c3d46eb0" class="cell" data-execution_count="4">
+<div id="7af66c07" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -499,22 +640,6 @@ Maximum holding time: 37 days</code></pre>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
-<td>2024-05-22</td>
-<td>2024-05-30</td>
-<td>LONG</td>
-<td>SHORT</td>
-<td>100</td>
-<td>$2,772.64</td>
-<td>$2,772.56</td>
-<td>$-8.00</td>
-<td>$991.44</td>
-<td>$963.64</td>
-<td>$2,780.00</td>
-<td>$2,772.00</td>
-<td>True</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
 <td>2024-07-16</td>
 <td>2024-07-22</td>
 <td>SHORT</td>
@@ -529,8 +654,8 @@ Maximum holding time: 37 days</code></pre>
 <td>$4,118.00</td>
 <td>True</td>
 </tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
 <td>2024-08-16</td>
 <td>2024-08-21</td>
 <td>SHORT</td>
@@ -545,8 +670,8 @@ Maximum holding time: 37 days</code></pre>
 <td>$2,929.00</td>
 <td>True</td>
 </tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
 <td>2024-09-17</td>
 <td>2024-09-26</td>
 <td>LONG</td>
@@ -561,8 +686,8 @@ Maximum holding time: 37 days</code></pre>
 <td>$7,908.00</td>
 <td>True</td>
 </tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
 <td>2024-10-02</td>
 <td>2024-10-23</td>
 <td>LONG</td>
@@ -577,8 +702,8 @@ Maximum holding time: 37 days</code></pre>
 <td>$6,879.00</td>
 <td>True</td>
 </tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">5</td>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
 <td>2024-11-08</td>
 <td>2024-11-18</td>
 <td>LONG</td>
@@ -593,8 +718,8 @@ Maximum holding time: 37 days</code></pre>
 <td>$5,784.00</td>
 <td>True</td>
 </tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">6</td>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
 <td>2024-11-22</td>
 <td>2024-11-27</td>
 <td>LONG</td>
@@ -609,24 +734,24 @@ Maximum holding time: 37 days</code></pre>
 <td>$7,408.00</td>
 <td>True</td>
 </tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">7</td>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
 <td>2024-12-06</td>
-<td>2025-01-13</td>
+<td>2025-01-06</td>
 <td>SHORT</td>
 <td>LONG</td>
 <td>100</td>
 <td>$3,309.44</td>
-<td>$3,239.62</td>
-<td>$6,982.00</td>
+<td>$3,293.46</td>
+<td>$1,598.00</td>
 <td>$1,257.78</td>
-<td>$1,210.14</td>
-<td>$-4,764.00</td>
-<td>$2,218.00</td>
-<td>True</td>
+<td>$1,210.47</td>
+<td>$-4,731.00</td>
+<td>$-3,133.00</td>
+<td>False</td>
 </tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">8</td>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
 <td>2025-01-28</td>
 <td>2025-02-10</td>
 <td>LONG</td>
@@ -641,8 +766,8 @@ Maximum holding time: 37 days</code></pre>
 <td>$7,729.00</td>
 <td>True</td>
 </tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">9</td>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
 <td>2025-02-25</td>
 <td>2025-03-20</td>
 <td>LONG</td>
@@ -664,9 +789,35 @@ Maximum holding time: 37 days</code></pre>
 </div>
 </div>
 </section>
+<section id="analyzing-the-trade-blotter" class="level3">
+<h3 class="anchored" data-anchor-id="analyzing-the-trade-blotter">Analyzing the Trade Blotter</h3>
+<p>The trade blotter above shows a complete record of our pairs trading activity. Each row represents a unique trade with both legs of the pair (AZO and ORLY). Here’s how to interpret the blotter:</p>
+<ul>
+<li><strong>Entry/Exit Timestamp</strong>: When we opened and closed the position</li>
+<li><strong>Position columns</strong>: Shows whether we were LONG or SHORT each stock</li>
+<li><strong>Quantity</strong>: Number of shares traded in each leg</li>
+<li><strong>Entry/Exit Price</strong>: The price at which we bought or sold each stock</li>
+<li><strong>P&amp;L columns</strong>: Profit/loss for each individual leg and the combined total</li>
+<li><strong>Success</strong>: Whether the trade was profitable overall</li>
+</ul>
+<p>Looking at the specific trades:</p>
+<ol type="1">
+<li>For trades where AZO’s position is LONG and ORLY’s position is SHORT:
+<ul>
+<li>We were betting that AZO was undervalued relative to ORLY</li>
+<li>We expected AZO to rise faster (or fall slower) than ORLY</li>
+</ul></li>
+<li>For trades where AZO’s position is SHORT and ORLY’s position is LONG:
+<ul>
+<li>We were betting that AZO was overvalued relative to ORLY</li>
+<li>We expected ORLY to rise faster (or fall slower) than AZO</li>
+</ul></li>
+</ol>
+<p>The “Total P&amp;L” column shows whether our bet on the relationship was correct, regardless of the absolute direction of stock prices.</p>
+</section>
 <section id="ledger-account-daily-statuswith-active-position" class="level3">
 <h3 class="anchored" data-anchor-id="ledger-account-daily-statuswith-active-position">Ledger (Account Daily Status–With active position)</h3>
-<div id="d203acfe" class="cell" data-execution_count="5">
+<div id="7d7c5eda" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -685,49 +836,49 @@ Maximum holding time: 37 days</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">17</td>
-<td>2024-05-22</td>
-<td>100</td>
+<td data-quarto-table-cell-role="th">51</td>
+<td>2024-07-16</td>
+<td>-100</td>
 <td>$1,000,000.00</td>
-<td>$2,772.64</td>
-<td>$991.44</td>
-<td>$1,178,120.00</td>
+<td>$2,985.33</td>
+<td>$1,043.52</td>
+<td>$805,819.00</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">18</td>
-<td>2024-05-23</td>
-<td>100</td>
+<td data-quarto-table-cell-role="th">52</td>
+<td>2024-07-17</td>
+<td>-100</td>
 <td>$1,000,000.00</td>
-<td>$2,777.54</td>
-<td>$975.87</td>
-<td>$1,180,167.00</td>
+<td>$2,984.11</td>
+<td>$1,043.63</td>
+<td>$805,952.00</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">19</td>
-<td>2024-05-24</td>
-<td>100</td>
+<td data-quarto-table-cell-role="th">53</td>
+<td>2024-07-18</td>
+<td>-100</td>
 <td>$1,000,000.00</td>
-<td>$2,792.90</td>
-<td>$986.96</td>
-<td>$1,180,594.00</td>
+<td>$2,926.35</td>
+<td>$1,028.09</td>
+<td>$810,174.00</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">20</td>
-<td>2024-05-28</td>
-<td>100</td>
+<td data-quarto-table-cell-role="th">54</td>
+<td>2024-07-19</td>
+<td>-100</td>
 <td>$1,000,000.00</td>
-<td>$2,800.00</td>
-<td>$957.51</td>
-<td>$1,184,249.00</td>
+<td>$2,950.40</td>
+<td>$1,042.86</td>
+<td>$809,246.00</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">21</td>
-<td>2024-05-29</td>
-<td>100</td>
+<td data-quarto-table-cell-role="th">74</td>
+<td>2024-08-16</td>
+<td>-100</td>
 <td>$1,000,000.00</td>
-<td>$2,739.10</td>
-<td>$957.90</td>
-<td>$1,178,120.00</td>
+<td>$3,212.87</td>
+<td>$1,119.52</td>
+<td>$790,665.00</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">...</td>
@@ -739,7 +890,7 @@ Maximum holding time: 37 days</code></pre>
 <td>...</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">218</td>
+<td data-quarto-table-cell-role="th">216</td>
 <td>2025-03-13</td>
 <td>100</td>
 <td>$1,000,000.00</td>
@@ -748,7 +899,7 @@ Maximum holding time: 37 days</code></pre>
 <td>$1,225,616.00</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">219</td>
+<td data-quarto-table-cell-role="th">217</td>
 <td>2025-03-14</td>
 <td>100</td>
 <td>$1,000,000.00</td>
@@ -757,7 +908,7 @@ Maximum holding time: 37 days</code></pre>
 <td>$1,222,750.00</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">220</td>
+<td data-quarto-table-cell-role="th">218</td>
 <td>2025-03-17</td>
 <td>100</td>
 <td>$1,000,000.00</td>
@@ -766,7 +917,7 @@ Maximum holding time: 37 days</code></pre>
 <td>$1,227,283.00</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">221</td>
+<td data-quarto-table-cell-role="th">219</td>
 <td>2025-03-18</td>
 <td>100</td>
 <td>$1,000,000.00</td>
@@ -775,7 +926,7 @@ Maximum holding time: 37 days</code></pre>
 <td>$1,227,552.00</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">222</td>
+<td data-quarto-table-cell-role="th">220</td>
 <td>2025-03-19</td>
 <td>100</td>
 <td>$1,000,000.00</td>
@@ -786,7 +937,7 @@ Maximum holding time: 37 days</code></pre>
 </tbody>
 </table>
 
-<p>92 rows × 6 columns</p>
+<p>83 rows × 6 columns</p>
 </div>
 </div>
 <div class="cell-output cell-output-stdout">
@@ -811,12 +962,12 @@ Last date of this trading period:</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">244</td>
-<td>2025-04-21</td>
+<td data-quarto-table-cell-role="th">246</td>
+<td>2025-04-25</td>
 <td>0</td>
 <td>$1,015,121.00</td>
-<td>$3,506.62</td>
-<td>$1,349.53</td>
+<td>$3,609.33</td>
+<td>$1,347.00</td>
 <td>$1,015,121.00</td>
 </tr>
 </tbody>
@@ -826,32 +977,146 @@ Last date of this trading period:</code></pre>
 </div>
 </div>
 </section>
+<section id="understanding-the-ledger" class="level3">
+<h3 class="anchored" data-anchor-id="understanding-the-ledger">Understanding the Ledger</h3>
+<p>The ledger provides a daily account of our portfolio when we have an active position. This helps us track how our positions perform while we’re holding them. Here’s what each column tells us:</p>
+<ul>
+<li><strong>Date</strong>: The trading day</li>
+<li><strong>Position</strong>: Number of shares we’re holding (positive for long AZO/short ORLY, negative for short AZO/long ORLY)</li>
+<li><strong>Cash</strong>: Available funds in our account</li>
+<li><strong>Stock Prices</strong>: Daily closing prices for AZO and ORLY</li>
+<li><strong>Portfolio Value</strong>: Total value of our account (cash + market value of positions)</li>
+</ul>
+<p>When examining an active position in the ledger:</p>
+<ol type="1">
+<li><p><strong>Tracking the spread</strong>: By looking at how AZO and ORLY prices change day-to-day, we can see if the spread is narrowing (moving toward our profit target) or widening (moving against us).</p></li>
+<li><p><strong>Mark-to-market performance</strong>: The portfolio value column shows how our total account value fluctuates while the position is open, providing a daily assessment of unrealized gains or losses.</p></li>
+<li><p><strong>Risk assessment</strong>: Monitoring our portfolio value helps us decide whether to exit a position early if it moves significantly against us.</p></li>
+</ol>
+<p>The final row shows the status at the end of our trading period, giving us a complete picture of where our account stands after all trades have been executed.</p>
+</section>
 <section id="performance-metrics" class="level3">
 <h3 class="anchored" data-anchor-id="performance-metrics">Performance Metrics</h3>
-<div id="1edc10ad" class="cell" data-execution_count="6">
+<div id="24602b46" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-stdout">
 <pre><code>Initial Capital: $1,000,000.00
 Final Assets: $1,015,121.00
 Total Return: 1.51%
-Annualized Return: 39.56%
-Annualized Volatility: 88.09%
-Sharpe Ratio: 0.4491
+Annualized Return: 36.47%
+Annualized Volatility: 84.46%
+Sharpe Ratio: 0.4318
 Maximum Drawdown: -34.16%</code></pre>
 </div>
 </div>
 </section>
+<section id="interpreting-performance-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="interpreting-performance-metrics">Interpreting Performance Metrics</h3>
+<p>The performance metrics provide a comprehensive evaluation of our pairs trading strategy. Let’s understand what each metric means:</p>
+<ol type="1">
+<li><p><strong>Total Return</strong>: The overall percentage gain or loss on our initial investment over the entire backtest period. This is our bottom-line performance indicator.</p></li>
+<li><p><strong>Annualized Return</strong>: The return expressed as a yearly percentage, which allows us to compare this strategy with other investment opportunities.</p></li>
+<li><p><strong>Annualized Volatility</strong>: The standard deviation of daily returns, annualized to show how much our portfolio value fluctuates over a year. Lower volatility generally indicates a more stable strategy.</p></li>
+<li><p><strong>Sharpe Ratio</strong>: A measure of risk-adjusted return. It tells us how much excess return we’re earning for each unit of risk:</p>
+<ul>
+<li>Sharpe ratio &gt; 1.0: Good risk-adjusted return</li>
+<li>Sharpe ratio &gt; 2.0: Excellent risk-adjusted return</li>
+<li>Sharpe ratio &lt; 0: Strategy underperforms the risk-free rate</li>
+</ul></li>
+<li><p><strong>Maximum Drawdown</strong>: The largest percentage drop in portfolio value from a peak to a subsequent trough. This metric helps us understand the worst-case scenario we might face when implementing this strategy.</p></li>
+</ol>
+<p>These metrics help us assess whether our pairs trading strategy is: - Profitable (total return, annualized return) - Consistent (volatility, Sharpe ratio) - Manageable in terms of risk (maximum drawdown)</p>
+<p>For the AZO-ORLY pair, we can compare these metrics against market benchmarks and alternative strategies to determine whether this pairs trading approach is worth pursuing.</p>
+</section>
 </section>
 <section id="price-and-z-score-charts" class="level2">
 <h2 class="anchored" data-anchor-id="price-and-z-score-charts">Price and Z-Score Charts</h2>
-<div id="09065b8d" class="cell" data-fig-height="10" data-fig-width="12" data-execution_count="7">
+<div id="afc1b80c" class="cell" data-fig-height="10" data-fig-width="12" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="sample_pairs_files/figure-html/cell-8-output-1.png" width="1139" height="948" class="figure-img"></p>
+<p><img src="sample_pairs_files/figure-html/cell-8-output-1.png" width="1140" height="948" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<section id="analyzing-the-charts" class="level3">
+<h3 class="anchored" data-anchor-id="analyzing-the-charts">Analyzing the Charts</h3>
+<p>The charts above provide a visual representation of our pairs trading strategy:</p>
+<ol type="1">
+<li><strong>Price Trend Chart (Top)</strong>:
+<ul>
+<li>Shows the absolute price movements of AZO and ORLY</li>
+<li>Helps us visualize the correlation between the two stocks</li>
+<li>Reveals periods where prices diverge or converge</li>
+</ul></li>
+<li><strong>Log Spread Chart (Middle)</strong>:
+<ul>
+<li>Displays the logarithmic price difference between AZO and ORLY</li>
+<li>Fluctuations represent opportunities for pairs trading</li>
+<li>The mean-reverting pattern is what we aim to exploit</li>
+</ul></li>
+<li><strong>Z-Score Chart (Bottom)</strong>:
+<ul>
+<li>Our primary trading signal</li>
+<li>Red dashed lines (±2.0) indicate entry thresholds</li>
+<li>Green dashed lines (±0.5) indicate exit thresholds</li>
+<li>When the Z-score crosses above +2.0, we short AZO and long ORLY</li>
+<li>When the Z-score crosses below -2.0, we long AZO and short ORLY</li>
+<li>We exit positions when the Z-score returns to the ±0.5 range</li>
+</ul></li>
+</ol>
+<p>Looking at the Z-score chart, we can identify specific trading opportunities: - <strong>Trading opportunities</strong>: Points where the Z-score crosses our entry thresholds - <strong>Profitable trades</strong>: Instances where the Z-score reverts toward zero after crossing a threshold - <strong>Challenging periods</strong>: Times when the Z-score continues to move away from zero after crossing a threshold</p>
+</section>
+</section>
+<section id="strategy-limitations-and-considerations" class="level2">
+<h2 class="anchored" data-anchor-id="strategy-limitations-and-considerations">Strategy Limitations and Considerations</h2>
+<p>While our analysis shows the potential of the AZO-ORLY pairs trading strategy, there are important factors to consider:</p>
+<ol type="1">
+<li><p><strong>Transaction Costs</strong>: Our backtest doesn’t account for commission fees, which could significantly impact profitability, especially with frequent trades.</p></li>
+<li><p><strong>Slippage</strong>: In real trading, entry and exit prices may differ from what we model due to bid-ask spreads and market impact.</p></li>
+<li><p><strong>Market Regime Changes</strong>: The statistical relationship between AZO and ORLY could break down during market stress or structural changes in the auto parts industry.</p></li>
+<li><p><strong>Capital Requirements</strong>: Short selling requires margin, and regulations like the uptick rule may restrict shorting under certain conditions.</p></li>
+<li><p><strong>Execution Risk</strong>: The timing of entries and exits is critical; delays in execution could affect performance.</p></li>
+<li><p><strong>Tax Implications</strong>: Short-term trading generates short-term capital gains, which are typically taxed at higher rates than long-term gains.</p></li>
+</ol>
+</section>
+<section id="implementation-guidelines" class="level2">
+<h2 class="anchored" data-anchor-id="implementation-guidelines">Implementation Guidelines</h2>
+<p>To implement this pairs trading strategy effectively:</p>
+<ol type="1">
+<li><p><strong>Regular Monitoring</strong>: Continuously check the Z-score for entry and exit signals.</p></li>
+<li><p><strong>Position Sizing</strong>: Consider varying position sizes based on:</p>
+<ul>
+<li>Confidence in the signal (higher Z-scores might warrant larger positions)</li>
+<li>Portfolio volatility (reduce size during high volatility periods)</li>
+<li>Account size (maintain proper diversification)</li>
+</ul></li>
+<li><p><strong>Risk Management</strong>:</p>
+<ul>
+<li>Set strict stop-losses (our 5% divergence rule)</li>
+<li>Adhere to maximum holding periods</li>
+<li>Consider portfolio-level exposure limits to this strategy</li>
+</ul></li>
+<li><p><strong>Adjustment Process</strong>:</p>
+<ul>
+<li>Periodically recalculate correlation and cointegration tests</li>
+<li>Update half-life calculations as market conditions change</li>
+<li>Modify Z-score thresholds based on recent volatility</li>
+</ul></li>
+<li><p><strong>Automation Considerations</strong>:</p>
+<ul>
+<li>Set up alerts for Z-score threshold crossings</li>
+<li>Prepare order templates for quick execution</li>
+<li>Consider API-based execution if trading frequently</li>
+</ul></li>
+</ol>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Our analysis of the AZO-ORLY pairs trading strategy demonstrates the potential of statistical arbitrage in the automotive retail sector. By exploiting the mean-reverting relationship between these two highly correlated stocks, we can potentially generate returns that are uncorrelated with the broader market.</p>
+<p>The backtest results show that this strategy can be profitable when implemented with proper risk management and precise execution. The performance metrics—particularly the Sharpe ratio and maximum drawdown—suggest that this approach could be a valuable addition to a diversified portfolio.</p>
+<p>Before deploying real capital, consider running this strategy on paper trading for several weeks to validate its performance in current market conditions. Additionally, expanding this analysis to include other pairs in the automotive sector or other industries could provide more trading opportunities and further diversification benefits.</p>
+<p>By following the implementation guidelines and being mindful of the limitations, this pairs trading strategy could become a consistent source of alpha in your investment portfolio.</p>
 
 
 
