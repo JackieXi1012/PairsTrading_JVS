@@ -777,6 +777,7 @@ The charts above provide a visual representation of our pairs trading strategy:
    - We exit positions when the Z-score returns to the ±0.5 range
 
 Looking at the Z-score chart, we can identify specific trading opportunities:
+
 - **Trading opportunities**: Points where the Z-score crosses our entry thresholds
 - **Profitable trades**: Instances where the Z-score reverts toward zero after crossing a threshold
 - **Challenging periods**: Times when the Z-score continues to move away from zero after crossing a threshold
