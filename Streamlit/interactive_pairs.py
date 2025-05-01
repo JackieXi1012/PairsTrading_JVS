@@ -4,9 +4,15 @@ import datetime
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import adfuller, coint
-# Replace shinybroker with yfinance
-import yfinance as yf
+# Replace yfinance with tiingo
+from tiingo import TiingoClient
 import warnings
+
+# Configure Tiingo API
+# Replace with your actual API key
+TIINGO_API_KEY = "fcedaa9129849916e3a2d3fe408f4c0fc8c48952"
+# Create client - this will be updated by app.py when an API key is provided
+client = TiingoClient({'api_key': TIINGO_API_KEY})
 
 warnings.filterwarnings('ignore')  # Suppress warnings for cleaner output
 
@@ -35,38 +41,99 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
         account ledger, and visualization figure
     """
     try:
-        # Fetch historical data using yfinance
-        stock_a_data = yf.download(stock_a_symbol, period="1y", auto_adjust=False)
-        stock_b_data = yf.download(stock_b_symbol, period="1y", auto_adjust=False)
+        # Get the current actual date - always use the current date for end date
+        end_date = datetime.datetime.now()
 
-        # Ensure both datasets have the same dates
+        # For debugging purposes - print current date being used
+        print(f"Current date being used as end date: {end_date.strftime('%Y-%m-%d')}")
+
+        # Set date range for 1 year of data
+        start_date = end_date - datetime.timedelta(days=365)
+
+        # Format dates for Tiingo API
+        start_date_str = start_date.strftime('%Y-%m-%d')
+        end_date_str = end_date.strftime('%Y-%m-%d')
+
+        print(f"Fetching data for {stock_a_symbol} and {stock_b_symbol}")
+        print(f"Date range: {start_date_str} to {end_date_str}")
+
+        # Using Tiingo's API to get historical price data
+        try:
+            # For stock A - get DataFrame directly with all information
+            stock_a_data = client.get_dataframe(
+                stock_a_symbol,
+                startDate=start_date_str,
+                endDate=end_date_str,
+                frequency='daily'
+            )
+
+            print(
+                f"Data fetched for {stock_a_symbol}. Start: {stock_a_data.index.min()}, End: {stock_a_data.index.max()}")
+
+            # For stock B - get DataFrame directly with all information
+            stock_b_data = client.get_dataframe(
+                stock_b_symbol,
+                startDate=start_date_str,
+                endDate=end_date_str,
+                frequency='daily'
+            )
+
+            print(
+                f"Data fetched for {stock_b_symbol}. Start: {stock_b_data.index.min()}, End: {stock_b_data.index.max()}")
+
+            # Print the most recent dates to verify data freshness
+            print(f"Most recent 5 dates in {stock_a_symbol} data:")
+            for date in stock_a_data.index[-5:]:
+                print(f"  {date}")
+
+        except Exception as e:
+            print(f"Error fetching stock data: {e}")
+            print("Please check your API key and ticker symbols.")
+            return None
+
+        # Ensure both datasets have the same dates by finding common dates
         common_dates = stock_a_data.index.intersection(stock_b_data.index)
+        if len(common_dates) < 20:  # Need at least 20 days for meaningful analysis
+            print(f"Not enough common trading days between {stock_a_symbol} and {stock_b_symbol}")
+            return None
+
+        print(f"Found {len(common_dates)} common trading days")
+
+        # Align data on common dates
         stock_a_data = stock_a_data.loc[common_dates]
         stock_b_data = stock_b_data.loc[common_dates]
 
         # Create DataFrame with aligned price data
         data = pd.DataFrame({
             'Date': common_dates,
-            'Stock_A_Price': stock_a_data['Close'].values.flatten(),  # Ensure 1D array
-            'Stock_B_Price': stock_b_data['Close'].values.flatten()  # Ensure 1D array
+            'Stock_A_Price': stock_a_data['adjClose'].values.flatten(),  # Using adjusted close
+            'Stock_B_Price': stock_b_data['adjClose'].values.flatten()
         })
+
+        # Verify we have recent data
+        print(f"Final data range: {data['Date'].min()} to {data['Date'].max()}")
 
         # Ensure Date is datetime type and sort data
         data['Date'] = pd.to_datetime(data['Date'])
         data = data.sort_values('Date').reset_index(drop=True)
 
-        # Calculate log spread and Z-score
+        # Calculate log spread and Z-score - EXACTLY as in QMD
         data['Log_Spread'] = np.log(data['Stock_A_Price']) - np.log(data['Stock_B_Price'])
         data['roll_mean'] = data['Log_Spread'].rolling(window=20).mean()
         data['roll_std'] = data['Log_Spread'].rolling(window=20).std()
         data['Z_Score'] = (data['Log_Spread'] - data['roll_mean']) / data['roll_std']
 
         # Statistical analysis
+        # Correlation Analysis - SAME as QMD
         correlation = data['Stock_A_Price'].corr(data['Stock_B_Price'])
+
+        # Cointegration Test - SAME as QMD
         score, pvalue, _ = coint(data['Stock_A_Price'].astype(float), data['Stock_B_Price'].astype(float))
+
+        # ADF Test - SAME as QMD
         adf_result = adfuller(data['Log_Spread'].dropna())
 
-        # Half-life calculation
+        # Half-life calculation - USING QMD VERSION EXACTLY
         def calculate_half_life(spread):
             """Calculate half-life of the spread series"""
             spread_lag = spread.shift(1)
@@ -77,18 +144,14 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
             spread_diff = spread_diff.dropna()
 
             # Set up regression model: ΔSpread_t = α + ρ*Spread_{t-1} + ε_t
-            spread_lag_values = sm.add_constant(spread_lag.values)
+            spread_lag = sm.add_constant(spread_lag)
 
             # Run OLS regression
-            # Extract values to 1D arrays
-            y = spread_diff.iloc[1:].values.flatten()
-            X = spread_lag_values[1:, :]  # Already 2D array
-
-            model = sm.OLS(y, X)
+            model = sm.OLS(spread_diff.iloc[1:], spread_lag.iloc[1:])
             results = model.fit()
 
             # Get coefficient for Spread_{t-1} (ρ)
-            rho = results.params[1]
+            rho = results.params.iloc[1]
 
             # Calculate half-life: t_{1/2} = -ln(2)/ln(1+ρ)
             if rho >= 0:  # No mean reversion
@@ -100,14 +163,20 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
 
         half_life, regression_results, rho = calculate_half_life(data['Log_Spread'])
 
-        # Determine maximum holding time based on half-life
+        # Determine maximum holding time based on half-life - SAME as QMD
         max_holding_time = int(1.5 * half_life) if half_life < 100 else 20
 
-        # Try to get VIX data using yfinance
+        # Try to get VIX data
         try:
-            vix_data = yf.download("^VIX", period="1y", auto_adjust=False)
+            vix_data = client.get_dataframe(
+                'VIX',
+                startDate=start_date_str,
+                endDate=end_date_str,
+                frequency='daily'
+            )
+
             # Create a mapping from date string to VIX value for easier lookup
-            vix_dict = {d.strftime('%Y-%m-%d'): v for d, v in zip(vix_data.index, vix_data['Close'].values)}
+            vix_dict = {d.strftime('%Y-%m-%d'): v for d, v in zip(vix_data.index, vix_data['adjClose'].values)}
 
             # Create aligned VIX data using the dictionary
             vix_values = []
@@ -128,28 +197,21 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
                     last_valid = data.at[i, 'VIX']
         except Exception as e:
             print(f"Error getting VIX data: {e}")
-            # If no VIX data, use a simple estimate of price volatility
-            vol_data = data['Stock_A_Price'].pct_change().rolling(20).std() * 100
-            vol_data = vol_data.fillna(15)  # Use 15 as default value
-            data['VIX'] = vol_data.values
+            # If no VIX data, use a simple estimate of price volatility - SAME as QMD
+            data['VIX'] = data['Stock_A_Price'].pct_change().rolling(20).std() * 100
+            data['VIX'].fillna(15, inplace=True)  # Use 15 as default value
 
-        # Adjust thresholds based on VIX
-        data['threshold'] = 2.0  # Default threshold
+        # Adjust thresholds based on VIX - USING QMD APPROACH
+        conditions = [
+            (data['VIX'] < 20),
+            (data['VIX'] >= 20) & (data['VIX'] < 25),
+            (data['VIX'] >= 25) & (data['VIX'] < 30),
+            (data['VIX'] >= 30)
+        ]
+        choices = [2.0, 2.25, 2.5, 3.0]
+        data['threshold'] = np.select(conditions, choices, default=2.0)
 
-        # Apply conditions one by one to avoid Series truth value ambiguity
-        mask1 = data['VIX'] < 20
-        data.loc[mask1, 'threshold'] = 2.0
-
-        mask2 = (data['VIX'] >= 20) & (data['VIX'] < 25)
-        data.loc[mask2, 'threshold'] = 2.25
-
-        mask3 = (data['VIX'] >= 25) & (data['VIX'] < 30)
-        data.loc[mask3, 'threshold'] = 2.5
-
-        mask4 = data['VIX'] >= 30
-        data.loc[mask4, 'threshold'] = 3.0
-
-        # Define trading periods function
+        # Define trading periods - SAME as QMD
         def define_trading_periods(df, period_length_days=5):
             """Divide daily data into trading periods"""
             df = df.copy()
@@ -164,18 +226,19 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
         period_length_days = 5
         data = define_trading_periods(data, period_length_days)
 
-        # Generate trading signals
+        # Generate trading signals - SAME as QMD
         data['signal'] = 0
         data.loc[data['Z_Score'] > data['threshold'], 'signal'] = -1  # Short Stock A, Long Stock B
         data.loc[data['Z_Score'] < -data['threshold'], 'signal'] = 1  # Long Stock A, Short Stock B
 
-        # Exit signal (Z-score reverts to ±0.5)
+        # Exit signal (Z-score reverts to ±0.5) - SAME as QMD
         data['exit_signal'] = 0
         data.loc[(data['Z_Score'] <= 0.5) & (data['Z_Score'] >= -0.5), 'exit_signal'] = 1
 
         # Initialize blotter and ledger
         trading_periods = data['trading_period'].unique()[1:]  # Start from the second trading period
 
+        # Initialize blotter - SAME STRUCTURE as QMD
         blotter = pd.DataFrame({
             'trading_period': trading_periods,
             'entry_timestamp': pd.NaT,
@@ -194,7 +257,7 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
             'position_B': None  # Added for clarity
         }).set_index('trading_period')
 
-        # Initialize ledger (each row represents a trading day)
+        # Initialize ledger - EXACTLY as QMD
         first_period = data['trading_period'].iloc[0]
         dates_after_first_period = data[data['trading_period'] > first_period]['Date'].tolist()
 
@@ -210,21 +273,19 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
         # Set initial cash
         ledger['cash'] = initial_cash
 
-        # Track current position
+        # Track current position - EXACTLY as QMD
         current_position = 0
         entry_price_A = 0
         entry_price_B = 0
         entry_date = None
         current_period = None
 
-        # Trading execution loop
+        # Trading execution loop - FOLLOWING QMD LOGIC EXACTLY
         filtered_data = data[data['trading_period'] > data['trading_period'].iloc[0]]
 
         for i, row in filtered_data.iterrows():
             current_date = row['Date']
-            current_period = int(row['trading_period'])  # Ensure integer
-            signal_value = int(row['signal'])  # Ensure integer
-            exit_signal_value = int(row['exit_signal'])  # Ensure integer
+            current_period = row['trading_period']
 
             # Find index for current date in ledger
             ledger_idx_list = ledger[ledger['date'] == current_date].index.tolist()
@@ -235,11 +296,12 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
             ledger_idx = ledger_idx_list[0]
 
             # Check if there's an entry signal and no current position
-            if signal_value != 0 and current_position == 0:
+            if row['signal'] != 0 and current_position == 0:
                 # Record entry information
-                current_position = signal_value * shares_per_trade  # Positive means long Stock A/short Stock B, negative means short Stock A/long Stock B
-                entry_price_A = float(row['Stock_A_Price'])  # Ensure float
-                entry_price_B = float(row['Stock_B_Price'])  # Ensure float
+                current_position = row[
+                                       'signal'] * shares_per_trade  # Positive means long Stock A/short Stock B, negative means short Stock A/long Stock B
+                entry_price_A = row['Stock_A_Price']
+                entry_price_B = row['Stock_B_Price']
                 entry_date = current_date
 
                 # Update blotter
@@ -260,67 +322,54 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
                 # Update ledger
                 ledger.loc[ledger_idx, 'position'] = current_position
 
-            # Check if there's an exit signal and current position exists - break into simple conditions
-            elif current_position != 0:
-                exit_condition1 = exit_signal_value == 1
+            # Check if there's an exit signal and current position exists - USING QMD LOGIC
+            elif ((row['exit_signal'] == 1 or
+                   (entry_date and (current_date - entry_date).days > max_holding_time) or
+                   (entry_price_A and entry_price_B and
+                    abs(((row['Stock_A_Price'] / entry_price_A) - (
+                            row['Stock_B_Price'] / entry_price_B)) / 2) > stop_loss_pct))
+                  and current_position != 0):
 
-                exit_condition2 = False
-                if entry_date is not None:
-                    exit_condition2 = (current_date - entry_date).days > max_holding_time
+                # Calculate pairs trading P&L
+                exit_price_A = row['Stock_A_Price']
+                exit_price_B = row['Stock_B_Price']
 
-                exit_condition3 = False
-                if entry_price_A != 0 and entry_price_B != 0:
-                    ratio_diff = abs(((float(row['Stock_A_Price']) / entry_price_A) -
-                                      (float(row['Stock_B_Price']) / entry_price_B)) / 2)
-                    exit_condition3 = ratio_diff > stop_loss_pct
+                # Calculate P&L for both directions - EXACTLY as QMD
+                if current_position > 0:  # Long Stock A, Short Stock B
+                    pnl_A = current_position * (exit_price_A - entry_price_A)  # Stock A long P&L
+                    pnl_B = current_position * (entry_price_B - exit_price_B)  # Stock B short P&L
+                else:  # Short Stock A, Long Stock B
+                    pnl_A = -current_position * (entry_price_A - exit_price_A)  # Stock A short P&L
+                    pnl_B = -current_position * (exit_price_B - entry_price_B)  # Stock B long P&L
 
-                # Combine exit conditions
-                if exit_condition1 or exit_condition2 or exit_condition3:
-                    # Calculate pairs trading P&L
-                    exit_price_A = float(row['Stock_A_Price'])  # Ensure float
-                    exit_price_B = float(row['Stock_B_Price'])  # Ensure float
+                total_pnl = pnl_A + pnl_B
 
-                    # Calculate P&L for both directions
-                    if current_position > 0:  # Long Stock A, Short Stock B
-                        pnl_A = current_position * (exit_price_A - entry_price_A)  # Stock A long P&L
-                        pnl_B = current_position * (entry_price_B - exit_price_B)  # Stock B short P&L
-                    else:  # Short Stock A, Long Stock B
-                        pnl_A = -current_position * (entry_price_A - exit_price_A)  # Stock A short P&L
-                        pnl_B = -current_position * (exit_price_B - entry_price_B)  # Stock B long P&L
+                # Update blotter
+                period_of_entry = blotter[blotter['entry_timestamp'] == entry_date].index
+                if len(period_of_entry) > 0:
+                    period_of_entry = period_of_entry[0]
+                    blotter.loc[period_of_entry, 'exit_timestamp'] = current_date
+                    blotter.loc[period_of_entry, 'exit_price_A'] = exit_price_A
+                    blotter.loc[period_of_entry, 'exit_price_B'] = exit_price_B
+                    blotter.loc[period_of_entry, 'success'] = total_pnl > 0
+                    blotter.loc[period_of_entry, 'pnl_A'] = pnl_A
+                    blotter.loc[period_of_entry, 'pnl_B'] = pnl_B
+                    blotter.loc[period_of_entry, 'total_pnl'] = total_pnl
 
-                    total_pnl = pnl_A + pnl_B
-
-                    # Update blotter
-                    periods_of_entry = blotter.index[blotter['entry_timestamp'] == entry_date].tolist()
-                    if periods_of_entry:
-                        period_of_entry = periods_of_entry[0]
-                        blotter.loc[period_of_entry, 'exit_timestamp'] = current_date
-                        blotter.loc[period_of_entry, 'exit_price_A'] = exit_price_A
-                        blotter.loc[period_of_entry, 'exit_price_B'] = exit_price_B
-                        blotter.loc[period_of_entry, 'success'] = total_pnl > 0
-                        blotter.loc[period_of_entry, 'pnl_A'] = pnl_A
-                        blotter.loc[period_of_entry, 'pnl_B'] = pnl_B
-                        blotter.loc[period_of_entry, 'total_pnl'] = total_pnl
-
-                    # Update ledger cash
-                    if ledger_idx > 0:
-                        ledger.loc[ledger_idx, 'cash'] = ledger.loc[ledger_idx - 1, 'cash'] + total_pnl
-                    else:
-                        ledger.loc[ledger_idx, 'cash'] = initial_cash + total_pnl
-
-                    # Reset position information
-                    current_position = 0
-                    entry_price_A = 0
-                    entry_price_B = 0
-                    entry_date = None
+                # Update ledger cash
+                if ledger_idx > 0:
+                    ledger.loc[ledger_idx, 'cash'] = ledger.loc[ledger_idx - 1, 'cash'] + total_pnl
                 else:
-                    # If no exit signal but have position, copy cash from previous day
-                    if ledger_idx > 0:
-                        ledger.loc[ledger_idx, 'cash'] = ledger.loc[ledger_idx - 1, 'cash']
-                    else:
-                        ledger.loc[ledger_idx, 'cash'] = initial_cash
+                    ledger.loc[ledger_idx, 'cash'] = initial_cash + total_pnl
+
+                # Reset position information
+                current_position = 0
+                entry_price_A = 0
+                entry_price_B = 0
+                entry_date = None
+
             else:
-                # If no trade signal and no position, copy cash from previous day
+                # If no trade signal, copy cash from previous day
                 if ledger_idx > 0:
                     ledger.loc[ledger_idx, 'cash'] = ledger.loc[ledger_idx - 1, 'cash']
                 else:
@@ -329,16 +378,13 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
             # Update position column in ledger
             ledger.loc[ledger_idx, 'position'] = current_position
 
-            # Calculate market value (considering both positions)
-            stock_a_price = float(row['Stock_A_Price'])  # Ensure float
-            stock_b_price = float(row['Stock_B_Price'])  # Ensure float
-
+            # Calculate market value (considering both positions) - EXACTLY as QMD
             if current_position > 0:  # Long Stock A, Short Stock B
-                value_A = current_position * stock_a_price  # Stock A long value
-                value_B = -current_position * stock_b_price  # Stock B short value
+                value_A = current_position * row['Stock_A_Price']  # Stock A long value
+                value_B = -current_position * row['Stock_B_Price']  # Stock B short value
             elif current_position < 0:  # Short Stock A, Long Stock B
-                value_A = current_position * stock_a_price  # Stock A short value
-                value_B = -current_position * stock_b_price  # Stock B long value
+                value_A = current_position * row['Stock_A_Price']  # Stock A short value
+                value_B = -current_position * row['Stock_B_Price']  # Stock B long value
             else:
                 value_A = 0
                 value_B = 0
@@ -352,34 +398,12 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
         # Store complete ledger for calculations
         complete_ledger = ledger.copy()
 
-        # Filter ledger to only show positions != 0 and the last row
-        if not ledger.empty:
-            # Get the last row of the ledger
-            last_row = ledger.iloc[[-1]].copy()  # Make a copy to avoid SettingWithCopyWarning
-            # Add a marker column to identify the last row
-            last_row['row_type'] = 'FINAL_ROW'
-
-            # Get all rows where position is not 0
-            positions_not_zero = ledger[ledger['position'] != 0].copy()
-            # Add marker for position rows
-            positions_not_zero['row_type'] = 'POSITION'
-
-            # Combine the filtered positions with the last row
-            ledger = pd.concat([positions_not_zero, last_row])
-
-            # If the last row already had a position != 0, it will be duplicated
-            # So drop duplicates based on date
-            ledger = ledger.drop_duplicates(subset=['date'])
-
-            # Sort by date to maintain chronological order
-            ledger = ledger.sort_values('date').reset_index(drop=True)
-
-        # Calculate performance metrics (using complete_ledger)
+        # Calculate performance metrics
         initial_value = complete_ledger['mkt_value'].iloc[0] if not complete_ledger.empty else initial_cash
         final_value = complete_ledger['mkt_value'].iloc[-1] if not complete_ledger.empty else initial_cash
         total_return = (final_value - initial_value) / initial_value * 100
 
-        # Additional performance metrics
+        # Additional performance metrics - SAME as QMD
         if not complete_ledger.empty:
             complete_ledger['daily_return'] = complete_ledger['mkt_value'].pct_change()
             annualized_return = complete_ledger['daily_return'].mean() * 252 * 100
@@ -407,12 +431,13 @@ def analyze_pair(stock_a_symbol, stock_b_symbol, initial_cash=1000000, shares_pe
             "Final Value": f"${final_value:,.2f}",
             "Total Return": f"{total_return:.2f}%",
             "Annualized Return": f"{annualized_return:.2f}%",
+            "Annualized Volatility": f"{annualized_volatility:.2f}%",
             "Sharpe Ratio": f"{sharpe_ratio:.4f}",
             "Max Drawdown": f"{max_drawdown:.2f}%",
             "Total Trades": len(blotter)
         }
 
-        # Plot figure
+        # Plot figure - IDENTICAL to QMD
         fig = plt.figure(figsize=(12, 10))
 
         # Price trend subplot
