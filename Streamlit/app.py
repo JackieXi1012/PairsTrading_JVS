@@ -7,7 +7,7 @@ from tiingo import TiingoClient
 st.set_page_config(page_title="Pairs Trading Analyzer", layout="wide")
 
 # Title
-st.title("📈 Pairs Trading Analysis Tool")
+st.title(" Pairs Trading Analysis Tool")
 
 # Sidebar inputs
 st.sidebar.header("Input Parameters")
@@ -75,7 +75,7 @@ if run_analysis:
             st.header("Ledger")
             st.dataframe(result["ledger"].tail(20), use_container_width=True)
 
-            st.header("📉 Visualizations")
+            st.header("Visualizations")
             st.pyplot(result["figure"])
 else:
     st.markdown(
